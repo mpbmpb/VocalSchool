@@ -1,0 +1,44 @@
+@model IEnumerable<VocalSchool.Models.Seminar>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4 class="category-heading mb-3">Seminars</h4>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create new seminar</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Seminar</th>
+            <th>Description</th>
+            <th>Days</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+    @foreach (var sDay in item.SeminarDays)
+    {
+        <span>@sDay.Day.Name &nbsp;</span>
+    }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SeminarId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SeminarId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SeminarId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

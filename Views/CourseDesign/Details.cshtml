@@ -1,0 +1,68 @@
+@model VocalSchool.Models.CourseDesign
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4 class="category-heading mb-3">@Model.Name course design details</h4>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+    <div class="mb-3">
+        <a asp-action="Edit" asp-route-id="@Model.CourseDesignId" class="btn btn-primary">Edit</a>
+        <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+    </div>
+</div>
+<div class="mb-3">
+    <p><b>Seminars</b></p>
+</div>
+<div>
+@foreach (var item in Model.CourseSeminars)
+{
+    <table>
+        <thead>
+            <tr>
+                <th width="20%">@item.Seminar.Name</th>
+                <th width="50%">@item.Seminar.Description</th>
+                <th width="30%">
+                    <a asp-controller="Seminar" asp-action="Edit" asp-route-id="@item.SeminarId">Edit</a> |
+                    <a  asp-controller="Seminar"asp-action="Details" asp-route-id="@item.SeminarId">Details</a> |
+                    <a asp-controller="Seminar" asp-action="Create" asp-route-id="@item.SeminarId">Create</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var semDay in item.Seminar.SeminarDays)
+    {
+            <tr>
+                <td><b>@semDay.Day.Name</b></td>
+                <td><b>Description</b></td>
+                <td>
+                    <a asp-controller="Day" asp-action="Edit" asp-route-id="@semDay.DayId">Edit</a> |
+                    <a asp-controller="Day" asp-action="Details" asp-route-id="@semDay.DayId">Details</a> |
+                    <a asp-controller="Day" asp-action="Create" asp-route-id="@semDay.DayId">Create</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @foreach (var daySub in semDay.Day.DaySubjects)
+                    {
+                        @daySub.Subject.Name <span> </span>
+                    }
+                </td>
+                <td>@semDay.Day.Description</td>
+                <td></td>
+            </tr>
+    }
+        </tbody>
+    </table>
+}
+</div>
+

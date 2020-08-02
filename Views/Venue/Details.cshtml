@@ -1,0 +1,105 @@
+@model VocalSchool.Models.Venue
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4 class="category-heading mb-3">Venue details</h4>
+<hr />
+<div>
+    <h4>Venue</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Info)
+        </dt>
+        <dd class="col-sm-10">
+            <p class="col-sm-11 pl-0">@Html.DisplayFor(model => model.Info)</p>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email1)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email1)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email2)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email2)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Adress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Adress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MapsUrl)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MapsUrl)
+        </dd>
+    </dl>
+    @if (Model.Contact1 != null)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th><b>Contact1</b></th>
+                    <th><b>Email</b></th>
+                    <th><b>Phone</b></th>
+                    <th><b>Adress</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.Contact1.Name</td>
+                    <td>@Model.Contact1.Email</td>
+                    <td>@Model.Contact1.Phone</td>
+                    <td>@Model.Contact1.Adress</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+    }
+    @if (Model.Contact2 != null)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th><b>Contact2</b></th>
+                    <th><b>Email</b></th>
+                    <th><b>Phone</b></th>
+                    <th><b>Adress</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.Contact2.Name</td>
+                    <td>@Model.Contact2.Email</td>
+                    <td>@Model.Contact2.Phone</td>
+                    <td>@Model.Contact2.Adress</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+    }
+
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.VenueId" class="btn btn-primary">Edit</a>
+    <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+</div>

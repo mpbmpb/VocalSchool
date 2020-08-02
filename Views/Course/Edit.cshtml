@@ -1,0 +1,42 @@
+@model CourseViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4 class="category-heading mb-3">Edit course</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Course.CourseId" />
+            <div class="form-group col-md-6">
+                <label asp-for="Course.Name" class="control-label"></label>
+                <input asp-for="Course.Name" class="form-control" />
+                <span asp-validation-for="Course.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Course.Description" class="control-label"></label>
+                <input asp-for="Course.Description" class="form-control" />
+                <span asp-validation-for="Course.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Course.CourseDesign" class="category-heading"></label>
+                <select asp-for="Course.CourseDesign.CourseDesignId" asp-items="Model.DesignList" class="custom-select"></select>
+                <input type="hidden" asp-for="Course.CourseDesign.Name" value="temp" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+                <a asp-controller="Course" asp-action="AddCourseDates" asp-route-id="Course.CourseId" class="btn btn-primary">Add course date</a>
+                <a asp-controller="CourseDesign" asp-action="Create" class="btn btn-primary">Create new course design</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

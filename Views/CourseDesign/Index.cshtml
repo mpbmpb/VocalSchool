@@ -1,0 +1,58 @@
+@model IEnumerable<VocalSchool.Models.CourseDesign>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4 class="category-heading mb-3">Course designs</h4>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+@foreach (var item in Model)
+{
+    <table>
+        <thead>
+            <tr>
+                <th width="20%">@item.Name</th>
+                <th width="50%">@item.Description</th>
+                <th width="30%">
+                    <a asp-action="Edit" asp-route-id="@item.CourseDesignId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CourseDesignId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CourseDesignId">Delete</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>Seminars</b></td>
+                <td><b>Days</b></td>
+                <td><b>Subjects</b></td>
+            </tr>
+    @foreach (var courseSem in item.CourseSeminars)
+    {
+            <tr>
+                <td>
+                    @courseSem.Seminar.Name
+                </td>
+                <td>
+        @foreach (var semDay in courseSem.Seminar.SeminarDays)
+        {
+                @semDay.Day.Name <span> </span>
+        }
+                </td>
+                <td>
+        @foreach (var semDay in courseSem.Seminar.SeminarDays)
+        {
+            foreach (var daySub in semDay.Day.DaySubjects)
+            {
+                @daySub.Subject.Name <span> </span>
+            }
+        }
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+}

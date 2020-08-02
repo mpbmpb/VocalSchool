@@ -1,0 +1,69 @@
+@model VocalSchool.Models.Course
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4 class="category-heading mb-3">@Model.Name course details</h4>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+    <div class="mb-3">
+        <a asp-action="Edit" asp-route-id="@Model.CourseId" class="btn btn-primary">Edit</a>
+        <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+    </div>
+</div>
+<div class="mb-3">
+    <h6><b>Course design</b></h6>
+</div> 
+<table class="table">
+    <thead>
+
+        <tr>
+            <th width="20%">@Model.CourseDesign.Name</th>
+            <th width="50%">@Model.CourseDesign.Description</th>
+            <th width="30%">
+                <a asp-controller="CourseDesign" asp-action="Edit" asp-route-id="@Model.CourseDesign.CourseDesignId">Edit</a> |
+                <a asp-controller="CourseDesign" asp-action="Details" asp-route-id="@Model.CourseDesign.CourseDesignId">Details</a> |
+                <a asp-controller="CourseDesign" asp-action="Delete" asp-route-id="@Model.CourseDesign.CourseDesignId">Delete</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>Seminars</b></td>
+            <td><b>Subjects</b></td>
+            <td><b>Days</b></td>
+        </tr>
+        @foreach (var courseSem in Model.CourseDesign.CourseSeminars)
+        {
+            <tr>
+                <td>
+                    @courseSem.Seminar.Name
+                </td>
+                <td>
+                    @foreach (var semDay in courseSem.Seminar.SeminarDays)
+                    {
+                        foreach (var daySub in semDay.Day.DaySubjects)
+                        {
+                            @daySub.Subject.Name <span> </span>
+                        }
+                    }
+                </td>
+                <td>
+                    @foreach (var semDay in courseSem.Seminar.SeminarDays)
+                    {
+                        @semDay.Day.Name <span> </span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

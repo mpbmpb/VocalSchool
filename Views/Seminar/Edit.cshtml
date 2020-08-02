@@ -1,0 +1,63 @@
+@model SeminarViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4 class="category-heading mb-3">Edit seminar</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div class="col-md-6 pl-0">
+                <div asp-validation-summary="ModelOnly" class="text-danger">
+                </div>
+                <input type="hidden" asp-for="Seminar.SeminarId" />
+                <div class="form-group">
+                    <label asp-for="Seminar.Name" class="control-label"></label>
+                    <input asp-for="Seminar.Name" class="form-control" />
+                    <span asp-validation-for="Seminar.Name" class="text-danger"></span>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label asp-for="Seminar.Description" class="control-label"></label>
+                    <input asp-for="Seminar.Description" class="form-control" />
+                    <span asp-validation-for="Seminar.Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div>
+                <hr />
+                <p><b>Add days</b></p>
+                <div class="form-inline">
+                    @for (int i = 0; i < Model.CheckList.Count; i++)
+                    {
+                        <div class="col align-self-start col-sm-3 col-md-2">
+                            <div class="form-inline">
+                                <label asp-for="@Model.CheckList[i].Name" class="category-heading mr-1 mb-3">@Model.CheckList[i].Name</label>
+                                <input type="checkbox" asp-for="@Model.CheckList[i].IsSelected" class="custom-checkbox mr-3 mb-3" />
+                                <input type="hidden" asp-for="@Model.CheckList[i].Id" />
+                                <input type="hidden" asp-for="@Model.CheckList[i].Name" />
+                            </div>
+                            <dl>
+                                @foreach (var ds in Model.Days[i].DaySubjects)
+                                {
+                                    <dd>@ds.Subject.Name</dd>
+                                }
+                            </dl>
+                        </div>
+                    }
+                </div>
+                <hr />
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+                    <a asp-controller="Day" asp-action="Create" class="btn btn-primary">Create new day</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

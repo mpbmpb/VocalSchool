@@ -1,0 +1,40 @@
+@model VocalSchool.Models.Contact
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4 class="category-heading mb-3">Contact details</h4>
+<hr />
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Adress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Adress)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ContactId" class="btn btn-primary">Edit</a>
+    <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+</div>

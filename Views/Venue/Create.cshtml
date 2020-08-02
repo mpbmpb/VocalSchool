@@ -1,0 +1,67 @@
+@model VenueViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4 class="category-heading mb-3">Create venue</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.Name" class="control-label"></label>
+                <input asp-for="Venue.Name" class="form-control" />
+                <span asp-validation-for="Venue.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-10">
+                <label asp-for="Venue.Info" class="control-label"></label>
+                <textarea asp-for="Venue.Info" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Venue.Info" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.Email1" class="control-label"></label>
+                <input asp-for="Venue.Email1" class="form-control" />
+                <span asp-validation-for="Venue.Email1" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.Email2" class="control-label"></label>
+                <input asp-for="Venue.Email2" class="form-control" />
+                <span asp-validation-for="Venue.Email2" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.Phone" class="control-label"></label>
+                <input asp-for="Venue.Phone" class="form-control" />
+                <span asp-validation-for="Venue.Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.Adress" class="control-label"></label>
+                <textarea asp-for="Venue.Adress" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Venue.Adress" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.MapsUrl" class="control-label"></label>
+                <input asp-for="Venue.MapsUrl" class="form-control" />
+                <span asp-validation-for="Venue.MapsUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.Contact1" class="category-heading"></label>
+                <select asp-for="Venue.Contact1.ContactId" asp-items="Model.ContactList" class="custom-select"></select>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Venue.Contact2" class="category-heading"></label>
+                <select asp-for="Venue.Contact2.ContactId" asp-items="Model.ContactList" class="custom-select"></select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,28 @@
+@model VocalSchool.Models.Day
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h4 class="category-heading mb-3">Delete day</h4>
+<div class="alert alert-danger" role="alert">
+    <h4>Are you sure you want to delete this day?</h4>
+</div>
+<hr />
+
+<div>
+    <dl class="form-group col-sm-4 pl-0">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dt class="alert alert-primary">
+                @Html.DisplayFor(model => model.Name)
+        </dt>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="DayId" />
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+    </form>
+</div>

@@ -1,0 +1,52 @@
+@model IEnumerable<Subject>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4 class="category-heading mb-3">Subjects</h4>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create new subject</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th width="10%">
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th width="30%">
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th width="15%">Reading</th>
+            <th width="15%">Taught in</th>
+            <th width="20%">options</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequiredReading)
+            </td>
+            <td>
+    @foreach (var ds in item.DaySubjects.OrderBy(x => x.Day.Name.ToLower()))
+    {
+            <span>@ds.Day.Name </span>
+    }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SubjectId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SubjectId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SubjectId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

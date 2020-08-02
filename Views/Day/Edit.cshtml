@@ -1,0 +1,47 @@
+@model DayViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4 class="category-heading mb-3">Edit day @Model.Day.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div class="col-md-6">
+                <div asp-validation-summary="ModelOnly" class="text-danger">
+                </div>
+                <input type="hidden" asp-for="Day.DayId" />
+                <div class="form-group">
+                    <label asp-for="Day.Name" class="control-label"></label>
+                    <input asp-for="Day.Name" class="form-control" />
+                    <span asp-validation-for="Day.Name" class="text-danger"></span>
+                    <label asp-for="Day.Description" class="control-label"></label>
+                    <input asp-for="Day.Description" class="form-control" />
+                    <span asp-validation-for="Day.Description" class="text-danger"></span>
+                </div>
+            </div>
+            <hr />
+            <div class="form-inline">
+@for (int i = 0; i < Model.CheckList.Count; i++)
+{
+                <label asp-for="@Model.CheckList[i].Name" class="category-heading mr-1 mb-3">@Model.CheckList[i].Name</label>
+                <input type="checkbox" asp-for="@Model.CheckList[i].IsSelected" class="custom-checkbox mr-3 mb-3" />
+                <input type="hidden" asp-for="@Model.CheckList[i].Id" />
+                <input type="hidden" asp-for="@Model.CheckList[i].Name" />
+}
+            </div>
+            <hr />
+            <div class="col-sm-0 mt-5">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+                <a asp-controller="Subject" asp-action="Create" class="btn btn-primary">Create new subject</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

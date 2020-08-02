@@ -1,0 +1,5 @@
+#visual studio files
+.DS_STORE
+*UserPrefs.xml
+*.[Cc]ache
+*[Dd]ebug*

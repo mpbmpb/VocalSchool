@@ -1,0 +1,46 @@
+@model Day
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+    <h4 class="category-heading mb-3">Day details</h4>
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>@Model.Name</th>
+
+                <th>Subjects</th>
+                <th>@Model.Description</th>
+                <th>Required Reading</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var ds in Model.DaySubjects)
+        {
+            <tr>
+                <td></td>
+                <td>@ds.Subject.Name</td>
+                <td>@ds.Subject.Description</td>
+                <td>@ds.Subject.RequiredReading</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.DayId" class="btn btn-primary">Edit</a>
+        <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    
