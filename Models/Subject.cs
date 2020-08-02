@@ -12,6 +12,6 @@ namespace VocalSchool.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string RequiredReading { get; set; }
-        public ICollection<DaySubject> DaySubjects { get; set; }
+        public virtual ICollection<DaySubject> DaySubjects { get; set; }
     }
 }

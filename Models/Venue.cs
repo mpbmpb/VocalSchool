@@ -11,8 +11,8 @@ namespace VocalSchool.Models
         public string Phone { get; set; }
         public string Adress { get; set; }
         public string MapsUrl { get; set; }
-        public Contact Contact1 { get; set; }
-        public Contact Contact2 { get; set; }
+        public virtual Contact Contact1 { get; set; }
+        public virtual Contact Contact2 { get; set; }
 
     }
 }

@@ -9,7 +9,7 @@ namespace VocalSchool.Models
         public int CourseId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public CourseDesign CourseDesign { get; set; }
-        public ICollection<CourseDate> CourseDates { get; set; }
+        public virtual CourseDesign CourseDesign { get; set; }
+        public virtual ICollection<CourseDate> CourseDates { get; set; }
     }
 }

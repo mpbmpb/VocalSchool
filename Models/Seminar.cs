@@ -10,8 +10,8 @@ namespace VocalSchool.Models
         [Required]
         public string Name { get; set; }
         public string Description { get; set; }
-        public ICollection<SeminarDay> SeminarDays { get; set; }
-        public ICollection<CourseDesign> CourseDesigns { get; set; }
+        public virtual ICollection<SeminarDay> SeminarDays { get; set; }
+        public virtual ICollection<CourseDesign> CourseDesigns { get; set; }
 
     }
 }

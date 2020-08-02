@@ -4,8 +4,8 @@ namespace VocalSchool.Models
     public class SeminarDay
     {
         public int SeminarId { get; set; }
-        public Seminar Seminar { get; set; }
+        public virtual Seminar Seminar { get; set; }
         public int DayId { get; set; }
-        public Day Day { get; set; }
+        public virtual Day Day { get; set; }
     }
 }

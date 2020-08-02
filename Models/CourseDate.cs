@@ -9,10 +9,10 @@ namespace VocalSchool.Models
         [Required]
         public DateTime Date { get; set; }
         public int VenueId { get; set; }
-        public Venue Venue { get; set; }
+        public virtual Venue Venue { get; set; }
         public string ReservationInfo { get; set; }
         public string Rider { get; set; }
         public int CourseId { get; set; }
-        public Course Course { get; set; }
+        public virtual Course Course { get; set; }
     }
 }
