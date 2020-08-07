@@ -25,7 +25,7 @@ namespace VocalSchool.Controllers
         // GET: Day
         public async Task<IActionResult> Index()
         {
-            return View(await _db.GetAllDaysAsync());
+            return View(await _db.GetAllAsync<Day>());
         }
 
         // GET: Day/Details/5
@@ -36,7 +36,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var day = await _db.GetDayIncludeSubjectsAsync(id);
+            var day = await _db.GetAsync<Day>(id);
             if (day == null)
             {
                 return NotFound();

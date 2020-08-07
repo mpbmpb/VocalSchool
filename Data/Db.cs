@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,11 +14,14 @@ namespace VocalSchool.Data
     public class DbHandler
     {
         private readonly SchoolContext _context;
+        
 
         public DbHandler(SchoolContext context)
         {
             _context = context;
         }
+
+       
 
         public async Task AddAsync(Object entity)
         {
@@ -138,6 +142,19 @@ namespace VocalSchool.Data
                 .ToListAsync();
         }
 
+        public async Task<CourseDesign> GetCourseDesignIncludingSubjectsAsync(int id)
+        {
+            return await _context.CourseDesigns
+                .Where(cd => cd.CourseDesignId == id)
+                .Include(c => c.CourseSeminars)
+                .ThenInclude(cs => cs.Seminar)
+                .ThenInclude(s => s.SeminarDays)
+                .ThenInclude(sd => sd.Day)
+                .ThenInclude(d => d.DaySubjects)
+                .ThenInclude(ds => ds.Subject)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<CourseDesign>> GetAllCourseDesignsAsync()
         {
             return await _context.CourseDesigns
@@ -153,6 +170,11 @@ namespace VocalSchool.Data
         public async Task<List<CourseDesign>> GetOnlyCourseDesignsAsync()
         {
             return await _context.CourseDesigns.ToListAsync();
+        }
+
+        public async Task<T> GetAsync<T>(int? id) where T : class
+        {
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task<Day> GetDayAsync(int id)
@@ -200,18 +222,6 @@ namespace VocalSchool.Data
                .FirstOrDefaultAsync();
         }
 
-        public async Task<CourseDesign> GetCourseDesignIncludingSubjectsAsync(int id)
-        {
-            return await _context.CourseDesigns
-                .Where(cd => cd.CourseDesignId == id)
-                .Include(c => c.CourseSeminars)
-                .ThenInclude(cs => cs.Seminar)
-                .ThenInclude(s => s.SeminarDays)
-                .ThenInclude(sd => sd.Day)
-                .ThenInclude(d => d.DaySubjects)
-                .ThenInclude(ds => ds.Subject)
-                .FirstOrDefaultAsync();
-        }
         public async Task<List<Seminar>> GetAllSeminarsAsync()
         {
             return await _context.Seminars
@@ -231,6 +241,11 @@ namespace VocalSchool.Data
         public async Task<List<Subject>> GetAllSubjectsAsync()
         {
             return await _context.Subjects.ToListAsync();
+        }
+
+        public  async Task<List<T>> GetAllAsync<T>() where T : class
+        {   
+            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<IEnumerable<Subject>> GetAllSubjectsIncludeDaysAsync()
