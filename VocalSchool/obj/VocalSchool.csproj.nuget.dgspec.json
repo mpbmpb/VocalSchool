@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/Mark/Projects/git/VocalSchool/VocalSchool.csproj": {}
+    "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj": {}
   },
   "projects": {
-    "/Users/Mark/Projects/git/VocalSchool/VocalSchool.csproj": {
+    "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.csproj",
+        "projectUniqueName": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj",
         "projectName": "VocalSchool",
-        "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.csproj",
+        "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj",
         "packagesPath": "/Users/Mark/.nuget/packages/",
-        "outputPath": "/Users/Mark/Projects/git/VocalSchool/obj/",
+        "outputPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/obj/",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
