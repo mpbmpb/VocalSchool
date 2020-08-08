@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VocalSchool", "VocalSchool.csproj", "{571EF9CB-B8A4-4280-B592-AE38623AEC5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VocalSchool.Test", "..\VocalSchool.Test\VocalSchool.Test.csproj", "{3F67FD07-90E6-4C9F-B5A6-8A4ADE0E4A3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,5 +15,9 @@ Global
 		{571EF9CB-B8A4-4280-B592-AE38623AEC5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{571EF9CB-B8A4-4280-B592-AE38623AEC5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{571EF9CB-B8A4-4280-B592-AE38623AEC5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F67FD07-90E6-4C9F-B5A6-8A4ADE0E4A3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F67FD07-90E6-4C9F-B5A6-8A4ADE0E4A3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F67FD07-90E6-4C9F-B5A6-8A4ADE0E4A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F67FD07-90E6-4C9F-B5A6-8A4ADE0E4A3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

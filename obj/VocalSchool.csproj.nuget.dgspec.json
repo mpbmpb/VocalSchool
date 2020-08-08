@@ -13,6 +13,9 @@
         "packagesPath": "/Users/Mark/.nuget/packages/",
         "outputPath": "/Users/Mark/Projects/git/VocalSchool/obj/",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
         "configFilePaths": [
           "/Users/Mark/.config/NuGet/NuGet.Config"
         ],

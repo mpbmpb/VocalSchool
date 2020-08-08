@@ -31,10 +31,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\Assets\MicLogoIcon.png" />
+    <Content Remove="VocalSchool.Tests\obj\project.assets.json" />
+    <Content Remove="VocalSchool.Tests\obj\VocalSchool.Tests.csproj.nuget.dgspec.json" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="MySchool.db-wal" />
     <None Remove="MySchool.db-shm" />
+    <None Remove="VocalSchool.Tests\obj\project.nuget.cache" />
+    <None Remove="VocalSchool.Tests\obj\VocalSchool.Tests.csproj.nuget.g.props" />
+    <None Remove="VocalSchool.Tests\obj\VocalSchool.Tests.csproj.nuget.g.targets" />
+    <None Remove="VocalSchool.Tests\obj\Debug\netcoreapp3.1\VocalSchool.Tests.assets.cache" />
+    <None Remove="VocalSchool.Tests\obj\Debug\netcoreapp3.1\VocalSchool.Tests.csproj.FileListAbsolute.txt" />
+    <None Remove="VocalSchool.Tests\obj\Debug\netcoreapp3.1\VocalSchool.Tests.csprojAssemblyReference.cache" />
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\Assets\MicLogoIcon.png" />
