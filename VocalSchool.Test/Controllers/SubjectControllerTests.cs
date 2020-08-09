@@ -79,7 +79,7 @@ namespace VocalSchool.Test.Controllers
         }
         
         [Fact]
-        public void Create_returns_view()
+        public void Create_returns_view_when_not_passed_Id()
         {
             var controller = new SubjectController(_context);
 
@@ -109,7 +109,7 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Create(s);
 
-            _context.Subjects.FirstOrDefault(x => x.SubjectId == 7).Should().Be(s);
+            _context.Subjects.FirstOrDefault(x => x.SubjectId == 7).Should().BeEquivalentTo<Subject>(s);
         }
 
     }
