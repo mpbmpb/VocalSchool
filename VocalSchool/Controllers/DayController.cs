@@ -104,7 +104,7 @@ namespace VocalSchool.Controllers
             {
                 bool succes = await _db.UpdateDayAsync(model);
                 if (succes) { return RedirectToAction(nameof(Index)); }
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
             return View(model);
         }

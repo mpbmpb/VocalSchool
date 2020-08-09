@@ -34,6 +34,48 @@ namespace VocalSchool.Test.Infrastructure
 
             context.Subjects.AddRange(subjects);
             context.SaveChanges();
+
+            var days = new[]
+            {
+                new Day { DayId = 1, Name = "Day1",
+                    Description = "Introduction day. Overview of the system, overall principles."},
+                new Day { DayId = 2, Name = "Day2",
+                    Description = "The modes Neutral and Overdrive."},
+                new Day { DayId = 3, Name = "Day3",
+                    Description = "Deeper in the modes."},
+                new Day { DayId = 4, Name = "Day4",
+                    Description = "Edge"},
+                new Day { DayId = 5, Name = "Day5",
+                    Description = "All the modes."},
+                new Day { DayId = 6, Name = "Day6",
+                    Description = "Recap, practise & questions."},           
+            };
+
+            context.Days.AddRange(days);
+            context.SaveChanges();
+
+            var daySubjects = new[]
+            {
+                new DaySubject() { DayId = 1, SubjectId = 1 },
+                new DaySubject() { DayId = 1, SubjectId = 2 },
+                new DaySubject() { DayId = 1, SubjectId = 3 },
+                new DaySubject() { DayId = 2, SubjectId = 4 },
+                new DaySubject() { DayId = 2, SubjectId = 5 },
+                new DaySubject() { DayId = 3, SubjectId = 3 },
+                new DaySubject() { DayId = 3, SubjectId = 4 },
+                new DaySubject() { DayId = 3, SubjectId = 5 },
+                new DaySubject() { DayId = 4, SubjectId = 6 },
+                new DaySubject() { DayId = 5, SubjectId = 4 },
+                new DaySubject() { DayId = 5, SubjectId = 5 },
+                new DaySubject() { DayId = 5, SubjectId = 6 },
+                new DaySubject() { DayId = 6, SubjectId = 3 },
+                new DaySubject() { DayId = 6, SubjectId = 4 },
+                new DaySubject() { DayId = 6, SubjectId = 5 },
+                new DaySubject() { DayId = 6, SubjectId = 6 },
+            };
+
+            context.DaySubjects.AddRange(daySubjects);
+            context.SaveChanges();
         }
     }
 }

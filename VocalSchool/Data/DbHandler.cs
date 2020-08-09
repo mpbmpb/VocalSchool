@@ -187,7 +187,7 @@ namespace VocalSchool.Data
             return await _context.Days
                 .Include(d => d.DaySubjects)
                 .ThenInclude(ds => ds.Subject)
-                .SingleAsync(d => d.DayId == id);
+                .FirstOrDefaultAsync(d => d.DayId == id);
         }
 
         public async Task<List<Day>> GetAllDaysAsync()

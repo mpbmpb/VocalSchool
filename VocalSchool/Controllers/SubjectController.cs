@@ -12,12 +12,10 @@ namespace VocalSchool.Controllers
 {
     public class SubjectController : Controller
     {
-        private readonly SchoolContext _context;
         private readonly DbHandler _db;
 
         public SubjectController(SchoolContext context)
         {
-            _context = context;
             _db = new DbHandler(context);
         }
 
