@@ -12,6 +12,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.6" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,5 +21,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VocalSchool\VocalSchool.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="xunit.testrunner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

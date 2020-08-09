@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj": {}
+    "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj": {}
   },
   "projects": {
-    "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj": {
+    "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj",
+        "projectUniqueName": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj",
         "projectName": "VocalSchool",
-        "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj",
-        "packagesPath": "/Users/Mark/.nuget/packages/",
-        "outputPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/obj/",
+        "projectPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj",
+        "packagesPath": "/Users/markvandenbeemt/.nuget/packages/",
+        "outputPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "/Users/Mark/.config/NuGet/NuGet.Config"
+          "/Users/markvandenbeemt/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"

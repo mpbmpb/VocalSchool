@@ -7,7 +7,7 @@ namespace VocalSchool.Test.Infrastructure
     {
         public static void Initialize(SchoolContext context)
         {
-            if (!context.Subjects.Any()) { return; }
+            if (context.Subjects.Any()) { return; }
 
 
             Seed(context);
@@ -16,7 +16,7 @@ namespace VocalSchool.Test.Infrastructure
 
         private static void Seed(SchoolContext context)
         {
-            var customers = new[]
+            var subjects = new[]
             {
                 new Subject { SubjectId = 1, Name = "Introduction",
                     Description = "What is cvt and how is it structured.", RequiredReading = "CVT App pages 3-8"},
@@ -32,7 +32,7 @@ namespace VocalSchool.Test.Infrastructure
                     Description = "Introduction into edge, and how to use it.", RequiredReading = "CVT App pages 76-80"},           
             };
 
-            context.Subjects.AddRange(customers);
+            context.Subjects.AddRange(subjects);
             context.SaveChanges();
         }
     }
