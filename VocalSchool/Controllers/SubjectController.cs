@@ -94,7 +94,7 @@ namespace VocalSchool.Controllers
                 bool updateSucces = await _db.UpdateAsync(subject);
                 if (!updateSucces)
                 {
-                    return NotFound();
+                    return RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index));
             }
