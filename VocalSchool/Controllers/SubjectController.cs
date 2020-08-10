@@ -87,16 +87,19 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) //FIXME should skip when name = ""
             {
-                bool updateSucces = await _db.UpdateAsync(subject);
-                if (!updateSucces)
+                try
                 {
-                    return RedirectToAction(nameof(Index));
+                    await _db.UpdateAsync(subject);
+                }
+                catch (Exception)
+                {
+                    RedirectToAction(nameof(Index));
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(subject);
+            return View(subject); 
         }
 
         // GET: Subject/Delete/5

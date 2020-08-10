@@ -208,7 +208,7 @@ namespace VocalSchool.Test.Controllers
 
 
         [Fact]
-        public async Task Edit_returns_SeminarViewModel_with_ALL_subjects_injected_into_checklist()
+        public async Task Edit_returns_SeminarViewModel_with_ALL_Days_injected_into_checklist()
         {
             var controller = new SeminarController(_context);
             var subjects = await _context.Subjects.ToListAsync();
@@ -216,10 +216,10 @@ namespace VocalSchool.Test.Controllers
             IActionResult result = await controller.Edit(1);
 
             result.As<ViewResult>().Model.As<SeminarViewModel>().CheckList
-                .Should().HaveCount(6).And.Contain(x => x.Name == "Introduction")
-                .And.Contain(x => x.Name == "Overview").And.Contain(x => x.Name == "Support")
-                .And.Contain(x => x.Name == "Neutral").And.Contain(x => x.Name == "Overdrive")
-                .And.Contain(x => x.Name == "Edge");
+                .Should().HaveCount(6).And.Contain(x => x.Name == "Day1")
+                .And.Contain(x => x.Name == "Day2").And.Contain(x => x.Name == "Day3")
+                .And.Contain(x => x.Name == "Day4").And.Contain(x => x.Name == "Day5")
+                .And.Contain(x => x.Name == "Day6");
         }
 
         [Fact]
@@ -247,15 +247,14 @@ namespace VocalSchool.Test.Controllers
             var days = await _context.Days.ToListAsync();
 
             SeminarViewModel SeminarView = new SeminarViewModel(s, days);
-            SeminarView.CheckList[0].IsSelected = false;
-            SeminarView.CheckList[1].IsSelected = false;
-            SeminarView.CheckList[2].IsSelected = false;
+            SeminarView.CheckList[5].IsSelected = false;
+            SeminarView.CheckList[4].IsSelected = false;
             SeminarView.CheckList[3].IsSelected = true;
 
             await controller.Edit(1, SeminarView);
 
             _context.Seminars.FirstOrDefault(x => x.SeminarId == 1).SeminarDays.Should()
-                .HaveCount(1).And.Contain(x => x.Day.Name == "Neutral");
+                .HaveCount(1).And.Contain(x => x.Day.Name == "Day3");
         }
 
         [Fact]
@@ -276,25 +275,23 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Redirect_if_modelstate_not_valid()
         {
-            var controller = new SeminarController(_context);
-            Seminar s = _context.Seminars.FirstOrDefault(x => x.SeminarId == 1);
-            s.Name = "";
+            var controller = new SeminarController(_context); 
+            Seminar s = await _context.Seminars.FirstOrDefaultAsync(s => s.SeminarId == 1);
+            s.Name = null;
+            var days = await _context.Days.ToListAsync();
+            SeminarViewModel seminarView = new SeminarViewModel(s, days);
 
-            SeminarViewModel SeminarView = new SeminarViewModel();
-            SeminarView.Seminar = s;
-            SeminarView.CheckList = new List<CheckedId>();
+            IActionResult result = await controller.Edit(1, seminarView);
 
-            IActionResult result = await controller.Edit(1, SeminarView);
-
-            result.Should().BeOfType<RedirectToActionResult>();
+            result.As<RedirectToActionResult>().ActionName.Should().Match("Edit");
         }
 
         [Fact]
         public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
         {
             var controller = new SeminarController(_context);
-            Seminar s = _context.Seminars.FirstOrDefault(x => x.SeminarId == 1);
-            var days = _context.Days.ToList();
+            Seminar s = await _context.Seminars.FirstOrDefaultAsync(x => x.SeminarId == 1);
+            var days = await _context.Days.ToListAsync();
             SeminarViewModel seminarView = new SeminarViewModel(s, days);
 
             _context.Remove(s);

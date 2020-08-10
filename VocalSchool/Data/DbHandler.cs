@@ -279,36 +279,33 @@ namespace VocalSchool.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateAsync(Object entity)
+        public async Task UpdateAsync(Object entity)
         {
             try
             {
                 _context.Update(entity);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
-                return false;
+                throw e;
             }
-            return true;
+            return;
         }
 
-        public async Task<bool> UpdateVenueAsync(VenueViewModel model)
+        public async Task UpdateVenueAsync(VenueViewModel model)
         {
             var con1 = _context.Contacts.FirstOrDefault(x => x.ContactId == model.Venue.Contact1.ContactId);
             var con2 = _context.Contacts.FirstOrDefault(x => x.ContactId == model.Venue.Contact2.ContactId);
             model.Venue.Contact1 = con1;
             model.Venue.Contact2 = con2;
 
-            bool success = await UpdateAsync(model.Venue);
-            if (!success) { return false; }
-            return true;
+            await UpdateAsync(model.Venue);
         }
 
-        public async Task<bool> UpdateCourseDesignAsync(CourseDesignViewModel model)
+        public async Task UpdateCourseDesignAsync(CourseDesignViewModel model)
         {
-            bool success = await UpdateAsync(model.CourseDesign);
-            if (!success) { return false; }
+            await UpdateAsync(model.CourseDesign);
             var courseSeminars = await _context.CourseSeminars.ToListAsync();
 
             foreach (var item in model.CheckList)
@@ -332,13 +329,12 @@ namespace VocalSchool.Data
                 }
             }
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> UpdateDayAsync(DayViewModel model)
+        //FIXME this still has the null reference bug
+        public async Task UpdateDayAsync(DayViewModel model)
         {
-            bool success = await UpdateAsync(model.Day);
-            if (!success) { return false; }
+            await UpdateAsync(model.Day);
             var daySubjects = await GetAllDaySubjectsAsync();
 
             foreach (var item in model.CheckList)
@@ -362,37 +358,36 @@ namespace VocalSchool.Data
             }
 
             await _context.SaveChangesAsync();
-            return true;
         }
 
-        public async Task<bool> UpdateSeminarAsync(SeminarViewModel model)
+        public async Task UpdateSeminarAsync(SeminarViewModel model)
         {
-            bool success = await UpdateAsync(model.Seminar);
-            if (!success) { return false; }
+            await UpdateAsync(model.Seminar);
             var seminarDays = await _context.SeminarDays.ToListAsync();
 
-            foreach (var item in model.CheckList)
-            {
-                var existingEntry = seminarDays
-                    .FirstOrDefault(x => x.SeminarId == model.Seminar.SeminarId && x.DayId == item.Id);
-                if (!item.IsSelected && existingEntry != null)
-                {
-                    await RemoveAsync(existingEntry);
-                }
+            //TODO: this fixes null exception being triggered at start of function
+            // find the others
+            model.CheckList.ForEach(async check => 
+           {
+               var existingEntry = seminarDays
+                   .FirstOrDefault(x => x.SeminarId == model.Seminar.SeminarId && x.DayId == check.Id);
+               if (!check.IsSelected && existingEntry != null)
+               {
+                   await RemoveAsync(existingEntry);
+               }
 
-                if (item.IsSelected && existingEntry == null)
-                {
-                    SeminarDay ds = new SeminarDay()
-                    {
-                        SeminarId = model.Seminar.SeminarId,
-                        DayId = item.Id
-                    };
-                    _context.Add(ds);
-                }
-            }
+               if (check.IsSelected && existingEntry == null)
+               {
+                   SeminarDay ds = new SeminarDay()
+                   {
+                       SeminarId = model.Seminar.SeminarId,
+                       DayId = check.Id
+                   };
+                   _context.Add(ds);
+               }
+           });
 
             await _context.SaveChangesAsync();
-            return true;
         }
 
 

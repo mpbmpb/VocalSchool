@@ -100,8 +100,14 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
-                bool succes = await _db.UpdateDayAsync(model);
-                if (succes) { return RedirectToAction(nameof(Index)); }
+                try
+                {
+                    await _db.UpdateDayAsync(model);
+                }
+                catch (Exception)
+                {
+                    RedirectToAction(nameof(Index));
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(model);

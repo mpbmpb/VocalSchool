@@ -88,9 +88,16 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
-                bool success = await _db.UpdateSeminarAsync(model);
-                if (success) { return RedirectToAction(nameof(Index)); }
-                return NotFound();
+                try
+                {
+                    await _db.UpdateSeminarAsync(model);
+                }
+                catch (System.Exception)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return RedirectToAction(nameof(Index));
             }
             return View(model);
         }

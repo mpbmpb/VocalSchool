@@ -174,7 +174,7 @@ namespace VocalSchool.Test.Controllers
         {
             var controller = new SubjectController(_context);
             Subject s = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
-            s.Name = "";
+            s.Name = null;
             s.Description = "Learn about effects";
             s.RequiredReading = "CVT App";
 

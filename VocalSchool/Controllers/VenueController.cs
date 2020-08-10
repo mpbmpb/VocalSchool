@@ -98,8 +98,14 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
-                bool success = await _db.UpdateVenueAsync(model);
-                if (!success) { return NotFound(); }
+                try
+                {
+                    await _db.UpdateVenueAsync(model);
+                }
+                catch (Exception)
+                {
+                    RedirectToAction(nameof(Index));
+                } 
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
