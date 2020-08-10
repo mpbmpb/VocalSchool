@@ -208,7 +208,7 @@ namespace VocalSchool.Data
         {
             return await _context.Seminars
                 .Include(s => s.SeminarDays)
-                .SingleAsync(x => x.SeminarId == id);
+                .FirstOrDefaultAsync(x => x.SeminarId == id);
         }
 
         public async Task<Seminar> GetSeminarIncludingSubjectsAsync(int id)

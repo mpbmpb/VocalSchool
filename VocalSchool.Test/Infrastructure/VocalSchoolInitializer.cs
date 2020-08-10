@@ -76,6 +76,33 @@ namespace VocalSchool.Test.Infrastructure
 
             context.DaySubjects.AddRange(daySubjects);
             context.SaveChanges();
+
+            var seminars = new[]
+            {
+                new Seminar { SeminarId = 1, Name = "Seminar1",
+                    Description = "Introduction seminar."},
+                new Seminar { SeminarId = 2, Name = "Seminar1",
+                    Description = "Diving deeper in the modes."},
+                new Seminar { SeminarId = 3, Name = "Seminar1",
+                    Description = "Recap, questions and eval."},
+                
+            };
+
+            context.Seminars.AddRange(seminars);
+            context.SaveChanges();
+
+            var seminarDays = new[]
+            {
+                new SeminarDay() {SeminarId = 1, DayId = 1},
+                new SeminarDay() {SeminarId = 1, DayId = 2},
+                new SeminarDay() {SeminarId = 2, DayId = 3},
+                new SeminarDay() {SeminarId = 2, DayId = 4},
+                new SeminarDay() {SeminarId = 3, DayId = 5},
+                new SeminarDay() {SeminarId = 3, DayId = 6},
+            };
+
+            context.SeminarDays.AddRange(seminarDays);
+            context.SaveChanges();
         }
     }
 }

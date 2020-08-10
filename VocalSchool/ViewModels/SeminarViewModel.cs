@@ -27,6 +27,7 @@ namespace VocalSchool.ViewModels
                 {
                     Id = day.DayId,
                     Name = day.Name,
+                    Description = day.Description,
                     IsSelected = false
                 };
                 CheckList.Add(check);
@@ -47,6 +48,7 @@ namespace VocalSchool.ViewModels
                 {
                     Id = day.DayId,
                     Name = day.Name,
+                    Description = day.Description,
                     IsSelected = isInSeminarDays
                 };
                 CheckList.Add(check);

@@ -17,6 +17,5 @@ namespace VocalSchool.Models
         public string Description { get; set; }
         public virtual ICollection<DaySubject> DaySubjects { get; set; }
         public virtual ICollection<SeminarDay> SeminarDays { get; set; }
-
     }
 }

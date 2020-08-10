@@ -13,12 +13,10 @@ namespace VocalSchool.Controllers
 {
     public class DayController : Controller
     {
-        private readonly SchoolContext _context;
         private readonly DbHandler _db;
 
         public DayController(SchoolContext context)
         {
-            _context = context;
             _db = new DbHandler(context);
         }
 
@@ -131,7 +129,7 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var day = await _context.Days.FindAsync(id);
+            var day = await _db.GetDayAsync(id);
 
             await _db.RemoveAsync(day);
             return RedirectToAction(nameof(Index));
