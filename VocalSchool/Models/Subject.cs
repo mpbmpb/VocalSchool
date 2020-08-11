@@ -8,7 +8,8 @@ namespace VocalSchool.Models
     public class Subject
     {
         public int SubjectId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Name of at least 4 characters is required")]
+        [MinLength(4)]
         public string Name { get; set; }
         public string Description { get; set; }
         public string RequiredReading { get; set; }

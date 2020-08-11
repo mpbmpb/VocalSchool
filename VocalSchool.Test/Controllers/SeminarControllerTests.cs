@@ -277,7 +277,7 @@ namespace VocalSchool.Test.Controllers
         {
             var controller = new SeminarController(_context); 
             Seminar s = await _context.Seminars.FirstOrDefaultAsync(s => s.SeminarId == 1);
-            s.Name = null;
+            s.Name = "a";
             var days = await _context.Days.ToListAsync();
             SeminarViewModel seminarView = new SeminarViewModel(s, days);
 

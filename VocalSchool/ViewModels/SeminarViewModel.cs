@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Models;
 
 namespace VocalSchool.ViewModels
 {
     public class SeminarViewModel
     {
+        [Required]
         public Seminar Seminar { get; set; }
         public List<CheckedId> CheckList { get; set; }
         public List<Day> Days { get; set; }

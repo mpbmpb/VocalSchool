@@ -173,8 +173,9 @@ namespace VocalSchool.Test.Controllers
         public async Task Edit_returns_Redirect_if_modelstate_not_valid()
         {
             var controller = new SubjectController(_context);
-            Subject s = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
-            s.Name = null;
+            Subject s = new Subject();
+            s.SubjectId = 1;
+            s.Name = "";
             s.Description = "Learn about effects";
             s.RequiredReading = "CVT App";
 

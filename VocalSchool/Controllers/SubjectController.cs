@@ -80,7 +80,7 @@ namespace VocalSchool.Controllers
         // POST: Subject/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubjectId,Name,Description,RequiredReading")] Subject subject)
+        public async Task<IActionResult> Edit(int id, Subject subject)
         {
             if (id != subject.SubjectId)
             {
