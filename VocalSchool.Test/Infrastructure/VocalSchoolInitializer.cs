@@ -81,9 +81,9 @@ namespace VocalSchool.Test.Infrastructure
             {
                 new Seminar { SeminarId = 1, Name = "Seminar1",
                     Description = "Introduction seminar."},
-                new Seminar { SeminarId = 2, Name = "Seminar1",
+                new Seminar { SeminarId = 2, Name = "Seminar2",
                     Description = "Diving deeper in the modes."},
-                new Seminar { SeminarId = 3, Name = "Seminar1",
+                new Seminar { SeminarId = 3, Name = "Seminar3",
                     Description = "Recap, questions and eval."},
                 
             };
@@ -102,6 +102,32 @@ namespace VocalSchool.Test.Infrastructure
             };
 
             context.SeminarDays.AddRange(seminarDays);
+            context.SaveChanges();
+
+            var courseDesigns = new[]
+            {
+                new CourseDesign() {CourseDesignId = 1, Name = "CourseDesign1",
+                    Description = "One weekend workshop"},
+                new CourseDesign() {CourseDesignId = 2, Name = "CourseDesign2",
+                    Description = "Short 4 day introduction course."},
+                new CourseDesign() {CourseDesignId = 3, Name = "CourseDesign3",
+                    Description = "Complete 3 seminars introduction course."},
+            };
+
+            context.CourseDesigns.AddRange(courseDesigns);
+            context.SaveChanges();
+
+            var courseSeminars = new[]
+            {
+                new CourseSeminar() {CourseDesignId = 1, SeminarId = 1},
+                new CourseSeminar() {CourseDesignId = 2, SeminarId = 1},
+                new CourseSeminar() {CourseDesignId = 2, SeminarId = 2},
+                new CourseSeminar() {CourseDesignId = 3, SeminarId = 1},
+                new CourseSeminar() {CourseDesignId = 3, SeminarId = 2},
+                new CourseSeminar() {CourseDesignId = 3, SeminarId = 3},
+            };
+
+            context.CourseSeminars.AddRange(courseSeminars);
             context.SaveChanges();
         }
     }

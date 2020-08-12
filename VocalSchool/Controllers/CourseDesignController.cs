@@ -105,7 +105,7 @@ namespace VocalSchool.Controllers
                 }
                 catch (Exception)
                 {
-                    RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
                 }
                 return NotFound();
             }

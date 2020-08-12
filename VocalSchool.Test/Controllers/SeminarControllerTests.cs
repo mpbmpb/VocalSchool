@@ -194,7 +194,7 @@ namespace VocalSchool.Test.Controllers
             IActionResult result = await controller.Edit(1);
 
             result.As<ViewResult>().Model.As<SeminarViewModel>().CheckList
-                .Should().NotBeNullOrEmpty(because: "we seeded the Db with subjects");
+                .Should().NotBeNullOrEmpty(because: "we seeded the Db with days");
         }
 
         [Fact]
@@ -212,7 +212,6 @@ namespace VocalSchool.Test.Controllers
         public async Task Edit_returns_SeminarViewModel_with_ALL_Days_injected_into_checklist()
         {
             var controller = new SeminarController(_context);
-            var subjects = await _context.Subjects.ToListAsync();
 
             IActionResult result = await controller.Edit(1);
 

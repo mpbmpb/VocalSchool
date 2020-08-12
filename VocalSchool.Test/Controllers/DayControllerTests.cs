@@ -212,7 +212,6 @@ namespace VocalSchool.Test.Controllers
         public async Task Edit_returns_DayViewModel_with_ALL_subjects_injected_into_checklist()
         {
             var controller = new DayController(_context);
-            var subjects = await _context.Subjects.ToListAsync();
 
             IActionResult result = await controller.Edit(1);
 

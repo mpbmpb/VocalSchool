@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
@@ -92,7 +93,7 @@ namespace VocalSchool.Controllers
                 {
                     await _db.UpdateSeminarAsync(model);
                 }
-                catch (System.Exception)
+                catch (Exception)
                 {
                     return RedirectToAction(nameof(Index));
                 }
