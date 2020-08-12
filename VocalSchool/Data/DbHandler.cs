@@ -308,7 +308,7 @@ namespace VocalSchool.Data
             await UpdateAsync(model.CourseDesign);
             var courseSeminars = await _context.CourseSeminars.ToListAsync();
 
-            foreach (var item in model.CheckList)
+            model.CheckList.ForEach(async item =>
             {
                 var existingEntry = courseSeminars
                     .FirstOrDefault(x => x.CourseDesignId == model.CourseDesign.CourseDesignId
@@ -327,17 +327,16 @@ namespace VocalSchool.Data
                     };
                     _context.Add(cs);
                 }
-            }
+            });
             await _context.SaveChangesAsync();
         }
 
-        //FIXME this still has the null reference bug
         public async Task UpdateDayAsync(DayViewModel model)
         {
             await UpdateAsync(model.Day);
             var daySubjects = await GetAllDaySubjectsAsync();
 
-            foreach (var item in model.CheckList)
+            model.CheckList.ForEach(async item =>
             {
                 var existingEntry = daySubjects
                     .FirstOrDefault(x => x.DayId == model.Day.DayId && x.SubjectId == item.Id);
@@ -355,7 +354,7 @@ namespace VocalSchool.Data
                     };
                     _context.Add(ds);
                 }
-            }
+            });
 
             await _context.SaveChangesAsync();
         }
@@ -367,21 +366,21 @@ namespace VocalSchool.Data
 
             //TODO: this fixes null exception being triggered at start of function
             // find the others
-            model.CheckList.ForEach(async check => 
+            model.CheckList.ForEach(async item => 
            {
                var existingEntry = seminarDays
-                   .FirstOrDefault(x => x.SeminarId == model.Seminar.SeminarId && x.DayId == check.Id);
-               if (!check.IsSelected && existingEntry != null)
+                   .FirstOrDefault(x => x.SeminarId == model.Seminar.SeminarId && x.DayId == item.Id);
+               if (!item.IsSelected && existingEntry != null)
                {
                    await RemoveAsync(existingEntry);
                }
 
-               if (check.IsSelected && existingEntry == null)
+               if (item.IsSelected && existingEntry == null)
                {
                    SeminarDay ds = new SeminarDay()
                    {
                        SeminarId = model.Seminar.SeminarId,
-                       DayId = check.Id
+                       DayId = item.Id
                    };
                    _context.Add(ds);
                }

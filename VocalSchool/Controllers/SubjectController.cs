@@ -87,7 +87,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid) //FIXME should skip when name = ""
+            if (ModelState.IsValid)
             {
                 try
                 {
