@@ -129,6 +129,43 @@ namespace VocalSchool.Test.Infrastructure
 
             context.CourseSeminars.AddRange(courseSeminars);
             context.SaveChanges();
+
+            var contacts = new[]
+            {
+                new Contact() {ContactId = 1, Name = "Contact1", Email = "mitch@acme.com",
+                    Phone = "06-0001", Adress = "polanenbuurt 1 1000BB Amsterdam"},
+                new Contact() {ContactId = 2, Name = "Contact2", Email = "peter@acme.com",
+                    Phone = "06-0002", Adress = "polanenbuurt 2 1000BB Amsterdam"},
+                new Contact() {ContactId = 3, Name = "Contact3", Email = "jenny@acme.com",
+                    Phone = "06-0003", Adress = "Atlantisplein 2 1000XX Amsterdam"}
+            };
+
+            context.Contacts.AddRange(contacts);
+            context.SaveChanges();
+
+            var venues = new[]
+            {
+                new Venue() {VenueId = 1, Name = "Venue1",
+                    Info = "Van alles over de bel en de poort etc.", Email1 = "info@polanen.acme",
+                    Phone = "020-1205", Adress = "polanenstraat 1 1000AA Amsterdam",
+                    MapsUrl = "https://goo.gl/maps/qMjMmcgD43nf9Fqy9"},
+                new Venue() {VenueId = 2, Name = "Venue2", Info = "Alles checken, klopt altijd wel iets niet!",
+                    Email1 = "info@qfactory.acme", Email2 = "sorry@qfactory.acme",
+                    Phone = "020-1206", Adress = "Atlantisplein 1 1000XX Amsterdam",
+                    MapsUrl = "https://goo.gl/maps/u3isDnp99GXWZ23U7"}
+            };
+
+            context.Venues.AddRange(venues);
+            context.SaveChanges();
+
+            Venue venue1 = context.Venues.FirstOrDefault(x => x.VenueId == 1);
+            venue1.Contact1 = contacts[0];
+            venue1.Contact2 = contacts[1];
+            Venue venue2 = context.Venues.FirstOrDefault(x => x.VenueId == 2);
+            venue2.Contact1 = contacts[2];
+            context.Update(venue1);
+            context.Update(venue2);
+            context.SaveChanges();
         }
     }
 }

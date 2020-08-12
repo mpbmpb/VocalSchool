@@ -98,14 +98,23 @@ namespace VocalSchool.Data
             await _context.SaveChangesAsync();
         }
 
+        //FIXME not working anymore
         public async Task AddVenueAsync(VenueViewModel model)
         {
-            var con1 = _context.Contacts.FirstOrDefault(x => x.ContactId == model.Venue.Contact1.ContactId);
-            var con2 = _context.Contacts.FirstOrDefault(x => x.ContactId == model.Venue.Contact2.ContactId);
-            model.Venue.Contact1 = con1;
-            model.Venue.Contact2 = con2;
+            var contacts = await _context.Contacts.ToListAsync();
 
-            await AddAsync(model.Venue);
+            if (model.Venue.Contact1 != null)
+            {
+                var con1 = contacts.FirstOrDefault(x => x.ContactId == model.Venue.Contact1.ContactId);
+                model.Venue.Contact1 = con1;
+            }
+            if (model.Venue.Contact2 != null)
+            {
+                var con2 = contacts.FirstOrDefault(x => x.ContactId == model.Venue.Contact2.ContactId);
+                model.Venue.Contact2 = con2;
+            }
+            _context.Venues.Add(model.Venue);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Contact>> GetAllContactsAsync()
