@@ -153,15 +153,17 @@ namespace VocalSchool.Test.Controllers
             var Contacts = await _context.Contacts.ToListAsync();
             VenueViewModel VenueView = new VenueViewModel(Contacts);
             VenueView.Venue = v;
-            VenueView.Venue.Contact1.Name = VenueView.ContactList[0].Text;
-            VenueView.Venue.Contact2.Name = VenueView.ContactList[2].Text;
+            VenueView.Venue.Contact1 = new Contact();
+            VenueView.Venue.Contact2 = new Contact();
+            VenueView.Venue.Contact1.ContactId = Int32.Parse(VenueView.ContactList[1].Value);
+            VenueView.Venue.Contact2.ContactId = Int32.Parse(VenueView.ContactList[3].Value);
 
             await controller.Create(VenueView);
 
             var result = _context.Venues.FirstOrDefault(x => x.VenueId == 7);
 
-            result.Contact1.Name.Should().Match("Contact1");
-            result.Contact2.Name.Should().Match("Contact3");
+            result.Contact1.Name.Should().Match("Contact3");
+            result.Contact2.Name.Should().Match("Contact1");
         }
 
         [Fact]
@@ -214,7 +216,7 @@ namespace VocalSchool.Test.Controllers
             IActionResult result = await controller.Edit(1);
 
             result.As<ViewResult>().Model.As<VenueViewModel>().ContactList
-                .Should().HaveCount(3).And.Contain(x => x.Text == "Contact1")
+                .Should().HaveCount(4).And.Contain(x => x.Text == "Contact1")
                 .And.Contain(x => x.Text == "Contact2").And.Contain(x => x.Text == "Contact3");
         }
 
@@ -243,7 +245,7 @@ namespace VocalSchool.Test.Controllers
             var Contacts = await _context.Contacts.ToListAsync();
 
             VenueViewModel VenueView = new VenueViewModel(v, Contacts);
-            VenueView.Venue.Contact1 = Contacts[2];
+            VenueView.Venue.Contact1.ContactId = Int32.Parse(VenueView.ContactList[1].Value);
 
             await controller.Edit(1, VenueView);
 

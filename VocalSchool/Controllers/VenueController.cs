@@ -119,8 +119,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var venue = await _context.Venues
-                .FirstOrDefaultAsync(m => m.VenueId == id);
+            var venue = await _db.GetAsync<Venue>(id);
             if (venue == null)
             {
                 return NotFound();
@@ -134,7 +133,7 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var venue = await _context.Venues.FindAsync(id);
+            var venue = await _db.GetAsync<Venue>(id);
             _context.Venues.Remove(venue);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -185,6 +185,11 @@ namespace VocalSchool.Data
         {
             return await _context.Set<T>().FindAsync(id);
         }
+        
+        public async Task<List<T>> GetAllAsync<T>(DbSet<T> set) where T : class
+        {
+            return await _context.Set<T>().Where(x => x != null).ToListAsync();
+        }
 
         public async Task<Day> GetDayAsync(int id)
         {
