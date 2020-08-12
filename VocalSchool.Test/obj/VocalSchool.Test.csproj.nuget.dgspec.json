@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj": {}
+    "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj": {}
   },
   "projects": {
-    "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj": {
+    "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
+        "projectUniqueName": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
         "projectName": "VocalSchool.Test",
-        "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
-        "packagesPath": "/Users/Mark/.nuget/packages/",
-        "outputPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/obj/",
+        "projectPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
+        "packagesPath": "/Users/markvandenbeemt/.nuget/packages/",
+        "outputPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "/Users/Mark/.config/NuGet/NuGet.Config"
+          "/Users/markvandenbeemt/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -28,8 +25,8 @@
         "frameworks": {
           "netcoreapp3.1": {
             "projectReferences": {
-              "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj": {
-                "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj"
+              "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj": {
+                "projectPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj"
               }
             }
           }
@@ -49,17 +46,17 @@
             },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
@@ -105,20 +102,17 @@
         }
       }
     },
-    "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj": {
+    "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj",
+        "projectUniqueName": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj",
         "projectName": "VocalSchool",
-        "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj",
-        "packagesPath": "/Users/Mark/.nuget/packages/",
-        "outputPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/obj/",
+        "projectPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj",
+        "packagesPath": "/Users/markvandenbeemt/.nuget/packages/",
+        "outputPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "/Users/Mark/.config/NuGet/NuGet.Config"
+          "/Users/markvandenbeemt/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -142,41 +136,41 @@
           "dependencies": {
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.CodeAnalysis.Analyzers": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.0.0, )"
+              "version": "[3.3.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.EntityFrameworkCore.Proxies": {
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.6, )"
+              "version": "[3.1.7, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",

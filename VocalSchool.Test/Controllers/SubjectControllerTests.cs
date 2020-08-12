@@ -8,6 +8,7 @@ using FluentAssertions;
 using VocalSchool.Models;
 using VocalSchool.Controllers;
 using VocalSchool.Test.Infrastructure;
+using System.ComponentModel.DataAnnotations;
 
 namespace VocalSchool.Test.Controllers
 {
@@ -170,18 +171,33 @@ namespace VocalSchool.Test.Controllers
         }
         
         [Fact]
-        public async Task Edit_returns_Redirect_if_modelstate_not_valid()
+        public void Subject_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
         {
             var controller = new SubjectController(_context);
             Subject s = new Subject();
+            Subject s2 = new Subject();
             s.SubjectId = 1;
-            s.Name = "";
-            s.Description = "Learn about effects";
-            s.RequiredReading = "CVT App";
+            s2.SubjectId = 1;
+            s2.Name = "123";
+
+            var result = Validator.TryValidateObject(s, new ValidationContext(s), null, true);
+            var result2 = Validator.TryValidateObject(s2, new ValidationContext(s2), null, true);
+
+            result.Should().BeFalse();
+            result2.Should().BeFalse();
+        }
+       
+        [Fact]
+        public async Task Edit_returns_Redirect_if_modelstate_not_valid()
+        {
+            var controller = new SubjectController(_context);
+            controller.ViewData.ModelState.AddModelError("key", "Some Exception");  
+            Subject s = new Subject();
+            s.SubjectId = 1;
 
             IActionResult result = await controller.Edit(1,s);
 
-            result.Should().BeOfType<RedirectToActionResult>();
+            result.Should().BeOfType<ViewResult>();
         }
        
         [Fact]

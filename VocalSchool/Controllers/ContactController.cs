@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Server.Kestrel;
 using VocalSchool.Models;
+using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace VocalSchool.Controllers
 {
     public class ContactController : Controller
     {
         private readonly SchoolContext _context;
+        private string _lastUrl { get; set; }
 
         public ContactController(SchoolContext context)
         {
@@ -77,6 +81,7 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
+            _lastUrl = Request.Headers["Referer"].ToString();
             return View(contact);
         }
 
@@ -110,7 +115,7 @@ namespace VocalSchool.Controllers
                         throw;
                     }
                 }
-                return Redirect(Request.Headers["Referer"].ToString());
+                return Redirect(HtmlHelperLinkExtensions.ActionLink("Back to previous page", null, null, null, new { onclick = "history.go(-1);" }));
             }
             return View(contact);
         }
