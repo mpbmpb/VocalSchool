@@ -16,8 +16,8 @@ mono_crash.*
 */[Dd]ebug/
 */[Rr]elease/
 x64/
-*/[Bb]in/
-*/[Oo]bj/
+*/bin/
+*/obj/
 */[Ll]og/
 */[Ll]ogs/
 

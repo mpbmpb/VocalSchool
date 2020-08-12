@@ -9844,23 +9844,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/Mark/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "/Users/markvandenbeemt/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
+      "projectUniqueName": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
       "projectName": "VocalSchool.Test",
-      "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
-      "packagesPath": "/Users/Mark/.nuget/packages/",
-      "outputPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool.Test/obj/",
+      "projectPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/VocalSchool.Test.csproj",
+      "packagesPath": "/Users/markvandenbeemt/.nuget/packages/",
+      "outputPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool.Test/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "/Users/Mark/.config/NuGet/NuGet.Config"
+        "/Users/markvandenbeemt/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -9871,8 +9867,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj": {
-              "projectPath": "/Users/Mark/Projects/git/VocalSchool/VocalSchool/VocalSchool.csproj"
+            "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj": {
+              "projectPath": "/Users/markvandenbeemt/Projects/git/VocalSchool/VocalSchool/VocalSchool/VocalSchool.csproj"
             }
           }
         }
