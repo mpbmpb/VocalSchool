@@ -115,7 +115,8 @@ namespace VocalSchool.Controllers
                         throw;
                     }
                 }
-                return Redirect(HtmlHelperLinkExtensions.ActionLink("Back to previous page", null, null, null, new { onclick = "history.go(-1);" }));
+                //return Redirect(HtmlHelperLinkExtensions.ActionLink("Back to previous page", null, null, null, new { onclick = "history.go(-1);" }));
+                return View(contact);
             }
             return View(contact);
         }

@@ -10,6 +10,7 @@ using VocalSchool.Controllers;
 using VocalSchool.Test.Infrastructure;
 using VocalSchool.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace VocalSchool.Test.Controllers
 {
@@ -273,17 +274,17 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Edit_returns_Redirect_if_modelstate_not_valid()
+        public async Task Edit_returns_View_if_modelstate_not_valid()
         {
-            var controller = new SeminarController(_context); 
-            Seminar s = await _context.Seminars.FirstOrDefaultAsync(s => s.SeminarId == 1);
-            s.Name = "a";
-            var days = await _context.Days.ToListAsync();
-            SeminarViewModel seminarView = new SeminarViewModel(s, days);
+            var controller = new SeminarController(_context);
+            controller.ViewData.ModelState.AddModelError("key", "some error");
+            SeminarViewModel seminarView = new SeminarViewModel();
+            seminarView.Seminar = new Seminar() { SeminarId = 1 };
+            seminarView.CheckList = new List<CheckedId>();
 
             IActionResult result = await controller.Edit(1, seminarView);
 
-            result.As<RedirectToActionResult>().ActionName.Should().Match("Edit");
+            result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
@@ -335,6 +336,23 @@ namespace VocalSchool.Test.Controllers
             var result = _context.Seminars.FirstOrDefault(x => x.SeminarId == 1);
 
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
+        {
+            var controller = new SubjectController(_context);
+            Seminar s = new Seminar();
+            Seminar s2 = new Seminar();
+            s.SeminarId = 1;
+            s2.SeminarId = 1;
+            s2.Name = "123";
+
+            var result = Validator.TryValidateObject(s, new ValidationContext(s), null, true);
+            var result2 = Validator.TryValidateObject(s2, new ValidationContext(s2), null, true);
+
+            result.Should().BeFalse();
+            result2.Should().BeFalse();
         }
 
     }

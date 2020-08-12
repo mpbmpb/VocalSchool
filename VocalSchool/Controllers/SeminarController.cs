@@ -78,7 +78,7 @@ namespace VocalSchool.Controllers
         // POST: Seminar/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Seminar")]  SeminarViewModel model)
+        public async Task<IActionResult> Edit(int id, SeminarViewModel model)
         {
             int seminarId = model.Seminar.SeminarId;
             if (id != seminarId)

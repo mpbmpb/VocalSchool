@@ -10,6 +10,7 @@ using VocalSchool.Controllers;
 using VocalSchool.Test.Infrastructure;
 using VocalSchool.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace VocalSchool.Test.Controllers
 {
@@ -274,19 +275,17 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Edit_returns_Redirect_if_modelstate_not_valid()
+        public async Task Edit_returns_View_if_modelstate_not_valid()
         {
             var controller = new DayController(_context);
-            Day d = _context.Days.FirstOrDefault(x => x.DayId == 1);
-            d.Name = "";
-
+            controller.ViewData.ModelState.AddModelError("key", "Some Exception");
             DayViewModel dayView = new DayViewModel();
-            dayView.Day = d;
+            dayView.Day = new Day { DayId = 1 };
             dayView.CheckList = new List<CheckedId>();
 
             IActionResult result = await controller.Edit(1, dayView);
 
-            result.Should().BeOfType<RedirectToActionResult>();
+            result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
@@ -338,6 +337,23 @@ namespace VocalSchool.Test.Controllers
             var result = _context.Days.FirstOrDefault(x => x.DayId == 1);
 
             result.Should().BeNull();
+        }
+
+        [Fact]
+        public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
+        {
+            var controller = new SubjectController(_context);
+            Day d = new Day();
+            Day d2 = new Day();
+            d.DayId = 1;
+            d2.DayId = 1;
+            d2.Name = "123";
+
+            var result = Validator.TryValidateObject(d, new ValidationContext(d), null, true);
+            var result2 = Validator.TryValidateObject(d2, new ValidationContext(d2), null, true);
+
+            result.Should().BeFalse();
+            result2.Should().BeFalse();
         }
 
     }
