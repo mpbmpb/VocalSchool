@@ -48,7 +48,7 @@ namespace VocalSchool.Controllers
         // GET: Venue/Create
         public async Task<IActionResult> Create()
         {
-            var contacts = await _context.Contacts.ToListAsync();
+            var contacts = await _db.GetAllAsync<Contact>();
             return View(new VenueViewModel(contacts));
         }
 

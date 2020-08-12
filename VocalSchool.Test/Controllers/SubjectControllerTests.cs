@@ -221,10 +221,7 @@ namespace VocalSchool.Test.Controllers
         {
             var controller = new SubjectController(_context);
 
-            var subject = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
-
             await controller.DeleteConfirmed(1);
-
             var result = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
 
             result.Should().BeNull();

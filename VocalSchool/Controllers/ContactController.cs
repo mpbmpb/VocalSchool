@@ -15,7 +15,6 @@ namespace VocalSchool.Controllers
     public class ContactController : Controller
     {
         private readonly SchoolContext _context;
-        private string _lastUrl { get; set; }
 
         public ContactController(SchoolContext context)
         {
@@ -63,7 +62,7 @@ namespace VocalSchool.Controllers
             {
                 _context.Add(contact);
                 await _context.SaveChangesAsync();
-                return Redirect(Request.Headers["Referer"].ToString());
+                return RedirectToAction(nameof(Index));
             }
             return View(contact);
         }
@@ -81,7 +80,6 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-            _lastUrl = Request.Headers["Referer"].ToString();
             return View(contact);
         }
 
@@ -112,10 +110,9 @@ namespace VocalSchool.Controllers
                     }
                     else
                     {
-                        throw;
+                        return RedirectToAction(nameof(Index));
                     }
                 }
-                //return Redirect(HtmlHelperLinkExtensions.ActionLink("Back to previous page", null, null, null, new { onclick = "history.go(-1);" }));
                 return View(contact);
             }
             return View(contact);
