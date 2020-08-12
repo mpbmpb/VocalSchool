@@ -19,6 +19,8 @@ namespace VocalSchool.ViewModels
         {
             Contacts = contacts;
             Venue = new Venue();
+            Venue.Contact1 = new Contact();
+            Venue.Contact2 = new Contact();
             ContactList = new List<SelectListItem>();
             ContactList.Add(new SelectListItem { Value = "0", Text = "-- select contact --" });
 

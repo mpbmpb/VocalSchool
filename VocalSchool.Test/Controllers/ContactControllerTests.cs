@@ -238,20 +238,16 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
+        public void Validation_Leaving_Name_short_causes_modelstate_not_valid()
         {
             var controller = new ContactController(_context);
             Contact c = new Contact();
-            Contact c2 = new Contact();
             c.ContactId = 1;
-            c2.ContactId = 1;
-            c2.Name = "123";
+            c.Name = "123";
 
             var result = Validator.TryValidateObject(c, new ValidationContext(c), null, true);
-            var result2 = Validator.TryValidateObject(c2, new ValidationContext(c2), null, true);
 
             result.Should().BeFalse();
-            result2.Should().BeFalse();
         }
 
     }
