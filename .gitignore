@@ -13,13 +13,13 @@ mono_crash.*
 
 
 # Build results
-[Dd]ebug/
-[Rr]elease/
+*/[Dd]ebug/
+*/[Rr]elease/
 x64/
-bin
-obj
-[Ll]og/
-[Ll]ogs/
+*/[Bb]in/
+*/[Oo]bj/
+*/[Ll]og/
+*/[Ll]ogs/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
