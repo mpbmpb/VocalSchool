@@ -13,19 +13,17 @@ namespace VocalSchool.Controllers
 {
     public class VenueController : Controller
     {
-        private readonly SchoolContext _context;
         private readonly DbHandler _db;
 
         public VenueController(SchoolContext context)
         {
-            _context = context;
             _db = new DbHandler(context);
         }
 
         // GET: Venue
         public async Task<IActionResult> Index()
         {
-            return View(await _db.GetAllVenuesAsync());
+            return View(await _db.GetAllAsync<Venue>());
         }
 
         // GET: Venue/Details/5
@@ -36,7 +34,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var venue = await _db.GetVenueAsync((int)id);
+            var venue = await _db.GetAsync<Venue>(id);
             if (venue == null)
             {
                 return NotFound();
@@ -75,18 +73,16 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var venue = await _db.GetVenueAsync((int)id);
+            var venue = await _db.GetAsync<Venue>(id);
             if (venue == null)
             {
                 return NotFound();
             }
-            var contacts = await _db.GetAllContactsAsync();
+            var contacts = await _db.GetAllAsync<Contact>();
             return View(new VenueViewModel(venue, contacts));
         }
 
         // POST: Venue/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VenueViewModel model)
@@ -134,14 +130,8 @@ namespace VocalSchool.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var venue = await _db.GetAsync<Venue>(id);
-            _context.Venues.Remove(venue);
-            await _context.SaveChangesAsync();
+            await _db.RemoveAsync(venue);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool VenueExists(int id)
-        {
-            return _context.Venues.Any(e => e.VenueId == id);
         }
     }
 }

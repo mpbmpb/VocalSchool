@@ -19,7 +19,7 @@ namespace VocalSchool.Controllers
         // GET: Seminar
         public async Task<IActionResult> Index()
         {
-            return View(await _db.GetAllSeminarsAsync());
+            return View(await _db.GetAllSeminarsFullAsync());
         }
 
         // GET: Seminar/Details/5

@@ -13,20 +13,47 @@ namespace VocalSchool.Data
 {
     public class DbHandler
     {
+
+        //TODO figure out if this class could cause memory leak without dispose method
         private readonly SchoolContext _context;
         
-
         public DbHandler(SchoolContext context)
         {
             _context = context;
         }
 
-       
 
         public async Task AddAsync(Object entity)
         {
             _context.Add(entity);
             await _context.SaveChangesAsync();
+        }
+
+        public T Get<T>(int? id) where T : class
+        {
+            return _context.Set<T>().Find(id);
+        }
+
+        public async Task<T> GetAsync<T>(int? id) where T : class
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
+        public async Task<List<T>> GetAllAsync<T>() where T : class
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+
+        public async Task RemoveAsync(Object entity)
+        {
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Object entity)
+        {
+                _context.Update(entity);
+                await _context.SaveChangesAsync();
         }
 
         public async Task AddCourseDesignAsync(CourseDesignViewModel model)
@@ -116,9 +143,9 @@ namespace VocalSchool.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Contact>> GetAllContactsAsync()
+        public bool ContactExists(int id)
         {
-            return await _context.Contacts.ToListAsync();
+            return _context.Contacts.Any(e => e.ContactId == id);
         }
 
         public async Task<Course> GetCourseIncludingSubjectsAsync(int id)
@@ -150,7 +177,7 @@ namespace VocalSchool.Data
                 .ToListAsync();
         }
 
-        public async Task<CourseDesign> GetCourseDesignIncludingSubjectsAsync(int id)
+        public async Task<CourseDesign> GetCourseDesignFullAsync(int? id)
         {
             return await _context.CourseDesigns
                 .Where(cd => cd.CourseDesignId == id)
@@ -180,22 +207,7 @@ namespace VocalSchool.Data
             return await _context.CourseDesigns.ToListAsync();
         }
 
-        public async Task<T> GetAsync<T>(int? id) where T : class
-        {
-            return await _context.Set<T>().FindAsync(id);
-        }
-        
-        public async Task<List<T>> GetAllAsync<T>(DbSet<T> set) where T : class
-        {
-            return await _context.Set<T>().Where(x => x != null).ToListAsync();
-        }
-
-        public async Task<Day> GetDayAsync(int id)
-        {
-            return await _context.Days.FindAsync(id);
-        }
-
-        public async Task<Day> GetDayIncludeSubjectsAsync(int? id)
+        public async Task<Day> GetDayFullAsync(int? id)
         {
             return await _context.Days
                 .Include(d => d.DaySubjects)
@@ -235,7 +247,7 @@ namespace VocalSchool.Data
                .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Seminar>> GetAllSeminarsAsync()
+        public async Task<List<Seminar>> GetAllSeminarsFullAsync()
         {
             return await _context.Seminars
                .Include(s => s.SeminarDays)
@@ -249,16 +261,6 @@ namespace VocalSchool.Data
         public async Task<Subject> GetSubjectAsync(int id)
         {
             return await _context.Subjects.FindAsync(id);
-        }
-
-        public async Task<List<Subject>> GetAllSubjectsAsync()
-        {
-            return await _context.Subjects.ToListAsync();
-        }
-
-        public  async Task<List<T>> GetAllAsync<T>() where T : class
-        {   
-            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<IEnumerable<Subject>> GetAllSubjectsIncludeDaysAsync()
@@ -284,26 +286,6 @@ namespace VocalSchool.Data
                 .Include(v => v.Contact1)
                 .Include(v => v.Contact2)
                 .ToListAsync();
-        }
-
-        public async Task RemoveAsync(Object entity)
-        {
-            _context.Remove(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Object entity)
-        {
-            try
-            {
-                _context.Update(entity);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException e)
-            {
-                throw e;
-            }
-            return;
         }
 
         public async Task UpdateVenueAsync(VenueViewModel model)

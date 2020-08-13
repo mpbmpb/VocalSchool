@@ -285,7 +285,7 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
+        public async Task Edit_returns_NotFound_if_concurrencyException_occurs()
         {
             var controller = new CourseDesignController(_context);
             CourseDesign cd = await _context.CourseDesigns.FirstOrDefaultAsync(x => x.CourseDesignId == 1);
@@ -297,7 +297,7 @@ namespace VocalSchool.Test.Controllers
 
             IActionResult result = await controller.Edit(1, CourseDesignView);
 
-            result.As<RedirectToActionResult>().ActionName.Should().Match("Index");
+            result.Should().BeOfType<NotFoundResult>();
         }
 
         [Fact]

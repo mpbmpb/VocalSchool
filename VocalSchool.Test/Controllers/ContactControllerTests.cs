@@ -194,7 +194,7 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Edit_returns_NotFound_to_Index_if_concurrencyException_occurs()
+        public async Task Edit_returns_NotFound_if_concurrencyException_occurs()
         {
             var controller = new ContactController(_context);
             Contact c = _context.Contacts.FirstOrDefault(x => x.ContactId == 1);

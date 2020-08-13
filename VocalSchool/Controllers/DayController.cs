@@ -46,7 +46,7 @@ namespace VocalSchool.Controllers
         // GET: Day/Create
         public async Task<IActionResult> Create()
         {
-            var subjects = await _db.GetAllSubjectsAsync();
+            var subjects = await _db.GetAllAsync<Subject>();
 
             return View(new DayViewModel(subjects));
         }
@@ -73,20 +73,18 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var day = await _db.GetDayIncludeSubjectsAsync(id);
+            var day = await _db.GetDayFullAsync(id);
 
             if (day == null)
             {
                 return NotFound();
             }
-            var subjects = await _db.GetAllSubjectsAsync();
+            var subjects = await _db.GetAllAsync<Subject>();
 
             return View(new DayViewModel(day, subjects));
         }
 
         // POST: Day/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, DayViewModel model)
@@ -121,7 +119,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var day = await _db.GetDayAsync((int)id);
+            var day = await _db.GetAsync<Day>(id);
             if (day == null)
             {
                 return NotFound();
@@ -135,7 +133,7 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var day = await _db.GetDayAsync(id);
+            var day = await _db.GetAsync<Day>(id);
 
             await _db.RemoveAsync(day);
             return RedirectToAction(nameof(Index));

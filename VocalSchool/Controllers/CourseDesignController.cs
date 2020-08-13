@@ -14,19 +14,17 @@ namespace VocalSchool.Controllers
 {
     public class CourseDesignController : Controller
     {
-        private readonly SchoolContext _context;
         private readonly DbHandler _db;
 
         public CourseDesignController(SchoolContext context)
         {
-            _context = context;
             _db = new DbHandler(context);
         }
 
         // GET: CourseDesign
         public async Task<IActionResult> Index()
         {
-            return View(await _db.GetAllCourseDesignsAsync());
+            return View(await _db.GetAllAsync<CourseDesign>());
         }
 
         // GET: CourseDesign/Details/5
@@ -37,7 +35,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var courseDesign = await _db.GetCourseDesignIncludingSubjectsAsync((int)id);
+            var courseDesign = await _db.GetCourseDesignFullAsync(id);
             if (courseDesign == null)
             {
                 return NotFound();
@@ -49,7 +47,7 @@ namespace VocalSchool.Controllers
         // GET: CourseDesign/Create
         public async Task<IActionResult> Create()
         {
-            var seminars = await _db.GetAllSeminarsAsync();
+            var seminars = await _db.GetAllSeminarsFullAsync();
             return View(new CourseDesignViewModel(seminars));
         }
 
@@ -74,13 +72,13 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var courseDesign = await _db.GetCourseDesignIncludingSubjectsAsync((int)id);
+            var courseDesign = await _db.GetCourseDesignFullAsync((int)id);
             if (courseDesign == null)
             {
                 return NotFound();
             }
 
-            var seminars = await _db.GetAllSeminarsAsync();
+            var seminars = await _db.GetAllSeminarsFullAsync();
             return View(new CourseDesignViewModel(courseDesign, seminars));
         }
 
@@ -105,9 +103,9 @@ namespace VocalSchool.Controllers
                 }
                 catch (Exception)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return NotFound();
                 }
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
             return View(model);
         }
@@ -120,8 +118,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var courseDesign = await _context.CourseDesigns
-                .FirstOrDefaultAsync(m => m.CourseDesignId == id);
+            var courseDesign = await _db.GetAsync<CourseDesign>(id);
             if (courseDesign == null)
             {
                 return NotFound();
@@ -135,15 +132,9 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var courseDesign = await _context.CourseDesigns.FindAsync(id);
-            _context.CourseDesigns.Remove(courseDesign);
-            await _context.SaveChangesAsync();
+            var courseDesign = await _db.GetAsync<CourseDesign>(id);
+            await _db.RemoveAsync(courseDesign);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool CourseDesignExists(int id)
-        {
-            return _context.CourseDesigns.Any(e => e.CourseDesignId == id);
         }
     }
 }

@@ -9,22 +9,23 @@ using Microsoft.AspNetCore.Server.Kestrel;
 using VocalSchool.Models;
 using Microsoft.AspNetCore.Http.Headers;
 using Microsoft.AspNetCore.Http;
+using VocalSchool.Data;
 
 namespace VocalSchool.Controllers
 {
     public class ContactController : Controller
     {
-        private readonly SchoolContext _context;
+        private readonly DbHandler _db;
 
         public ContactController(SchoolContext context)
         {
-            _context = context;
+            _db = new DbHandler(context);
         }
 
         // GET: Contact
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Contacts.ToListAsync());
+            return View(await _db.GetAllAsync<Contact>());
         }
 
         // GET: Contact/Details/5
@@ -35,8 +36,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts
-                .FirstOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _db.GetAsync<Contact>(id);
             if (contact == null)
             {
                 return NotFound();
@@ -60,8 +60,7 @@ namespace VocalSchool.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(contact);
-                await _context.SaveChangesAsync();
+                await _db.AddAsync(contact);
                 return RedirectToAction(nameof(Index));
             }
             return View(contact);
@@ -75,7 +74,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts.FindAsync(id);
+            var contact = await _db.GetAsync<Contact>(id);
             if (contact == null)
             {
                 return NotFound();
@@ -84,8 +83,6 @@ namespace VocalSchool.Controllers
         }
 
         // POST: Contact/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ContactId,Name,Email,Phone,Adress")] Contact contact)
@@ -99,12 +96,11 @@ namespace VocalSchool.Controllers
             {
                 try
                 {
-                    _context.Update(contact);
-                    await _context.SaveChangesAsync();
+                    await _db.UpdateAsync(contact);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ContactExists(contact.ContactId))
+                    if (!_db.ContactExists(id))
                     {
                         return NotFound();
                     }
@@ -126,8 +122,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts
-                .FirstOrDefaultAsync(m => m.ContactId == id);
+            var contact = await _db.GetAsync<Contact>(id);
             if (contact == null)
             {
                 return NotFound();
@@ -141,15 +136,9 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contact = await _context.Contacts.FindAsync(id);
-            _context.Contacts.Remove(contact);
-            await _context.SaveChangesAsync();
+            var contact = await _db.GetAsync<Contact>(id);
+            await _db.RemoveAsync(contact);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ContactExists(int id)
-        {
-            return _context.Contacts.Any(e => e.ContactId == id);
         }
     }
 }
