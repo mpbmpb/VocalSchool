@@ -29,7 +29,7 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-            Seminar seminar = await _db.GetSeminarIncludingSubjectsAsync((int)id);
+            Seminar seminar = await _db.GetSeminarFullAsync(id);
 
             if (seminar == null)
             {
@@ -66,7 +66,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var seminar = await _db.GetSeminarAsync((int)id);
+            var seminar = await _db.GetSeminarAndDaysAsync((int)id);
             if (seminar == null)
             {
                 return NotFound();
@@ -111,7 +111,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var seminar = await _db.GetSeminarAsync((int)id);
+            var seminar = await _db.GetSeminarAndDaysAsync((int)id);
             if (seminar == null)
             {
                 return NotFound();
@@ -125,7 +125,7 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var seminar = await _db.GetSeminarAsync((int)id);
+            var seminar = await _db.GetSeminarAndDaysAsync((int)id);
             await _db.RemoveAsync(seminar);
             return RedirectToAction(nameof(Index));
         }

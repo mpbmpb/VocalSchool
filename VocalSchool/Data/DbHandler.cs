@@ -229,14 +229,14 @@ namespace VocalSchool.Data
             return await _context.DaySubjects.ToListAsync();
         }
 
-        public async Task<Seminar> GetSeminarAsync(int id)
+        public async Task<Seminar> GetSeminarAndDaysAsync(int? id)
         {
             return await _context.Seminars
                 .Include(s => s.SeminarDays)
                 .FirstOrDefaultAsync(x => x.SeminarId == id);
         }
 
-        public async Task<Seminar> GetSeminarIncludingSubjectsAsync(int id)
+        public async Task<Seminar> GetSeminarFullAsync(int? id)
         {
             return await _context.Seminars
                .Where(s => s.SeminarId == id)
