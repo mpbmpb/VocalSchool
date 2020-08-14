@@ -52,8 +52,6 @@ namespace VocalSchool.Controllers
         }
 
         // POST: Course/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseViewModel model)
@@ -85,13 +83,11 @@ namespace VocalSchool.Controllers
         }
 
         // POST: Course/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CourseId,Name,Description")] Course course)
+        public async Task<IActionResult> Edit(int id, CourseViewModel model)
         {
-            if (id != course.CourseId)
+            if (id != model.Course.CourseId)
             {
                 return NotFound();
             }
@@ -100,12 +96,11 @@ namespace VocalSchool.Controllers
             {
                 try
                 {
-                    _context.Update(course);
-                    await _context.SaveChangesAsync();
+                    await _db.UpdateCourseAsync(model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CourseExists(course.CourseId))
+                    if (!CourseExists(model.Course.CourseId))
                     {
                         return NotFound();
                     }
@@ -116,14 +111,24 @@ namespace VocalSchool.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(course);
+            return View(model);
         }
 
         //GET: Course/AddCourseDates/5
-        public async Task<IActionResult> AddCourseDate(int? id)
+        public async Task<IActionResult> AddCourseDates(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var course = await _db.GetCourseIncludingSubjectsAsync((int)id);
-            return View(new CourseViewModel(course));
+            if (course == null)
+            {
+                return NotFound();
+            }
+            var courseDates = await _db.GetAllAsync<CourseDate>();
+            return View(new CourseViewModel(course, courseDates));
         }
 
         // GET: Course/Delete/5

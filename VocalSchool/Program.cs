@@ -25,8 +25,9 @@ namespace VocalSchool
                 });
     }
 }
+//TODO add no contact to contacts otherwise can't unselect contact in venue
 
-
+//TODO add edit button to days table in seminar details
 
 //TODO disable enter key as submit button
 

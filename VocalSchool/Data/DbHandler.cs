@@ -100,8 +100,12 @@ namespace VocalSchool.Data
 
         public async Task AddCourseAsync(CourseViewModel model)
         {
-            var design = _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == model.Course.CourseDesign.CourseDesignId);
-            model.Course.CourseDesign = design;
+            if (model.Course.CourseDesign != null)
+            {
+                var design = _context.CourseDesigns
+                    .FirstOrDefault(x => x.CourseDesignId == model.Course.CourseDesign.CourseDesignId);
+                model.Course.CourseDesign = design;
+            }
             await AddAsync(model.Course);
         }
 
@@ -296,6 +300,15 @@ namespace VocalSchool.Data
             model.Venue.Contact2 = con2;
 
             await UpdateAsync(model.Venue);
+        }
+        
+        public async Task UpdateCourseAsync(CourseViewModel model)
+        {
+            var design = _context.CourseDesigns.FirstOrDefault(x =>
+                x.CourseDesignId == model.Course.CourseDesign.CourseDesignId);
+            model.Course.CourseDesign = design;
+
+            await UpdateAsync(model.Course);
         }
 
         public async Task UpdateCourseDesignAsync(CourseDesignViewModel model)

@@ -52,6 +52,12 @@ namespace VocalSchool.ViewModels
 
             }
         }
+        
+        public CourseViewModel(Course course, List<CourseDate> dates)
+        {
+            Course = course;
+            CourseDates = dates;
+        }
 
         public CourseViewModel(Course course)
         {

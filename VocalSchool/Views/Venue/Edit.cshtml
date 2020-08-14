@@ -49,10 +49,12 @@
             <div class="form-group col-md-6">
                 <label asp-for="Venue.Contact1" class="category-heading"></label>
                 <select asp-for="Venue.Contact1.ContactId" asp-items="Model.ContactList" class="custom-select"></select>
+                <input type="hidden" asp-for="Venue.Contact1.Name" value=temp />
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="Venue.Contact2" class="category-heading"></label>
                 <select asp-for="Venue.Contact2.ContactId" asp-items="Model.ContactList" class="custom-select"></select>
+                <input type="hidden" asp-for="Venue.Contact2.Name" value=temp />
             </div>
 
             <div class="form-group">

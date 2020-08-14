@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using VocalSchool.Models;
 
 namespace VocalSchool.Test.Infrastructure
@@ -130,6 +131,20 @@ namespace VocalSchool.Test.Infrastructure
             context.CourseSeminars.AddRange(courseSeminars);
             context.SaveChanges();
 
+
+            var courses = new[]
+            {
+                new Course() {CourseId = 1, Name = "Course1", Description = "workshop",
+                    CourseDesign = context.CourseDesigns.Find(1)},
+                new Course() {CourseId = 2, Name = "Course2", Description = "short course",
+                    CourseDesign = context.CourseDesigns.Find(2)},
+                new Course() {CourseId = 3, Name = "Course2", Description = "complete course",
+                    CourseDesign = context.CourseDesigns.Find(3)}
+            };
+
+            context.Courses.AddRange(courses);
+            context.SaveChanges();
+
             var contacts = new[]
             {
                 new Contact() {ContactId = 1, Name = "Contact1", Email = "mitch@acme.com",
@@ -148,24 +163,35 @@ namespace VocalSchool.Test.Infrastructure
                 new Venue() {VenueId = 1, Name = "Venue1",
                     Info = "Van alles over de bel en de poort etc.", Email1 = "info@polanen.acme",
                     Phone = "020-1205", Adress = "polanenstraat 1 1000AA Amsterdam",
-                    MapsUrl = "https://goo.gl/maps/qMjMmcgD43nf9Fqy9"},
+                    MapsUrl = "https://goo.gl/maps/qMjMmcgD43nf9Fqy9",
+                    Contact1 = context.Contacts.Find(1),
+                    Contact2 = context.Contacts.Find(2)},
                 new Venue() {VenueId = 2, Name = "Venue2", Info = "Alles checken, klopt altijd wel iets niet!",
                     Email1 = "info@qfactory.acme", Email2 = "sorry@qfactory.acme",
                     Phone = "020-1206", Adress = "Atlantisplein 1 1000XX Amsterdam",
-                    MapsUrl = "https://goo.gl/maps/u3isDnp99GXWZ23U7"}
+                    MapsUrl = "https://goo.gl/maps/u3isDnp99GXWZ23U7",
+                    Contact1 = context.Contacts.Find(3)}
             };
 
             context.Venues.AddRange(venues);
             context.SaveChanges();
 
-            Venue venue1 = context.Venues.FirstOrDefault(x => x.VenueId == 1);
-            venue1.Contact1 = contacts[0];
-            venue1.Contact2 = contacts[1];
-            Venue venue2 = context.Venues.FirstOrDefault(x => x.VenueId == 2);
-            venue2.Contact1 = contacts[2];
-            context.Update(venue1);
-            context.Update(venue2);
+            var courseDates = new[]
+            {
+                new CourseDate() {CourseDateId = 1, Date = new DateTime(2080, 01, 01),
+                    Venue = context.Venues.Find(1), Course = context.Courses.Find(1),
+                    ReservationInfo = "Reserveringsnr: 1333", Rider = "PA met kabels en 2 mics"
+                },
+                new CourseDate() {CourseDateId = 2, Date = new DateTime(2080, 01, 02),
+                    Venue = context.Venues.Find(1), Course = context.Courses.Find(1),
+                    ReservationInfo = "Reserveringsnr: 1334", Rider = "PA met kabels en 2 mics"
+                },
+
+            };
+
+            context.CourseDates.AddRange(courseDates);
             context.SaveChanges();
+
         }
     }
 }

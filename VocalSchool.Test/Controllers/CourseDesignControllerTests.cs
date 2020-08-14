@@ -207,7 +207,6 @@ namespace VocalSchool.Test.Controllers
             result.As<ViewResult>().Model.As<CourseDesignViewModel>().CourseDesign.Name.Should().Be("CourseDesign1");
         }
 
-        //TODO check if seminars is needed
         [Fact]
         public async Task Edit_returns_CourseDesignViewModel_with_ALL_Seminars_injected_into_checklist()
         {

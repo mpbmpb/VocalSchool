@@ -30,7 +30,7 @@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
-                <a asp-controller="Course" asp-action="AddCourseDates" asp-route-id="Course.CourseId" class="btn btn-primary">Add course date</a>
+                <a asp-controller="Course" asp-action="AddCourseDates" asp-route-id="@Model.Course.CourseId" class="btn btn-primary">Add course dates</a>
                 <a asp-controller="CourseDesign" asp-action="Create" class="btn btn-primary">Create new course design</a>
             </div>
         </form>
