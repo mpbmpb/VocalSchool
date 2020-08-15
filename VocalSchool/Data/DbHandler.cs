@@ -75,6 +75,29 @@ namespace VocalSchool.Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddCourseDatesAsync(CourseViewModel model)
+        {
+            foreach (var date in model.CourseDates)
+            {
+                if (CourseDateExists(date.CourseDateId))
+                {
+                    var existing = _context.CourseDates.Find(date.CourseDateId);
+                    _context.Remove(existing);
+                    await _context.SaveChangesAsync();
+                    _context.Add(date);
+                }
+                else
+                {
+                    _context.Add(date);
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public bool CourseDateExists(int id)
+        {
+            return _context.CourseDates.Any(e => e.CourseDateId == id);
+        }
         public async Task AddDayAsync(DayViewModel model)
         {
             var day = new Day();
@@ -152,7 +175,7 @@ namespace VocalSchool.Data
             return _context.Contacts.Any(e => e.ContactId == id);
         }
 
-        public async Task<Course> GetCourseIncludingSubjectsAsync(int id)
+        public async Task<Course> GetCourseFullAsync(int id)
         {
             return await _context.Courses
                 .Where(c => c.CourseId == id)

@@ -82,6 +82,20 @@ namespace VocalSchool.Test.Controllers
                 .Match("CourseDesign2");
         }
 
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData(2, 0)]
+        [InlineData(3, 0)]
+        public async Task Details_returns_Course_with_assigned_CourseDates(int id, int expected)
+        {
+            var controller = new CourseController(_context);
+
+            IActionResult result = await controller.Details(id);
+
+            result.As<ViewResult>().Model.As<Course>().CourseDates
+                .Should().HaveCount(expected, because: "we seeded the Db with 2 CourseDates for Course1");
+        }
+
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
@@ -357,7 +371,7 @@ namespace VocalSchool.Test.Controllers
 
             result.Should().BeOfType<NotFoundResult>();
         }
-        
+
         [Fact]
         public async Task AddCourseDates_returns_ViewResult()
         {
@@ -367,7 +381,7 @@ namespace VocalSchool.Test.Controllers
 
             result.Should().BeOfType<ViewResult>();
         }
-        
+
         [Fact]
         public async Task AddCourseDates_returns_CourseViewModel()
         {
@@ -377,7 +391,7 @@ namespace VocalSchool.Test.Controllers
 
             result.As<ViewResult>().Model.Should().BeOfType<CourseViewModel>();
         }
-        
+
         [Fact]
         public async Task AddCourseDates_returns_CourseViewModel_with_CourseDates()
         {
@@ -387,35 +401,120 @@ namespace VocalSchool.Test.Controllers
 
             result.As<ViewResult>().Model.As<CourseViewModel>()
                 .CourseDates.Should().NotBeNullOrEmpty(because:
-                "we seeded the Db with 2 CourseDates");
+                "we seeded the Db with 2 CourseDates for course 1");
         }
-        
-        [Fact]
-        public async Task AddCourseDates_returns_CourseViewModel_with_All_CourseDates()
+
+        [Theory]
+        [InlineData(1,2)]
+        [InlineData(2,0)]
+        public async Task AddCourseDates_returns_CourseViewModel_with_All_assigned_CourseDates(int id, int expected)
         {
             var controller = new CourseController(_context);
 
-            IActionResult result = await controller.AddCourseDates(1);
+            IActionResult result = await controller.AddCourseDates(id);
 
             result.As<ViewResult>().Model.As<CourseViewModel>()
-                .CourseDates.Should().HaveCount(2, because:
-                "we seeded the Db with 2 CourseDates");
+                .CourseDates.Should().HaveCount(expected, because:
+                "we seeded the Db with 2 CourseDates for course 1");
+
         }
-        
+
         [Fact]
         public async Task AddCourseDates_adds_CourseDate()
         {
             var controller = new CourseController(_context);
             var course = await _context.Courses.FindAsync(2);
             var courseDates = await _context.CourseDates.ToListAsync();
-            var view = new CourseViewModel(course, courseDates);
-            IActionResult result = await controller.AddCourseDates(2, view);
+            var model = new CourseViewModel(2, courseDates);
+            var date = new CourseDate
+            {
+                Date = new DateTime(2080, 01, 03),
+                Venue = _context.Venues.Find(2),
+                Course = _context.Courses.Find(2),
+                ReservationInfo = "Reserveringsnr: 1335"
+            };
+            model.CourseDates.Add(date);
 
-            result.As<ViewResult>().Model.As<CourseViewModel>()
-                .CourseDates.Should().HaveCount(2, because:
+            IActionResult result = await controller.AddCourseDates(2, model);
+
+            _context.CourseDates.Should().HaveCount(3, because:
                 "we seeded the Db with 2 CourseDates");
         }
 
+        [Theory]
+        [InlineData(1, 3)]
+        [InlineData(2, 1)]
+        [InlineData(3, 1)]
+        public async Task AddCourseDates_adds_CourseDate_to_correct_course(int id, int expected)
+        {
+            var controller = new CourseController(_context);
+            var course = await _context.Courses.FindAsync(id);
+            var courseDates = await _context.CourseDates.ToListAsync();
+            var model = new CourseViewModel(id, courseDates);
+            var date = new CourseDate
+            {
+                Date = new DateTime(2080, 01, 03),
+                Venue = _context.Venues.Find(2),
+                Course = _context.Courses.Find(id),
+                ReservationInfo = "Reserveringsnr: 1335"
+            };
+            model.CourseDates.Add(date);
+
+            await controller.AddCourseDates(id, model);
+
+            IActionResult result = await controller.Details(id);
+
+            result.As<ViewResult>().Model.As<Course>().CourseDates
+                .Should().HaveCount(expected);
+        }
+
+        [Fact]
+        public async Task AddCourseDates_adds_CourseDate_with_correct_properties()
+        {
+            var controller = new CourseController(_context);
+            var course = await _context.Courses.FindAsync(2);
+            var courseDates = await _context.CourseDates.ToListAsync();
+            var model = new CourseViewModel(2, courseDates);
+            var date = new CourseDate
+            {
+                Date = new DateTime(2080, 01, 03),
+                Venue = _context.Venues.Find(2),
+                Course = _context.Courses.Find(2),
+                ReservationInfo = "Reserveringsnr: 1335"
+            };
+            model.CourseDates.Add(date);
+            await controller.AddCourseDates(2, model);
+
+            IActionResult result = await controller.Details(2);
+
+            result.As<ViewResult>().Model.As<Course>().CourseDates
+                .FirstOrDefault().Should().BeEquivalentTo(date);
+        }
+        
+        [Fact]
+        public async Task AddCourseDates_updates_CourseDate_with_correct_properties()
+        {
+            var controller = new CourseController(_context);
+            var courseDates = await _context.CourseDates.ToListAsync();
+            var model = new CourseViewModel(1, courseDates);
+            var date = new CourseDate
+            {
+                CourseDateId = 1,
+                Date = new DateTime(2080, 01, 03),
+                VenueId = 1,
+                Venue = _context.Venues.Find(2),
+                CourseId = 1,
+                Course = _context.Courses.Find(1),
+                ReservationInfo = "Reserveringsnr: 1335"
+            };
+            model.CourseDates[1] = date;
+            await controller.AddCourseDates(1, model);
+
+            IActionResult result = await controller.Details(1);
+
+            result.As<ViewResult>().Model.As<Course>().CourseDates
+                .FirstOrDefault().Should().BeEquivalentTo(date);
+        }
 
     }
 }

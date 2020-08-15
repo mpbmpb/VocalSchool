@@ -7,11 +7,11 @@ namespace VocalSchool.ViewModels
 {
     public class CourseViewModel
     {
+        public int Id { get; set; }
         public Course Course { get; set; }
         public List<CourseDesign> CourseDesigns { get; set; }
         public List<SelectListItem> DesignList { get; set; }
         public List<CourseDate> CourseDates { get; set; }
-        public CourseDate CourseDate { get; set; }
 
         public CourseViewModel()
         {
@@ -53,17 +53,20 @@ namespace VocalSchool.ViewModels
             }
         }
         
-        public CourseViewModel(Course course, List<CourseDate> dates)
+        public CourseViewModel(int id, List<CourseDate> dates)
         {
-            Course = course;
-            CourseDates = dates;
+            Id = id;
+            CourseDates = new List<CourseDate>();
+            foreach (var date in dates)
+            {
+                if (date.CourseId == id)
+                { CourseDates.Add(date); }
+            }
         }
 
         public CourseViewModel(Course course)
         {
             Course = course;
-            CourseDate = new CourseDate();
-
         }
     }
 }

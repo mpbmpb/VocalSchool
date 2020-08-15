@@ -36,7 +36,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var course = await _db.GetCourseIncludingSubjectsAsync((int)id);
+            var course = await _db.GetCourseFullAsync((int)id);
             if (course == null)
             {
                 return NotFound();
@@ -73,7 +73,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var course = await _db.GetCourseIncludingSubjectsAsync((int)id);
+            var course = await _db.GetCourseFullAsync((int)id);
             if (course == null)
             {
                 return NotFound();
@@ -122,13 +122,21 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var course = await _db.GetCourseIncludingSubjectsAsync((int)id);
+            var course = await _db.GetCourseFullAsync((int)id);
             if (course == null)
             {
                 return NotFound();
             }
             var courseDates = await _db.GetAllAsync<CourseDate>();
-            return View(new CourseViewModel(course, courseDates));
+            return View(new CourseViewModel((int)id, courseDates));
+        }
+
+        //Post
+        [HttpPost]
+        public async Task<IActionResult> AddCourseDates(int id, CourseViewModel model)
+        {
+            await _db.AddCourseDatesAsync(model);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Course/Delete/5
