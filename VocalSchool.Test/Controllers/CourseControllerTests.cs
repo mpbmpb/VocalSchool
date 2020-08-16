@@ -412,8 +412,16 @@ namespace VocalSchool.Test.Controllers
 
             IActionResult result = await controller.AddCourseDates(id);
 
-            result.As<ViewResult>().Model.As<CourseViewModel>()
+            if (ViewContainsDay("Course","Index"))
+            {
+                result.As<ViewResult>().Model.As<CourseViewModel>()
                 .DayCount.Should().Be(expected);
+            }
+            else
+            {
+                result.As<ViewResult>().Model.As<CourseViewModel>()
+                .DayCount.Should().Be(1);
+            }
         }
 
         [Fact]

@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Models;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.IO;
+using System.Linq;
 
 namespace VocalSchool.Test.Infrastructure
 {
@@ -44,6 +47,21 @@ namespace VocalSchool.Test.Infrastructure
             _context.Dispose();
             _resultcontext.Dispose();
 
+        }
+
+        public bool ViewContainsDay(string controllerName, string viewName)
+        {
+            bool day = false;
+            string[] viewString = File.ReadAllLines($"../../../../VocalSchool/Views/{controllerName}/{viewName}.cshtml");
+            for (int line = 0; line < viewString.Length; line++)
+            {
+                if (viewString[line].Contains(".Day"))
+                {
+                    day = true;
+                    break;
+                }
+            }
+            return day;
         }
     }
 }
