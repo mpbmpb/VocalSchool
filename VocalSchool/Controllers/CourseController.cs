@@ -128,15 +128,43 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
             var courseDates = await _db.GetAllAsync<CourseDate>();
-            return View(new CourseViewModel((int)id, courseDates));
+            return View(new CourseViewModel(course, courseDates));
         }
 
         //Post
         [HttpPost]
-        public async Task<IActionResult> AddCourseDates(int id, CourseViewModel model)
+        public async Task<IActionResult> AddCourseDates(int? id, CourseViewModel model)
         {
-            await _db.AddCourseDatesAsync(model);
-            return RedirectToAction(nameof(Index));
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = await _db.GetCourseFullAsync((int)id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _db.AddCourseDatesAsync(model);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CourseExists(model.Course.CourseId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
         // GET: Course/Delete/5

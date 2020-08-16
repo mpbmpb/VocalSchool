@@ -12,6 +12,7 @@ namespace VocalSchool.ViewModels
         public List<CourseDesign> CourseDesigns { get; set; }
         public List<SelectListItem> DesignList { get; set; }
         public List<CourseDate> CourseDates { get; set; }
+        public int DayCount { get; private set; }
 
         public CourseViewModel()
         {
@@ -53,14 +54,19 @@ namespace VocalSchool.ViewModels
             }
         }
         
-        public CourseViewModel(int id, List<CourseDate> dates)
+        public CourseViewModel(Course course, List<CourseDate> dates)
         {
-            Id = id;
+            DayCount = 0;
+            Id = course.CourseId;
             CourseDates = new List<CourseDate>();
             foreach (var date in dates)
             {
-                if (date.CourseId == id)
+                if (date.CourseId == Id)
                 { CourseDates.Add(date); }
+            }
+            foreach (var seminar in course.CourseDesign.CourseSeminars)
+            {
+                DayCount += seminar.Seminar.SeminarDays.Count;
             }
         }
 

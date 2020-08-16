@@ -346,23 +346,6 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
-        {
-            var controller = new SubjectController(_context);
-            Course c = new Course();
-            Course c2 = new Course();
-            c.CourseId = 1;
-            c2.CourseId = 1;
-            c2.Name = "123";
-
-            var result = Validator.TryValidateObject(c, new ValidationContext(c), null, true);
-            var result2 = Validator.TryValidateObject(c2, new ValidationContext(c2), null, true);
-
-            result.Should().BeFalse();
-            result2.Should().BeFalse();
-        }
-
-        [Fact]
         public async Task AddCourseDates_returns_Notfound_if_given_unknown_id()
         {
             var controller = new CourseController(_context);
@@ -405,8 +388,8 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Theory]
-        [InlineData(1,2)]
-        [InlineData(2,0)]
+        [InlineData(1, 2)]
+        [InlineData(2, 0)]
         public async Task AddCourseDates_returns_CourseViewModel_with_All_assigned_CourseDates(int id, int expected)
         {
             var controller = new CourseController(_context);
@@ -419,13 +402,27 @@ namespace VocalSchool.Test.Controllers
 
         }
 
+        [Theory]
+        [InlineData(1,2)]
+        [InlineData(2,4)]
+        [InlineData(3,6)]
+        public async Task AddCourseDates_returns_CourseViewModel_with_DayCount_equal_to_Days_in_Course(int id, int expected)
+        {
+            var controller = new CourseController(_context);
+
+            IActionResult result = await controller.AddCourseDates(id);
+
+            result.As<ViewResult>().Model.As<CourseViewModel>()
+                .DayCount.Should().Be(expected);
+        }
+
         [Fact]
         public async Task AddCourseDates_adds_CourseDate()
         {
             var controller = new CourseController(_context);
             var course = await _context.Courses.FindAsync(2);
             var courseDates = await _context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(2, courseDates);
+            var model = new CourseViewModel(course, courseDates);
             var date = new CourseDate
             {
                 Date = new DateTime(2080, 01, 03),
@@ -450,7 +447,7 @@ namespace VocalSchool.Test.Controllers
             var controller = new CourseController(_context);
             var course = await _context.Courses.FindAsync(id);
             var courseDates = await _context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(id, courseDates);
+            var model = new CourseViewModel(course, courseDates);
             var date = new CourseDate
             {
                 Date = new DateTime(2080, 01, 03),
@@ -474,7 +471,7 @@ namespace VocalSchool.Test.Controllers
             var controller = new CourseController(_context);
             var course = await _context.Courses.FindAsync(2);
             var courseDates = await _context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(2, courseDates);
+            var model = new CourseViewModel(course, courseDates);
             var date = new CourseDate
             {
                 Date = new DateTime(2080, 01, 03),
@@ -495,8 +492,9 @@ namespace VocalSchool.Test.Controllers
         public async Task AddCourseDates_updates_CourseDate_with_correct_properties()
         {
             var controller = new CourseController(_context);
+            var course = await _context.Courses.FindAsync(1);
             var courseDates = await _context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(1, courseDates);
+            var model = new CourseViewModel(course, courseDates);
             var date = new CourseDate
             {
                 CourseDateId = 1,
@@ -516,6 +514,67 @@ namespace VocalSchool.Test.Controllers
             result.As<CourseDate>().Should().BeEquivalentTo(date,
                 options => options.Excluding(e => e.Course)
                 .Excluding(e => e.Venue));
+        }
+
+        [Fact]
+        public async Task AddCourseDates_returns_NotFound_if_Id_changes()
+        {
+            var controller = new CourseController(_context);
+            Course c = _context.Courses.FirstOrDefault(x => x.CourseId == 1);
+
+            CourseViewModel CourseView = new CourseViewModel();
+            CourseView.Course = c;
+            CourseView.DesignList = new List<SelectListItem>();
+
+            IActionResult result = await controller.AddCourseDates(8, CourseView);
+
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public async Task AddCourseDates_returns_View_if_modelstate_not_valid()
+        {
+            var controller = new CourseController(_context);
+            controller.ViewData.ModelState.AddModelError("key", "some error");
+            CourseViewModel CourseView = new CourseViewModel();
+            CourseView.Course = new Course() { CourseId = 1 };
+            CourseView.DesignList = new List<SelectListItem>();
+
+            IActionResult result = await controller.AddCourseDates(1, CourseView);
+
+            result.Should().BeOfType<ViewResult>();
+        }
+
+        [Fact]
+        public async Task AddCourseDates_returns_NotFound_if_concurrencyException_occurs()
+        {
+            var controller = new CourseController(_context);
+            Course c = await _context.Courses.FirstOrDefaultAsync(x => x.CourseId == 1);
+            var CourseDesigns = await _context.CourseDesigns.ToListAsync();
+            CourseViewModel CourseView = new CourseViewModel(c, CourseDesigns);
+
+            _context.Remove(c);
+            await _context.SaveChangesAsync();
+
+            IActionResult result = await controller.AddCourseDates(1, CourseView);
+
+            result.Should().BeOfType<NotFoundResult>();
+        }
+
+        [Fact]
+        public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
+        {
+            Course c = new Course();
+            Course c2 = new Course();
+            c.CourseId = 1;
+            c2.CourseId = 1;
+            c2.Name = "123";
+
+            var result = Validator.TryValidateObject(c, new ValidationContext(c), null, true);
+            var result2 = Validator.TryValidateObject(c2, new ValidationContext(c2), null, true);
+
+            result.Should().BeFalse();
+            result2.Should().BeFalse();
         }
 
     }
