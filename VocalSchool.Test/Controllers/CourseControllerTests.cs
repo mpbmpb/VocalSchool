@@ -58,7 +58,7 @@ namespace VocalSchool.Test.Controllers
 
             IActionResult result = await controller.Details(1);
 
-            result.As<ViewResult>().Model.Should().BeOfType<Course>();
+            result.As<ViewResult>().Model.Should().BeAssignableTo<Course>();
         }
 
         [Fact]
@@ -510,10 +510,12 @@ namespace VocalSchool.Test.Controllers
             model.CourseDates[1] = date;
             await controller.AddCourseDates(1, model);
 
-            IActionResult result = await controller.Details(1);
+            var result = await _resultcontext.CourseDates
+                .FirstOrDefaultAsync(e => e.CourseDateId ==1);
 
-            result.As<ViewResult>().Model.As<Course>().CourseDates
-                .FirstOrDefault().Should().BeEquivalentTo(date);
+            result.As<CourseDate>().Should().BeEquivalentTo(date,
+                options => options.Excluding(e => e.Course)
+                .Excluding(e => e.Venue));
         }
 
     }

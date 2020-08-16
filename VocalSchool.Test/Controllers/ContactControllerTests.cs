@@ -55,7 +55,7 @@ namespace VocalSchool.Test.Controllers
 
             IActionResult result = await controller.Details(1);
 
-            result.As<ViewResult>().Model.Should().BeOfType<Contact>();
+            result.As<ViewResult>().Model.Should().BeAssignableTo<Contact>();
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace VocalSchool.Test.Controllers
 
             IActionResult result = await controller.Edit(1);
 
-            result.As<ViewResult>().Model.Should().BeOfType<Contact>();
+            result.As<ViewResult>().Model.Should().BeAssignableTo<Contact>();
         }
 
         [Fact]

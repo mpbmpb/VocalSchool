@@ -20,6 +20,8 @@ namespace VocalSchool.Models
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Contact> Contacts { get; set; }
 
+        public bool LazyLoading = false;
+
         public SchoolContext(DbContextOptions<SchoolContext> options)
             : base(options)
         {

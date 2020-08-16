@@ -57,7 +57,7 @@ namespace VocalSchool.Test.Controllers
 
             IActionResult result = await controller.Details(1);
 
-            result.As<ViewResult>().Model.Should().BeOfType<Day>();
+            result.As<ViewResult>().Model.Should().BeAssignableTo<Day>();
         }
 
         [Fact]

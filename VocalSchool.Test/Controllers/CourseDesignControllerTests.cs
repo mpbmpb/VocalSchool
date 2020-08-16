@@ -57,7 +57,7 @@ namespace VocalSchool.Test.Controllers
 
             IActionResult result = await controller.Details(1);
 
-            result.As<ViewResult>().Model.Should().BeOfType<CourseDesign>();
+            result.As<ViewResult>().Model.Should().BeAssignableTo<CourseDesign>();
         }
 
         [Fact]
