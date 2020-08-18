@@ -63,5 +63,21 @@ namespace VocalSchool.Test.Infrastructure
             }
             return day;
         }
+
+        private enum subjectRelation
+        {
+            Subject,
+            Day,
+            Seminar,
+            CourseDesign,
+            Course
+        }
+
+        private enum contactRelation
+        {
+            Contact,
+            Venue,
+            Course
+        }
     }
 }
