@@ -51,6 +51,18 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
+        public async Task Index_returns_Seminars_with_Days()
+        {
+            var controller = new SeminarController(_context);
+
+            IActionResult result = await controller.Index();
+
+            result.As<ViewResult>().Model.As<IEnumerable<Seminar>>().FirstOrDefault()
+                .SeminarDays.FirstOrDefault().Day.DaySubjects.Should().NotBeNull();
+
+        }
+
+        [Fact]
         public async Task Details_returns_Seminar()
         {
             var controller = new SeminarController(_context);
