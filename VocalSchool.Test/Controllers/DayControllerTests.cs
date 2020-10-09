@@ -11,30 +11,41 @@ using VocalSchool.Test.Infrastructure;
 using VocalSchool.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit.Abstractions;
 
 namespace VocalSchool.Test.Controllers
 {
     public class DayControllerTests : VocalSchoolTestBase
 
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public DayControllerTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
+        private DayController controller
+        {
+            get => new DayController(_context);
+        }
+
         [Fact]
         public async Task Index_returns_ViewResult()
         {
-            //Arrange
-            var controller = new DayController(_context);
-
-            //Act
             IActionResult result = await controller.Index();
-
-            //Assert
+            
             result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
         public async Task Index_returns_Days()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Index();
 
             result.As<ViewResult>().Model.Should().BeOfType<List<Day>>();
@@ -43,18 +54,32 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_Days()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Index();
 
             result.As<ViewResult>().Model.As<List<Day>>().Should().HaveCount(6);
         }
 
         [Fact]
+        public async Task Index_returns_everything_needed_for_view()
+        {
+            IActionResult result = await controller.Index();
+            try
+            {
+               
+                var context = new ActionContext(new DefaultHttpContext(), new RouteData(), new PageActionDescriptor(), new ModelStateDictionary());
+                await result.ExecuteResultAsync(context);
+            }
+            catch (Exception e)
+            {
+                _testOutputHelper.WriteLine(e.ToString());
+                throw;
+            }
+
+        }
+
+        [Fact]
         public async Task Details_returns_Day()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Details(1);
 
             result.As<ViewResult>().Model.Should().BeAssignableTo<Day>();
@@ -63,8 +88,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Day()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Details(1);
 
             result.As<ViewResult>().Model.As<Day>().Name.Should().Be("Day1");
@@ -73,8 +96,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Day_with_All_DaySubjects()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Details(1);
 
             result.As<ViewResult>().Model.As<Day>().DaySubjects.Should()
@@ -86,8 +107,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Details(8);
 
             result.Should().BeOfType<NotFoundResult>();
@@ -96,8 +115,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_returns_view_when_not_passed_Id()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Create();
 
             result.Should().BeOfType<ViewResult>();
@@ -106,7 +123,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Day()
         {
-            var controller = new DayController(_context);
             Day d = new Day
             {
                 DayId = 7,
@@ -125,8 +141,7 @@ namespace VocalSchool.Test.Controllers
 
         [Fact]
         public async Task Create_stores_Day_with_correct_properties()
-        {
-            var controller = new DayController(_context);
+        { 
             Day d = new Day
             {
                 DayId = 7,
@@ -146,7 +161,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Day_with_correct_daySubjects()
         {
-            var controller = new DayController(_context);
             Day d = new Day
             {
                 DayId = 7,
@@ -169,8 +183,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Edit(8);
 
             result.Should().BeOfType<NotFoundResult>();
@@ -179,8 +191,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Edit(1);
 
             result.As<ViewResult>().Model.Should().BeOfType<DayViewModel>();
@@ -189,8 +199,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel_with_checklist()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Edit(1);
 
             result.As<ViewResult>().Model.As<DayViewModel>().CheckList
@@ -200,8 +208,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel_with_correct_Day()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Edit(1);
 
             result.As<ViewResult>().Model.As<DayViewModel>().Day.Name.Should().Be("Day1");
@@ -211,8 +217,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel_with_ALL_subjects_injected_into_checklist()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Edit(1);
 
             result.As<ViewResult>().Model.As<DayViewModel>().CheckList
@@ -225,7 +229,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_Day_with_correct_properties()
         {
-            var controller = new DayController(_context);
             Day d = _context.Days.FirstOrDefault(x => x.DayId == 1);
             d.Name = "Effects";
             d.Description = "Learn about effects";
@@ -242,7 +245,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_Day_with_correct_DaySubjects()
         {
-            var controller = new DayController(_context);
             Day d = _context.Days.FirstOrDefault(x => x.DayId == 1);
             var subjects = await _context.Subjects.ToListAsync();
             
@@ -261,7 +263,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_NotFound_if_Id_changes()
         {
-            var controller = new DayController(_context);
             Day d = _context.Days.FirstOrDefault(x => x.DayId == 1);
 
             DayViewModel dayView = new DayViewModel();
@@ -276,7 +277,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_View_if_modelstate_not_valid()
         {
-            var controller = new DayController(_context);
             controller.ViewData.ModelState.AddModelError("key", "Some Exception");
             DayViewModel dayView = new DayViewModel();
             dayView.Day = new Day { DayId = 1 };
@@ -290,7 +290,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
         {
-            var controller = new DayController(_context);
             Day d = _context.Days.FirstOrDefault(x => x.DayId == 1);
             _context.Remove(d);
             await _context.SaveChangesAsync();
@@ -307,8 +306,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Correct_Day()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Delete(1);
 
             result.As<ViewResult>().Model.As<Day>().Name.Should().Be("Day1");
@@ -317,8 +314,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new DayController(_context);
-
             IActionResult result = await controller.Delete(8);
 
             result.Should().BeOfType<NotFoundResult>();
@@ -327,8 +322,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_Day_from_Db()
         {
-            var controller = new DayController(_context);
-
             var Day = _context.Days.FirstOrDefault(x => x.DayId == 1);
 
             await controller.DeleteConfirmed(1);
@@ -341,7 +334,6 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
         {
-            var controller = new SubjectController(_context);
             Day d = new Day();
             Day d2 = new Day();
             d.DayId = 1;
