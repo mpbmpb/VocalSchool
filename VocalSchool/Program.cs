@@ -35,6 +35,8 @@ namespace VocalSchool
 
 //TODO refactor _context out of controllers
 
+//TODO make method for tables in views
+
 //TODO make calendar date picker
 
 //TODO make calendar controller that displays all events
