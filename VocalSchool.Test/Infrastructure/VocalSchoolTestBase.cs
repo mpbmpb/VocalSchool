@@ -1,26 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using Microsoft.AspNetCore.Mvc;
-using VocalSchool.Models;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.IO;
-using System.Linq;
+using Microsoft.Extensions.Configuration;
+using VocalSchool.Models;
 
 namespace VocalSchool.Test.Infrastructure
 {
     public class VocalSchoolTestBase : IDisposable
     {
-        protected readonly SchoolContext _seedcontext;
-        protected readonly SchoolContext _context;
-        protected readonly SchoolContext _resultcontext;
-        public bool isLazyLoading = true;
-
+        protected readonly SchoolContext Seedcontext;
+        protected readonly SchoolContext Context;
+        protected readonly SchoolContext Resultcontext;
+        private bool _isLazyLoading = true;
+        
         public VocalSchoolTestBase()
         {
+            // CheckLazyLoadingAppsetting();
             var options = new DbContextOptionsBuilder<SchoolContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
-            if (isLazyLoading)
+            if (_isLazyLoading)
             {
                 options = new DbContextOptionsBuilder<SchoolContext>()
                 .UseLazyLoadingProxies()
@@ -28,25 +27,24 @@ namespace VocalSchool.Test.Infrastructure
                 .Options;
             }
           
-            _seedcontext = new SchoolContext(options);
-            _context = new SchoolContext(options);
-            _resultcontext = new SchoolContext(options);
+            Seedcontext = new SchoolContext(options);
+            Context = new SchoolContext(options);
+            Resultcontext = new SchoolContext(options);
 
-            _context.Database.EnsureCreated();
+            Context.Database.EnsureCreated();
 
-            VocalSchoolInitializer.Initialize(_seedcontext);
+            VocalSchoolInitializer.Initialize(Seedcontext);
         }
 
         public void Dispose()
         {
-            _seedcontext.Database.EnsureDeleted();
-            _context.Database.EnsureDeleted();
-            _resultcontext.Database.EnsureDeleted();
+            Seedcontext.Database.EnsureDeleted();
+            Context.Database.EnsureDeleted();
+            Resultcontext.Database.EnsureDeleted();
 
-            _seedcontext.Dispose();
-            _context.Dispose();
-            _resultcontext.Dispose();
-
+            Seedcontext.Dispose();
+            Context.Dispose();
+            Resultcontext.Dispose();
         }
 
         public bool ViewContainsDay(string controllerName, string viewName)
@@ -64,20 +62,18 @@ namespace VocalSchool.Test.Infrastructure
             return day;
         }
 
-        private enum subjectRelation
+        private void CheckLazyLoadingAppsetting()
         {
-            Subject,
-            Day,
-            Seminar,
-            CourseDesign,
-            Course
-        }
-
-        private enum contactRelation
-        {
-            Contact,
-            Venue,
-            Course
+            var dir = Directory.GetCurrentDirectory();
+            var path = Path.GetDirectoryName(dir
+                .Substring(0, dir.IndexOf("VocalSchool.Test")));
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile($"{path}/VocalSchool/appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            
+            IConfigurationRoot configuration = builder.Build();
+            _isLazyLoading = configuration.GetValue<bool>("LazyLoading");
         }
     }
 }
