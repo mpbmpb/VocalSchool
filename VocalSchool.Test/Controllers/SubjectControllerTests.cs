@@ -19,7 +19,7 @@ namespace VocalSchool.Test.Controllers
         public async Task Index_returns_ViewResult()
         {
             //Arrange
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             //Act
             IActionResult result = await controller.Index();
@@ -31,7 +31,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_Subjects()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Index();
 
@@ -41,7 +41,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_Subjects()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Index();
 
@@ -51,7 +51,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Subject()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Details(1);
 
@@ -61,7 +61,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Subject()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Details(1);
 
@@ -71,7 +71,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Details(8);
 
@@ -81,7 +81,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Create_returns_view_when_not_passed_Id()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = controller.Create();
 
@@ -91,31 +91,31 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Subject()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
             Subject s = new Subject { SubjectId = 7, Name = "Effects",
                 Description = "Learn about effects", RequiredReading = "CVT App" };
 
             await controller.Create(s);
 
-            _context.Subjects.Should().HaveCount(7);
+            Context.Subjects.Should().HaveCount(7);
         }
         
         [Fact]
         public async Task Create_stores_Subject_with_correct_properties()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
             Subject s = new Subject { SubjectId = 7, Name = "Effects",
                 Description = "Learn about effects", RequiredReading = "CVT App" };
 
             await controller.Create(s);
 
-            _context.Subjects.FirstOrDefault(x => x.SubjectId == 7).Should().BeEquivalentTo<Subject>(s);
+            Context.Subjects.FirstOrDefault(x => x.SubjectId == 7).Should().BeEquivalentTo<Subject>(s);
         }
 
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Edit(8);
 
@@ -125,7 +125,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Subject()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -135,7 +135,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Correct_Subject()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -145,22 +145,22 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_Subject_with_correct_properties()
         {
-            var controller = new SubjectController(_context);
-            Subject s = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
+            var controller = new SubjectController(Context);
+            Subject s = Context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
             s.Name = "Effects";
             s.Description = "Learn about effects";
             s.RequiredReading = "CVT App";
 
             await controller.Edit(1,s);
 
-            _context.Subjects.FirstOrDefault(x => x.SubjectId == 1).Should().BeEquivalentTo<Subject>(s);
+            Context.Subjects.FirstOrDefault(x => x.SubjectId == 1).Should().BeEquivalentTo<Subject>(s);
         }
         
         [Fact]
         public async Task Edit_returns_NotFound_if_Id_changes()
         {
-            var controller = new SubjectController(_context);
-            Subject s = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
+            var controller = new SubjectController(Context);
+            Subject s = Context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
             s.Name = "Effects";
             s.Description = "Learn about effects";
             s.RequiredReading = "CVT App";
@@ -173,7 +173,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Redirect_if_modelstate_not_valid()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
             controller.ViewData.ModelState.AddModelError("key", "Some Exception");  
             Subject s = new Subject();
             s.SubjectId = 1;
@@ -186,10 +186,10 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
         {
-            var controller = new SubjectController(_context);
-            Subject s = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
-            _context.Remove(s);
-            await _context.SaveChangesAsync();
+            var controller = new SubjectController(Context);
+            Subject s = Context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
+            Context.Remove(s);
+            await Context.SaveChangesAsync();
 
             IActionResult result = await controller.Edit(1,s);
 
@@ -199,7 +199,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Correct_Subject()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Delete(1);
 
@@ -209,7 +209,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             IActionResult result = await controller.Delete(8);
 
@@ -219,10 +219,10 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_subject_from_Db()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
 
             await controller.DeleteConfirmed(1);
-            var result = _context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
+            var result = Context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
 
             result.Should().BeNull();
         }
@@ -230,7 +230,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
             Subject s = new Subject();
             Subject s2 = new Subject();
             s.SubjectId = 1;

@@ -19,7 +19,7 @@ namespace VocalSchool.Test.Controllers
         public async Task Index_returns_ViewResult()
         {
             //Arrange
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             //Act
             IActionResult result = await controller.Index();
@@ -31,7 +31,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_Contacts()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Index();
 
@@ -41,7 +41,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_Contacts()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Index();
 
@@ -51,7 +51,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Contact()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Details(1);
 
@@ -61,7 +61,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Contact()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Details(1);
 
@@ -71,7 +71,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Details(8);
 
@@ -81,7 +81,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Create_returns_view_when_not_passed_Id()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = controller.Create();
 
@@ -91,7 +91,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Contact()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
             Contact c = new Contact
             {
                 ContactId = 7,
@@ -102,13 +102,13 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Create(c);
 
-            _context.Contacts.Should().HaveCount(4);
+            Context.Contacts.Should().HaveCount(4);
         }
 
         [Fact]
         public async Task Create_stores_Contact_with_correct_properties()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
             Contact c = new Contact
             {
                 ContactId = 7,
@@ -119,13 +119,13 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Create(c);
 
-            _context.Contacts.FirstOrDefault(x => x.ContactId == 7).Should().BeEquivalentTo(c);
+            Context.Contacts.FirstOrDefault(x => x.ContactId == 7).Should().BeEquivalentTo(c);
         }
 
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Edit(8);
 
@@ -135,7 +135,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Contact()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -145,7 +145,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Correct_Contact()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -155,22 +155,22 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_Contact_with_correct_properties()
         {
-            var controller = new ContactController(_context);
-            Contact c = _context.Contacts.FirstOrDefault(x => x.ContactId == 1);
+            var controller = new ContactController(Context);
+            Contact c = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
             c.Name = "Effects";
             c.Email = "info@acme.com";
             c.Adress = "straat 1 Amsterdam";
 
             await controller.Edit(1, c);
 
-            _context.Contacts.FirstOrDefault(x => x.ContactId == 1).Should().BeEquivalentTo(c);
+            Context.Contacts.FirstOrDefault(x => x.ContactId == 1).Should().BeEquivalentTo(c);
         }
 
         [Fact]
         public async Task Edit_returns_NotFound_if_Id_changes()
         {
-            var controller = new ContactController(_context);
-            Contact c = _context.Contacts.FirstOrDefault(x => x.ContactId == 1);
+            var controller = new ContactController(Context);
+            Contact c = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
             c.Name = "Effects";
             c.Email = "info@acme.com";
             c.Adress = "straat 1 Amsterdam";
@@ -183,7 +183,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Redirect_if_modelstate_not_valid()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
             controller.ViewData.ModelState.AddModelError("key", "Some Exception");
             Contact c = new Contact();
             c.ContactId = 1;
@@ -196,10 +196,10 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_NotFound_if_concurrencyException_occurs()
         {
-            var controller = new ContactController(_context);
-            Contact c = _context.Contacts.FirstOrDefault(x => x.ContactId == 1);
-            _context.Remove(c);
-            await _context.SaveChangesAsync();
+            var controller = new ContactController(Context);
+            Contact c = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
+            Context.Remove(c);
+            await Context.SaveChangesAsync();
 
             IActionResult result = await controller.Edit(1, c);
 
@@ -209,7 +209,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Correct_Contact()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Delete(1);
 
@@ -219,7 +219,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             IActionResult result = await controller.Delete(8);
 
@@ -229,10 +229,10 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_Contact_from_Db()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
 
             await controller.DeleteConfirmed(1);
-            var result = _context.Contacts.FirstOrDefault(x => x.ContactId == 1);
+            var result = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
 
             result.Should().BeNull();
         }
@@ -240,7 +240,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Validation_Leaving_Name_Null_Or_short_causes_modelstate_not_valid()
         {
-            var controller = new ContactController(_context);
+            var controller = new ContactController(Context);
             Contact c = new Contact();
             Contact c2 = new Contact();
             c.ContactId = 1;

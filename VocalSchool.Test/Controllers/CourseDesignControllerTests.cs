@@ -21,7 +21,7 @@ namespace VocalSchool.Test.Controllers
         public async Task Index_returns_ViewResult()
         {
             //Arrange
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             //Act
             IActionResult result = await controller.Index();
@@ -33,7 +33,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_CourseDesigns()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Index();
 
@@ -43,7 +43,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_CourseDesigns()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Index();
 
@@ -53,7 +53,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_CourseDesign()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Details(1);
 
@@ -63,7 +63,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_CourseDesign()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Details(1);
 
@@ -73,7 +73,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_CourseDesign_with_All_CourseSeminars()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Details(2);
 
@@ -85,7 +85,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Details(8);
 
@@ -95,7 +95,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_returns_view_when_not_passed_Id()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Create();
 
@@ -105,7 +105,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_CourseDesign()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
             CourseDesign cd = new CourseDesign
             {
                 CourseDesignId = 7,
@@ -119,13 +119,13 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Create(CourseDesignView);
 
-            _context.CourseDesigns.Should().HaveCount(4);
+            Context.CourseDesigns.Should().HaveCount(4);
         }
 
         [Fact]
         public async Task Create_stores_CourseDesign_with_correct_properties()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
             CourseDesign cd = new CourseDesign
             {
                 CourseDesignId = 7,
@@ -139,20 +139,20 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Create(CourseDesignView);
 
-            _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 7).Should().BeEquivalentTo<CourseDesign>(cd);
+            Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 7).Should().BeEquivalentTo<CourseDesign>(cd);
         }
 
         [Fact]
         public async Task Create_stores_CourseDesign_with_correct_CourseSeminars()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
             CourseDesign cd = new CourseDesign
             {
                 CourseDesignId = 7,
                 Name = "CourseDesign7",
                 Description = "Learn about effects",
             };
-            var Seminars = await _context.Seminars.ToListAsync();
+            var Seminars = await Context.Seminars.ToListAsync();
             CourseDesignViewModel CourseDesignView = new CourseDesignViewModel(Seminars);
             CourseDesignView.CourseDesign = cd;
             CourseDesignView.CheckList[0].IsSelected = true;
@@ -160,7 +160,7 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Create(CourseDesignView);
 
-            var result = _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 7);
+            var result = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 7);
 
             result.CourseSeminars.Should().HaveCount(2).And.Contain(x => x.Seminar.Name == "Seminar1")
                 .And.Contain(x => x.Seminar.Name == "Seminar3");
@@ -169,7 +169,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Edit(8);
 
@@ -179,7 +179,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_CourseDesignViewModel()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -189,7 +189,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_CourseDesignViewModel_with_checklist()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -200,7 +200,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_CourseDesignViewModel_with_correct_CourseDesign()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -210,7 +210,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_CourseDesignViewModel_with_ALL_Seminars_injected_into_checklist()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Edit(1);
 
@@ -222,8 +222,8 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_CourseDesign_with_correct_properties()
         {
-            var controller = new CourseDesignController(_context);
-            CourseDesign cd = _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            var controller = new CourseDesignController(Context);
+            CourseDesign cd = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
             cd.Name = "Effects";
             cd.Description = "Learn about effects";
 
@@ -233,15 +233,15 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Edit(1, CourseDesignView);
 
-            _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1).Should().BeEquivalentTo<CourseDesign>(cd);
+            Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1).Should().BeEquivalentTo<CourseDesign>(cd);
         }
 
         [Fact]
         public async Task Edit_updates_CourseDesign_with_correct_CourseSeminars()
         {
-            var controller = new CourseDesignController(_context);
-            CourseDesign cd = _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
-            var Seminars = await _context.Seminars.ToListAsync();
+            var controller = new CourseDesignController(Context);
+            CourseDesign cd = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            var Seminars = await Context.Seminars.ToListAsync();
 
             CourseDesignViewModel CourseDesignView = new CourseDesignViewModel(cd, Seminars);
             CourseDesignView.CheckList[2].IsSelected = false;
@@ -250,15 +250,15 @@ namespace VocalSchool.Test.Controllers
 
             await controller.Edit(1, CourseDesignView);
 
-            _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1).CourseSeminars.Should()
+            Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1).CourseSeminars.Should()
                 .HaveCount(1).And.Contain(x => x.Seminar.Name == "Seminar3");
         }
 
         [Fact]
         public async Task Edit_returns_NotFound_if_Id_changes()
         {
-            var controller = new CourseDesignController(_context);
-            CourseDesign cd = _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            var controller = new CourseDesignController(Context);
+            CourseDesign cd = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
 
             CourseDesignViewModel CourseDesignView = new CourseDesignViewModel();
             CourseDesignView.CourseDesign = cd;
@@ -272,7 +272,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_View_if_modelstate_not_valid()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
             controller.ViewData.ModelState.AddModelError("key", "some error");
             CourseDesignViewModel CourseDesignView = new CourseDesignViewModel();
             CourseDesignView.CourseDesign = new CourseDesign() { CourseDesignId = 1 };
@@ -286,13 +286,13 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_NotFound_if_concurrencyException_occurs()
         {
-            var controller = new CourseDesignController(_context);
-            CourseDesign cd = await _context.CourseDesigns.FirstOrDefaultAsync(x => x.CourseDesignId == 1);
-            var Seminars = await _context.Seminars.ToListAsync();
+            var controller = new CourseDesignController(Context);
+            CourseDesign cd = await Context.CourseDesigns.FirstOrDefaultAsync(x => x.CourseDesignId == 1);
+            var Seminars = await Context.Seminars.ToListAsync();
             CourseDesignViewModel CourseDesignView = new CourseDesignViewModel(cd, Seminars);
 
-            _context.Remove(cd);
-            await _context.SaveChangesAsync();
+            Context.Remove(cd);
+            await Context.SaveChangesAsync();
 
             IActionResult result = await controller.Edit(1, CourseDesignView);
 
@@ -302,7 +302,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Correct_CourseDesign()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Delete(1);
 
@@ -312,7 +312,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
             IActionResult result = await controller.Delete(8);
 
@@ -322,13 +322,13 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_CourseDesign_from_Db()
         {
-            var controller = new CourseDesignController(_context);
+            var controller = new CourseDesignController(Context);
 
-            var CourseDesign = _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            var CourseDesign = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
 
             await controller.DeleteConfirmed(1);
 
-            var result = _context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            var result = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
 
             result.Should().BeNull();
         }
@@ -336,7 +336,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
         {
-            var controller = new SubjectController(_context);
+            var controller = new SubjectController(Context);
             CourseDesign cd = new CourseDesign();
             CourseDesign cd2 = new CourseDesign();
             cd.CourseDesignId = 1;

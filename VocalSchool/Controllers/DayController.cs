@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using VocalSchool.Data;
 using VocalSchool.Models;
 using VocalSchool.ViewModels;
@@ -137,6 +133,12 @@ namespace VocalSchool.Controllers
 
             await _db.RemoveAsync(day);
             return RedirectToAction(nameof(Index));
+        }
+
+        public ControllerContext GetContext([FromServices] ControllerContext ctx)
+        {
+            var c = ctx;
+            return c;
         }
     }
 }
