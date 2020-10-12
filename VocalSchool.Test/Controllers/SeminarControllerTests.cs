@@ -17,6 +17,10 @@ namespace VocalSchool.Test.Controllers
     public class SeminarControllerTests : VocalSchoolTestBase
 
     {
+        public SeminarControllerTests(ConfigFixture fixture) : base(fixture)
+        {
+        }
+        
         [Fact]
         public async Task Index_returns_ViewResult()
         {

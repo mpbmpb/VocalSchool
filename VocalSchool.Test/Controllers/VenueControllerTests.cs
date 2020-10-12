@@ -18,6 +18,10 @@ namespace VocalSchool.Test.Controllers
     public class VenueControllerTests : VocalSchoolTestBase
 
     {
+        public VenueControllerTests(ConfigFixture fixture) : base(fixture)
+        {
+        }
+        
         [Fact]
         public async Task Index_returns_ViewResult()
         {

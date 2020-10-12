@@ -13,8 +13,11 @@ using System.ComponentModel.DataAnnotations;
 namespace VocalSchool.Test.Controllers
 {
     public class ContactControllerTests : VocalSchoolTestBase
-
     {
+        public ContactControllerTests(ConfigFixture fixture) : base(fixture)
+        {
+        }
+
         [Fact]
         public async Task Index_returns_ViewResult()
         {

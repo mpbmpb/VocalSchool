@@ -1,37 +1,35 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Models;
+using Xunit;
 
 namespace VocalSchool.Test.Infrastructure
 {
-    public class VocalSchoolTestBase : IDisposable
+    public class VocalSchoolTestBase : IClassFixture<ConfigFixture>,IDisposable
     {
         protected readonly SchoolContext Seedcontext;
         protected readonly SchoolContext Context;
         protected readonly SchoolContext Resultcontext;
-        private bool _isLazyLoading = true;
+        private ConfigFixture _fixture;
         
-        public VocalSchoolTestBase()
+        public VocalSchoolTestBase(ConfigFixture fixture)
         {
-            // CheckLazyLoadingAppsetting();
+            _fixture = fixture;
+            
             var options = new DbContextOptionsBuilder<SchoolContext>()
+                .UseLazyLoadingProxies(fixture.IsLazyLoading)
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
-            if (_isLazyLoading)
-            {
-                options = new DbContextOptionsBuilder<SchoolContext>()
-                .UseLazyLoadingProxies()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-            }
-          
+                
             Seedcontext = new SchoolContext(options);
             Context = new SchoolContext(options);
             Resultcontext = new SchoolContext(options);
 
-            Context.Database.EnsureCreated();
+            Seedcontext.Database.EnsureCreated();
 
             VocalSchoolInitializer.Initialize(Seedcontext);
         }
@@ -61,19 +59,14 @@ namespace VocalSchool.Test.Infrastructure
             }
             return day;
         }
-
-        private void CheckLazyLoadingAppsetting()
+        
+        protected async Task<T> GetModel<T>(Func<int?, Task<IActionResult>> method, int id)
         {
-            var dir = Directory.GetCurrentDirectory();
-            var path = Path.GetDirectoryName(dir
-                .Substring(0, dir.IndexOf("VocalSchool.Test")));
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile($"{path}/VocalSchool/appsettings.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables();
-            
-            IConfigurationRoot configuration = builder.Build();
-            _isLazyLoading = configuration.GetValue<bool>("LazyLoading");
+            var actionResult = await method(id);
+            var model = actionResult.As<ViewResult>().Model.As<T>();
+            return model;
         }
+
+        
     }
 }

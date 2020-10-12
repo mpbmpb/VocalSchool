@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,12 +17,16 @@ namespace VocalSchool.Test.Controllers
     public class DayControllerTests : VocalSchoolTestBase
 
     {
+        public DayControllerTests(ConfigFixture fixture) : base(fixture)
+        {
+        }
+        
+        private DayController Controller => new DayController(Context);
+
         [Fact]
         public async Task Index_returns_ViewResult()
         {
-            var controller = new DayController(Context);
-            
-            IActionResult result = await controller.Index();
+            var result = await Controller.Index();
             
             result.Should().BeOfType<ViewResult>();
         }
@@ -29,9 +34,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_Days()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Index();
+            var result = await Controller.Index();
 
             result.As<ViewResult>().Model.Should().BeOfType<List<Day>>();
         }
@@ -39,9 +42,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_Days()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Index();
+            var result = await Controller.Index();
 
             result.As<ViewResult>().Model.As<List<Day>>().Should().HaveCount(6);
         }
@@ -49,9 +50,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Day()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.Should().BeAssignableTo<Day>();
         }
@@ -59,9 +58,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Day()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.As<Day>().Name.Should().Be("Day1");
         }
@@ -69,9 +66,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Day_with_All_DaySubjects()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.As<Day>().DaySubjects.Should()
                 .HaveCount(3).And.Contain(x => x.Subject.Name == "Introduction")
@@ -82,9 +77,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Details(8);
+            var result = await Controller.Details(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -92,9 +85,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_returns_view_when_not_passed_Id()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Create();
+            var result = await Controller.Create();
 
             result.Should().BeOfType<ViewResult>();
         }
@@ -102,37 +93,31 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Day()
         {
-            var controller = new DayController(Context);
-
-            Day d = new Day
+            var d = new Day
             {
                 DayId = 7,
                 Name = "Day7",
                 Description = "Learn about effects",
             };
+            var dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
 
-            DayViewModel dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
-
-            await controller.Create(dayView);
+            await Controller.Create(dayView);
 
             Context.Days.Should().HaveCount(7);
         }
 
         [Fact]
         public async Task Create_stores_Day_with_correct_properties()
-        { 
-            var controller = new DayController(Context);
-
-            Day d = new Day
+        {
+            var d = new Day
             {
                 DayId = 7,
                 Name = "Day7",
                 Description = "Learn about effects",
             };
+            var dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
 
-            DayViewModel dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
-
-            await controller.Create(dayView);
+            await Controller.Create(dayView);
 
             Context.Days.FirstOrDefault(x => x.DayId == 7).Should().BeEquivalentTo(d);
         }
@@ -140,15 +125,13 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Day_with_correct_daySubjects()
         {
-            var controller = new DayController(Context);
-
-            Day d = new Day { DayId = 7, Name = "Day7", Description = "Learn about effects",};
+            var d = new Day { DayId = 7, Name = "Day7", Description = "Learn about effects",};
             var subjects = await Context.Subjects.ToListAsync();
-            DayViewModel dayView = new DayViewModel(subjects) {Day = d};
+            var dayView = new DayViewModel(subjects) {Day = d};
             dayView.CheckList[0].IsSelected = true;
             dayView.CheckList[4].IsSelected = true;
 
-            await controller.Create(dayView);
+            await Controller.Create(dayView);
 
             Context.Days.FirstOrDefault(x => x.DayId == 7)?.DaySubjects.Should()
                 .HaveCount(2).And.Contain(x => x.Subject.Name == "Introduction")
@@ -158,9 +141,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Edit(8);
+            var result = await Controller.Edit(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -168,9 +149,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.Should().BeOfType<DayViewModel>();
         }
@@ -178,9 +157,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel_with_checklist()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<DayViewModel>().CheckList
                 .Should().NotBeNullOrEmpty(because: "we seeded the Db with subjects");
@@ -189,9 +166,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel_with_correct_Day()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<DayViewModel>().Day.Name.Should().Be("Day1");
         }
@@ -200,9 +175,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_DayViewModel_with_ALL_subjects_injected_into_checklist()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<DayViewModel>().CheckList
                 .Should().HaveCount(6).And.Contain(x => x.Name == "Introduction")
@@ -214,35 +187,28 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_Day_with_correct_properties()
         {
-            var controller = new DayController(Context);
-
-            Day d = Context.Days.FirstOrDefault(x => x.DayId == 1);
-            d.Name = "Effects";
-            d.Description = "Learn about effects";
-
-            DayViewModel dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
-
-            await controller.Edit(1, dayView);
+            var model = await GetModel<DayViewModel>(Controller.Edit, 1);
+            model.Day.Name = "Effects";
+            model.Day.Description = "Learn about effects";
+            await Controller.Edit(1, model);
 
             Resultcontext.Days.FirstOrDefault(x => x.DayId == 1)?.Name.Should().Be("Effects");
             Resultcontext.Days.FirstOrDefault(x => x.DayId == 1)?.Description.Should().Be("Learn about effects");
         }
-        
+
         [Fact]
         public async Task Edit_updates_Day_with_correct_DaySubjects()
         {
-            var controller = new DayController(Context);
-
-            Day d = Context.Days.FirstOrDefault(x => x.DayId == 1);
+            var d = Context.Days.FirstOrDefault(x => x.DayId == 1);
             var subjects = await Context.Subjects.ToListAsync();
             
-            DayViewModel dayView = new DayViewModel(d, subjects);
+            var dayView = new DayViewModel(d, subjects);
             dayView.CheckList[0].IsSelected = false;
             dayView.CheckList[1].IsSelected = false;
             dayView.CheckList[2].IsSelected = false;
             dayView.CheckList[3].IsSelected = true;
 
-            await controller.Edit(1, dayView);
+            await Controller.Edit(1, dayView);
 
             Resultcontext.Days.FirstOrDefault(x => x.DayId == 1)?.DaySubjects.Should()
                 .HaveCount(1).And.Contain(x => x.Subject.Name == "Neutral");
@@ -251,13 +217,10 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_NotFound_if_Id_changes()
         {
-            var controller = new DayController(Context);
+            var d = Context.Days.FirstOrDefault(x => x.DayId == 1);
+            var dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
 
-            Day d = Context.Days.FirstOrDefault(x => x.DayId == 1);
-
-            DayViewModel dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
-
-            IActionResult result = await controller.Edit(8, dayView);
+            var result = await Controller.Edit(8, dayView);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -265,12 +228,11 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_View_if_Model_state_not_valid()
         {
-            var controller = new DayController(Context);
-            
+            var controller = Controller;
             controller.ViewData.ModelState.AddModelError("key", "Some Exception");
-            DayViewModel dayView = new DayViewModel { Day = new Day {DayId = 1}, CheckList = new List<CheckedId>()};
+            var dayView = new DayViewModel { Day = new Day {DayId = 1}, CheckList = new List<CheckedId>()};
 
-            IActionResult result = await controller.Edit(1, dayView);
+            var result = await controller.Edit(1, dayView);
 
             result.Should().BeOfType<ViewResult>();
         }
@@ -278,17 +240,14 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
         {
-            var controller = new DayController(Context);
-
-            Day d = Context.Days.FirstOrDefault(x => x.DayId == 1);
+            var d = Context.Days.FirstOrDefault(x => x.DayId == 1);
             Context.Remove(d);
             await Context.SaveChangesAsync();
 
-            DayViewModel dayView = new DayViewModel();
+            var dayView = new DayViewModel();
             dayView.Day = d;
             dayView.CheckList = new List<CheckedId>();
-
-            IActionResult result = await controller.Edit(1, dayView);
+            var result = await Controller.Edit(1, dayView);
 
             result.As<RedirectToActionResult>().ActionName.Should().Match("Index");
         }
@@ -296,9 +255,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Correct_Day()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Delete(1);
+            var result = await Controller.Delete(1);
 
             result.As<ViewResult>().Model.As<Day>().Name.Should().Be("Day1");
         }
@@ -306,9 +263,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new DayController(Context);
-
-            IActionResult result = await controller.Delete(8);
+            var result = await Controller.Delete(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -316,9 +271,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_Day_from_Db()
         {
-            var controller = new DayController(Context);
-            
-            await controller.DeleteConfirmed(1);
+            await Controller.DeleteConfirmed(1);
 
             var result = Context.Days.FirstOrDefault(x => x.DayId == 1);
 
@@ -328,8 +281,8 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
         {
-            Day d = new Day();
-            Day d2 = new Day();
+            var d = new Day();
+            var d2 = new Day();
             d.DayId = 1;
             d2.DayId = 1;
             d2.Name = "123";
