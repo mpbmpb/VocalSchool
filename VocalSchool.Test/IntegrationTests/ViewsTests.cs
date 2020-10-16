@@ -3,8 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using VocalSchool.Models;
 using VocalSchool.Test.Infrastructure;
 using Xunit;
@@ -37,12 +35,12 @@ namespace VocalSchool.Test.IntegrationTests
             var page = await _client.GetAsync("/contact/" + view);
             var content = await page.Content.ReadAsStringAsync();
 
-            page.StatusCode.Should().Equals(HttpStatusCode.OK);
+            page.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().ContainAll(expected);
         }
 
         [Theory]
-        [InlineData(@"AddCourseDates", "")] //TODO add expected strings once coursdates are fully implemented
+        [InlineData(@"AddCourseDates/1", "")] //TODO add expected strings once coursdates are fully implemented
         [InlineData(@"create", nameof(Course.Name), nameof(Course.Description), nameof(Course.CourseDesign))]
         [InlineData(@"delete/3", "Course3", "complete course")]
         [InlineData(@"details/1", "Course1", "workshop", "CourseDesign1", "One weekend workshop")]
@@ -54,7 +52,7 @@ namespace VocalSchool.Test.IntegrationTests
             var page = await _client.GetAsync("/course/" + view);
             var content = await page.Content.ReadAsStringAsync();
 
-            page.StatusCode.Should().Equals(HttpStatusCode.OK);
+            page.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().ContainAll(expected);
         }
         
@@ -67,15 +65,33 @@ namespace VocalSchool.Test.IntegrationTests
             "Day1", "The modes Neutral and Overdrive.", "Overview")]
         [InlineData(@"edit/2", "CourseDesign2", "Short 4 day introduction course.", "Seminar3", "Day6", "Introduction")]
         [InlineData(@"index", "CourseDesign3", "One weekend workshop", "Seminar2", "Day5", "Edge")]
-        public async Task CourseDesign_Views_return_OKResult_and_contain_seeded_details(string view, params string[] expected)
+        public async Task CourseDesign_Views_return_OKResult_and_contain_seeded_details(
+            string view, params string[] expected)
         {
             var page = await _client.GetAsync("/coursedesign/" + view);
             var content = await page.Content.ReadAsStringAsync();
 
-            page.StatusCode.Should().Equals(HttpStatusCode.OK);
+            page.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().ContainAll(expected);
+        }
+        
+        [Theory]
+        [InlineData(@"create", nameof(Day.Name), nameof(Day.Description))]
+        [InlineData(@"delete/3", "Day3", "Deeper in the modes.")]
+        [InlineData(@"details/1", "Day1", "Introduction day. Overview of the system, overall principles.", 
+            "Overview", "What is cvt and how is it structured.", "CVT App pages 15-24")]
+        [InlineData(@"edit/2", "Day2", "The modes Neutral and Overdrive.", "Neutral", 
+            "Introduction", "Overview", "Support", "Overdrive")]
+        [InlineData(@"index", "Day6", "All the modes.", "Overview", "Neutral")]
+        public async Task Day_Views_return_OKResult_and_contain_seeded_details(string view, params string[] expected)
+        {    
+            var page = await _client.GetAsync("/day/" + view);
+            var content = await page.Content.ReadAsStringAsync();
+
+            page.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().ContainAll(expected);
         }
 
-
+        
     }
 }
