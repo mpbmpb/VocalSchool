@@ -92,6 +92,39 @@ namespace VocalSchool.Test.IntegrationTests
             content.Should().ContainAll(expected);
         }
 
+        [Theory]
+        [InlineData(@"create", nameof(Seminar.Name), nameof(Seminar.Description), "Day1", "Day3", "Day6")]
+        [InlineData(@"delete/3", "Seminar3", "Recap, questions and eval.")]
+        [InlineData(@"details/1", "Seminar1", "Introduction seminar.", "Day1" ,"Day2", "Overview", "Neutral" ,"Support")]
+        [InlineData(@"edit/2", "Seminar2", "Diving deeper in the modes.", "Day2","Day4", "Day6", "Introduction", 
+            "Overview", "Neutral" ,"Support")]
+        [InlineData(@"index", "Seminar1", "Seminar3", "Day1" ,"Day5", "Day6")]
+        public async Task Seminar_Views_return_OKResult_and_contain_seeded_details(
+            string view, params string[] expected)
+        {
+            var page = await _client.GetAsync("/seminar/" + view);
+            var content = await page.Content.ReadAsStringAsync();
+
+            page.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().ContainAll(expected);
+        }
+
+        [Theory]
+        [InlineData(@"create", nameof(Subject.Name), nameof(Subject.Description), nameof(Subject.RequiredReading))]
+        [InlineData(@"delete/3", "Support", "Introduction into support, and how to use it.", "CVT App pages 15-24")]
+        [InlineData(@"details/1", "Introduction", "What is cvt and how is it structured.", "CVT App pages 3-8")]
+        [InlineData(@"edit/5", "Overdrive", "Introduction into overdrive, and how to use it.", "CVT App pages 85-89")]
+        [InlineData(@"index", "Overview", "Neutral", "Edge", "Introduction into neutral, and how to use it.", 
+            "CVT App pages 76-80")]
+        public async Task Subject_Views_return_OKResult_and_contain_seeded_details(string view, params string[] expected)
+        {        
+            var page = await _client.GetAsync("/subject/" + view);
+            var content = await page.Content.ReadAsStringAsync();
+
+            page.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().ContainAll(expected);
+        }
+
         
     }
 }
