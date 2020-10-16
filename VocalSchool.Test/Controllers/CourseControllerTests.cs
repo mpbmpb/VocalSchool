@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace VocalSchool.Test.Controllers
 {
-    public class CourseControllerTests : VocalSchoolTestBase
+    public class CourseControllerTests : UnitTestBase
 
     {
         public CourseControllerTests(ConfigFixture fixture) : base(fixture)

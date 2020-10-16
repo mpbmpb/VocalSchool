@@ -4,7 +4,7 @@ using VocalSchool.Models;
 
 namespace VocalSchool.Test.Infrastructure
 {
-    public class VocalSchoolInitializer
+    public class DbInitializer
     {
         public static void Initialize(SchoolContext context)
         {

@@ -8,14 +8,14 @@ using Xunit;
 
 namespace VocalSchool.Test.Infrastructure
 {
-    public class VocalSchoolTestBase : IClassFixture<ConfigFixture>,IDisposable
+    public class UnitTestBase : IClassFixture<ConfigFixture>,IDisposable
     {
         protected readonly SchoolContext Seedcontext;
         protected readonly SchoolContext Context;
         protected readonly SchoolContext Resultcontext;
         private ConfigFixture _fixture;
         
-        public VocalSchoolTestBase(ConfigFixture fixture)
+        public UnitTestBase(ConfigFixture fixture)
         {
             _fixture = fixture;
             
@@ -30,7 +30,7 @@ namespace VocalSchool.Test.Infrastructure
 
             Seedcontext.Database.EnsureCreated();
 
-            VocalSchoolInitializer.Initialize(Seedcontext);
+            DbInitializer.Initialize(Seedcontext);
         }
 
         public void Dispose()

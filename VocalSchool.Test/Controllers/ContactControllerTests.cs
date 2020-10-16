@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VocalSchool.Test.Controllers
 {
-    public class ContactControllerTests : VocalSchoolTestBase
+    public class ContactControllerTests : UnitTestBase
     {
         public ContactControllerTests(ConfigFixture fixture) : base(fixture)
         {

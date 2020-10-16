@@ -13,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VocalSchool.Test.Controllers
 {
-    public class SeminarControllerTests : VocalSchoolTestBase
+    public class SeminarControllerTests : UnitTestBase
 
     {
         public SeminarControllerTests(ConfigFixture fixture) : base(fixture)
