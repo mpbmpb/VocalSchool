@@ -42,7 +42,7 @@ namespace VocalSchool.Test.IntegrationTests
         }
 
         [Theory]
-        [InlineData(@"AddCourseDates", "")] 
+        [InlineData(@"AddCourseDates", "")] //TODO add expected strings once coursdates are fully implemented
         [InlineData(@"create", nameof(Course.Name), nameof(Course.Description), nameof(Course.CourseDesign))]
         [InlineData(@"delete/3", "Course3", "complete course")]
         [InlineData(@"details/1", "Course1", "workshop", "CourseDesign1", "One weekend workshop")]
@@ -57,6 +57,25 @@ namespace VocalSchool.Test.IntegrationTests
             page.StatusCode.Should().Equals(HttpStatusCode.OK);
             content.Should().ContainAll(expected);
         }
+        
+        //TODO add CourseDate Views tests once coursedates are fully implemented
+        
+        [Theory]
+        [InlineData(@"create", nameof(CourseDesign.Name), nameof(CourseDesign.Description))]
+        [InlineData(@"delete/3", "CourseDesign3", "Complete 3 seminars introduction course.")]
+        [InlineData(@"details/1", "CourseDesign1", "One weekend workshop", "Seminar1", "Introduction seminar.",
+            "Day1", "The modes Neutral and Overdrive.", "Overview")]
+        [InlineData(@"edit/2", "CourseDesign2", "Short 4 day introduction course.", "Seminar3", "Day6", "Introduction")]
+        [InlineData(@"index", "CourseDesign3", "One weekend workshop", "Seminar2", "Day5", "Edge")]
+        public async Task CourseDesign_Views_return_OKResult_and_contain_seeded_details(string view, params string[] expected)
+        {
+            var page = await _client.GetAsync("/coursedesign/" + view);
+            var content = await page.Content.ReadAsStringAsync();
+
+            page.StatusCode.Should().Equals(HttpStatusCode.OK);
+            content.Should().ContainAll(expected);
+        }
+
 
     }
 }
