@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -179,8 +178,10 @@ namespace VocalSchool.Test.Controllers
 
             result.As<ViewResult>().Model.As<DayViewModel>().CheckList
                 .Should().HaveCount(6).And.Contain(x => x.Name == "Introduction")
-                .And.Contain(x => x.Name == "Overview").And.Contain(x => x.Name == "Support")
-                .And.Contain(x => x.Name == "Neutral").And.Contain(x => x.Name == "Overdrive")
+                .And.Contain(x => x.Name == "Overview")
+                .And.Contain(x => x.Name == "Support")
+                .And.Contain(x => x.Name == "Neutral")
+                .And.Contain(x => x.Name == "Overdrive")
                 .And.Contain(x => x.Name == "Edge");
         }
 

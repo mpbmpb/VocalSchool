@@ -1,5 +1,4 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,25 +17,28 @@ namespace VocalSchool.Test.Controllers
         {
         }
 
+        private ContactController Controller => new ContactController(Context);
+
+        private static Contact Contact7 => new Contact
+        {
+            ContactId = 7,
+            Name = "Effects",
+            Email = "info@acme.com",
+            Adress = "straat 1 Amsterdam"
+        };
+
         [Fact]
         public async Task Index_returns_ViewResult()
         {
-            //Arrange
-            var controller = new ContactController(Context);
+            var result = await Controller.Index();
 
-            //Act
-            IActionResult result = await controller.Index();
-
-            //Assert
             result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
         public async Task Index_returns_Contacts()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Index();
+            var result = await Controller.Index();
 
             result.As<ViewResult>().Model.Should().BeOfType<List<Contact>>();
         }
@@ -44,9 +46,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_Contacts()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Index();
+            var result = await Controller.Index();
 
             result.As<ViewResult>().Model.As<List<Contact>>().Should().HaveCount(3);
         }
@@ -54,9 +54,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Contact()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.Should().BeAssignableTo<Contact>();
         }
@@ -64,9 +62,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Contact()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.As<Contact>().Name.Should().Be("Contact1");
         }
@@ -74,9 +70,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Details(8);
+            var result = await Controller.Details(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -84,9 +78,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public void Create_returns_view_when_not_passed_Id()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = controller.Create();
+            var result = Controller.Create();
 
             result.Should().BeOfType<ViewResult>();
         }
@@ -94,43 +86,23 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Contact()
         {
-            var controller = new ContactController(Context);
-            Contact c = new Contact
-            {
-                ContactId = 7,
-                Name = "Effects",
-                Email = "info@acme.com",
-                Adress = "straat 1 Amsterdam"
-            };
+            await Controller.Create(Contact7);
 
-            await controller.Create(c);
-
-            Context.Contacts.Should().HaveCount(4);
+            Resultcontext.Contacts.Should().HaveCount(4);
         }
 
         [Fact]
         public async Task Create_stores_Contact_with_correct_properties()
         {
-            var controller = new ContactController(Context);
-            Contact c = new Contact
-            {
-                ContactId = 7,
-                Name = "Effects",
-                Email = "info@acme.com",
-                Adress = "straat 1 Amsterdam"
-            };
+            await Controller.Create(Contact7);
 
-            await controller.Create(c);
-
-            Context.Contacts.FirstOrDefault(x => x.ContactId == 7).Should().BeEquivalentTo(c);
+            Resultcontext.Contacts.FirstOrDefault(x => x.ContactId == 7).Should().BeEquivalentTo(Contact7);
         }
 
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Edit(8);
+            var result = await Controller.Edit(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -138,9 +110,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Contact()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.Should().BeAssignableTo<Contact>();
         }
@@ -148,9 +118,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Correct_Contact()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<Contact>().Name.Should().Be("Contact1");
         }
@@ -158,27 +126,21 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_Contact_with_correct_properties()
         {
-            var controller = new ContactController(Context);
-            Contact c = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
-            c.Name = "Effects";
-            c.Email = "info@acme.com";
-            c.Adress = "straat 1 Amsterdam";
+            var c = Contact7;
+            c.ContactId = 1;
 
-            await controller.Edit(1, c);
+            await Controller.Edit(1, c);
 
-            Context.Contacts.FirstOrDefault(x => x.ContactId == 1).Should().BeEquivalentTo(c);
+            Resultcontext.Contacts.FirstOrDefault(x => x.ContactId == 1).Should().BeEquivalentTo(c);
         }
 
         [Fact]
         public async Task Edit_returns_NotFound_if_Id_changes()
-        {
-            var controller = new ContactController(Context);
-            Contact c = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
-            c.Name = "Effects";
-            c.Email = "info@acme.com";
-            c.Adress = "straat 1 Amsterdam";
+        {                
+            var c = Contact7;
+            c.ContactId = 1;
 
-            IActionResult result = await controller.Edit(8, c);
+            var result = await Controller.Edit(8, c);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -186,25 +148,23 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Redirect_if_modelstate_not_valid()
         {
-            var controller = new ContactController(Context);
+            var controller = Controller;
             controller.ViewData.ModelState.AddModelError("key", "Some Exception");
-            Contact c = new Contact();
-            c.ContactId = 1;
+            var c = new Contact {ContactId = 1};
 
-            IActionResult result = await controller.Edit(1, c);
+            var result = await controller.Edit(1, c);
 
             result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
         public async Task Edit_returns_NotFound_if_concurrencyException_occurs()
-        {
-            var controller = new ContactController(Context);
-            Contact c = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
+        {            
+            var c = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
             Context.Remove(c);
             await Context.SaveChangesAsync();
 
-            IActionResult result = await controller.Edit(1, c);
+            var result = await Controller.Edit(1, c);
 
             result.As<ActionResult>().Should().BeOfType<NotFoundResult>();
         }
@@ -212,9 +172,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Correct_Contact()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Delete(1);
+            var result = await Controller.Delete(1);
 
             result.As<ViewResult>().Model.As<Contact>().Name.Should().Be("Contact1");
         }
@@ -222,9 +180,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new ContactController(Context);
-
-            IActionResult result = await controller.Delete(8);
+            var result = await Controller.Delete(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -232,20 +188,17 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_Contact_from_Db()
         {
-            var controller = new ContactController(Context);
-
-            await controller.DeleteConfirmed(1);
-            var result = Context.Contacts.FirstOrDefault(x => x.ContactId == 1);
+            await Controller.DeleteConfirmed(1);
+            var result = Resultcontext.Contacts.FirstOrDefault(x => x.ContactId == 1);
 
             result.Should().BeNull();
         }
 
         [Fact]
         public void Validation_Leaving_Name_Null_Or_short_causes_modelstate_not_valid()
-        {
-            var controller = new ContactController(Context);
-            Contact c = new Contact();
-            Contact c2 = new Contact();
+        {            
+            var c = new Contact();
+            var c2 = new Contact();
             c.ContactId = 1;
             c2.ContactId = 1;
             c2.Name = "123";

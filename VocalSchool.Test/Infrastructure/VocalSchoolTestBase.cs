@@ -45,21 +45,6 @@ namespace VocalSchool.Test.Infrastructure
             Resultcontext.Dispose();
         }
 
-        public bool ViewContainsDay(string controllerName, string viewName)
-        {
-            bool day = false;
-            string[] viewString = File.ReadAllLines($"../../../../VocalSchool/Views/{controllerName}/{viewName}.cshtml");
-            for (int line = 0; line < viewString.Length; line++)
-            {
-                if (viewString[line].Contains(".Day"))
-                {
-                    day = true;
-                    break;
-                }
-            }
-            return day;
-        }
-        
         protected async Task<T> GetModel<T>(Func<int?, Task<IActionResult>> method, int id)
         {
             var actionResult = await method(id);

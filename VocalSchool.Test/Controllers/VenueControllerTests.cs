@@ -21,26 +21,21 @@ namespace VocalSchool.Test.Controllers
         public VenueControllerTests(ConfigFixture fixture) : base(fixture)
         {
         }
+
+        private VenueController Controller => new VenueController(Context);
         
         [Fact]
         public async Task Index_returns_ViewResult()
         {
-            //Arrange
-            var controller = new VenueController(Context);
+            var result = await Controller.Index();
 
-            //Act
-            IActionResult result = await controller.Index();
-
-            //Assert
             result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
         public async Task Index_returns_Venues()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Index();
+            var result = await Controller.Index();
 
             result.As<ViewResult>().Model.Should().BeOfType<List<Venue>>();
         }
@@ -48,9 +43,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_Venues()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Index();
+            var result = await Controller.Index();
 
             result.As<ViewResult>().Model.As<List<Venue>>().Should().HaveCount(2);
         }
@@ -58,9 +51,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Venue()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.Should().BeAssignableTo<Venue>();
         }
@@ -68,9 +59,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Venue()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.As<Venue>().Name.Should().Be("Venue1");
         }
@@ -78,9 +67,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Correct_Venue_with_All_Contacts()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Details(1);
+            var result = await Controller.Details(1);
 
             result.As<ViewResult>().Model.As<Venue>().Contact1.Name.Should().Match("Contact1");
             result.As<ViewResult>().Model.As<Venue>().Contact2.Name.Should().Match("Contact2");
@@ -89,9 +76,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Details_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Details(8);
+            var result = await Controller.Details(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -99,70 +84,61 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_returns_view_when_not_passed_Id()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Create();
+            var result = await Controller.Create();
 
             result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
         public async Task Create_stores_new_Venue()
-        {
-            var controller = new VenueController(Context);
-            Venue v = new Venue
+        {            
+            var v = new Venue
             {
                 VenueId = 7,
                 Name = "Venue7",
                 Info = "TBD",
             };
             var contacts = await Context.Contacts.ToListAsync();
-            VenueViewModel VenueView = new VenueViewModel(contacts);
-            VenueView.Venue = v;
+            var venueView = new VenueViewModel(contacts) {Venue = v};
 
-            await controller.Create(VenueView);
+            await Controller.Create(venueView);
 
             Context.Venues.Should().HaveCount(3);
         }
 
         [Fact]
         public async Task Create_stores_Venue_with_correct_properties()
-        {
-            var controller = new VenueController(Context);
-            Venue v = new Venue
+        {            
+            var v = new Venue
             {
                 VenueId = 7,
                 Name = "Venue7",
                 Info = "TBD",
             };
-            VenueViewModel VenueView = new VenueViewModel();
-            VenueView.Venue = v;
-            VenueView.ContactList = new List<SelectListItem>();
+            var venueView = new VenueViewModel {Venue = v, ContactList = new List<SelectListItem>()};
 
-            await controller.Create(VenueView);
+            await Controller.Create(venueView);
 
-            Context.Venues.FirstOrDefault(x => x.VenueId == 7).Should().BeEquivalentTo<Venue>(v);
+            Context.Venues.FirstOrDefault(x => x.VenueId == 7).Should().BeEquivalentTo(v);
         }
 
         [Fact]
         public async Task Create_stores_Venue_with_correct_Contacts()
-        {
-            var controller = new VenueController(Context);
-            Venue v = new Venue
+        {            
+            var v = new Venue
             {
                 VenueId = 7,
                 Name = "Venue7",
                 Info = "TBD",
             };
-            var Contacts = await Context.Contacts.ToListAsync();
-            VenueViewModel VenueView = new VenueViewModel(Contacts);
-            VenueView.Venue = v;
-            VenueView.Venue.Contact1 = new Contact();
-            VenueView.Venue.Contact2 = new Contact();
-            VenueView.Venue.Contact1.ContactId = Int32.Parse(VenueView.ContactList[1].Value);
-            VenueView.Venue.Contact2.ContactId = Int32.Parse(VenueView.ContactList[3].Value);
+            var contacts = await Context.Contacts.ToListAsync();
+            var venueView = new VenueViewModel(contacts) {Venue = v};
+            venueView.Venue.Contact1 = new Contact();
+            venueView.Venue.Contact2 = new Contact();
+            venueView.Venue.Contact1.ContactId = Int32.Parse(venueView.ContactList[1].Value);
+            venueView.Venue.Contact2.ContactId = Int32.Parse(venueView.ContactList[3].Value);
 
-            await controller.Create(VenueView);
+            await Controller.Create(venueView);
 
             var result = Context.Venues.FirstOrDefault(x => x.VenueId == 7);
 
@@ -173,9 +149,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Edit(8);
+            var result = await Controller.Edit(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -183,9 +157,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_VenueViewModel()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.Should().BeOfType<VenueViewModel>();
         }
@@ -193,9 +165,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_VenueViewModel_with_ContactList()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<VenueViewModel>().ContactList
                 .Should().NotBeNullOrEmpty(because: "we seeded the Db with Contacts");
@@ -204,9 +174,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_VenueViewModel_with_correct_Venue()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<VenueViewModel>().Venue.Name.Should().Be("Venue1");
         }
@@ -215,59 +183,50 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_VenueViewModel_with_ALL_Contacts_injected_into_ContactList()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Edit(1);
+            var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<VenueViewModel>().ContactList
                 .Should().HaveCount(4).And.Contain(x => x.Text == "Contact1")
-                .And.Contain(x => x.Text == "Contact2").And.Contain(x => x.Text == "Contact3");
+                .And.Contain(x => x.Text == "Contact2")
+                .And.Contain(x => x.Text == "Contact3");
         }
 
         [Fact]
         public async Task Edit_updates_Venue_with_correct_properties()
-        {
-            var controller = new VenueController(Context);
-            Venue v = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
+        {            
+            var v = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
             v.Name = "Effects";
             v.Info = "TBD";
 
-            VenueViewModel VenueView = new VenueViewModel();
-            VenueView.Venue = v;
-            VenueView.ContactList = new List<SelectListItem>();
+            var venueView = new VenueViewModel {Venue = v, ContactList = new List<SelectListItem>()};
 
-            await controller.Edit(1, VenueView);
+            await Controller.Edit(1, venueView);
 
-            Context.Venues.FirstOrDefault(x => x.VenueId == 1).Should().BeEquivalentTo<Venue>(v);
+            Context.Venues.FirstOrDefault(x => x.VenueId == 1).Should().BeEquivalentTo(v);
         }
 
         [Fact]
         public async Task Edit_updates_Venue_with_correct_Contacts()
-        {
-            var controller = new VenueController(Context);
-            Venue v = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
-            var Contacts = await Context.Contacts.ToListAsync();
+        {            var v = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
+            var contacts = await Context.Contacts.ToListAsync();
 
-            VenueViewModel VenueView = new VenueViewModel(v, Contacts);
-            VenueView.Venue.Contact1.ContactId = Int32.Parse(VenueView.ContactList[1].Value);
+            var venueView = new VenueViewModel(v, contacts);
+            venueView.Venue.Contact1.ContactId = Int32.Parse(venueView.ContactList[1].Value);
 
-            await controller.Edit(1, VenueView);
+            await Controller.Edit(1, venueView);
 
-            Context.Venues.FirstOrDefault(x => x.VenueId == 1).Contact1
+            Context.Venues.FirstOrDefault(x => x.VenueId == 1)?.Contact1
                 .Name.Should().Match("Contact3");
         }
 
         [Fact]
         public async Task Edit_returns_NotFound_if_Id_changes()
-        {
-            var controller = new VenueController(Context);
-            Venue v = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
+        {            
+            var v = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
 
-            VenueViewModel VenueView = new VenueViewModel();
-            VenueView.Venue = v;
-            VenueView.ContactList = new List<SelectListItem>();
+            var venueView = new VenueViewModel {Venue = v, ContactList = new List<SelectListItem>()};
 
-            IActionResult result = await controller.Edit(8, VenueView);
+            var result = await Controller.Edit(8, venueView);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -275,28 +234,28 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_returns_View_if_modelstate_not_valid()
         {
-            var controller = new VenueController(Context);
+            var controller = Controller;
             controller.ViewData.ModelState.AddModelError("key", "some error");
-            VenueViewModel VenueView = new VenueViewModel();
-            VenueView.Venue = new Venue() { VenueId = 1 };
-            VenueView.ContactList = new List<SelectListItem>();
+            var venueView = new VenueViewModel
+            {
+                Venue = new Venue() {VenueId = 1}, ContactList = new List<SelectListItem>()
+            };
 
-            IActionResult result = await controller.Edit(1, VenueView);
+            var result = await controller.Edit(1, venueView);
 
             result.Should().BeOfType<ViewResult>();
         }
 
         [Fact]
         public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
-        {
-            var controller = new VenueController(Context);
-            Venue v = await Context.Venues.FirstOrDefaultAsync(x => x.VenueId == 1);
-            var Contacts = await Context.Contacts.ToListAsync();
-            VenueViewModel VenueView = new VenueViewModel(v, Contacts);
+        {            
+            var v = await Context.Venues.FirstOrDefaultAsync(x => x.VenueId == 1);
+            var contacts = await Context.Contacts.ToListAsync();
+            var venueView = new VenueViewModel(v, contacts);
 
             Context.Remove(v);
             await Context.SaveChangesAsync();
-            IActionResult result = await controller.Edit(1, VenueView);
+            var result = await Controller.Edit(1, venueView);
 
             result.As<RedirectToActionResult>().ActionName.Should().Match("Index");
         }
@@ -304,9 +263,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Correct_Venue()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Delete(1);
+            var result = await Controller.Delete(1);
 
             result.As<ViewResult>().Model.As<Venue>().Name.Should().Be("Venue1");
         }
@@ -314,9 +271,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_returns_Notfound_if_given_unknown_id()
         {
-            var controller = new VenueController(Context);
-
-            IActionResult result = await controller.Delete(8);
+            var result = await Controller.Delete(8);
 
             result.Should().BeOfType<NotFoundResult>();
         }
@@ -324,11 +279,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_Venue_from_Db()
         {
-            var controller = new VenueController(Context);
-
-            var Venue = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
-
-            await controller.DeleteConfirmed(1);
+            await Controller.DeleteConfirmed(1);
 
             var result = Context.Venues.FirstOrDefault(x => x.VenueId == 1);
 
@@ -337,10 +288,9 @@ namespace VocalSchool.Test.Controllers
 
         [Fact]
         public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
-        {
-            var controller = new SubjectController(Context);
-            Venue v = new Venue();
-            Venue v2 = new Venue();
+        {            
+            var v = new Venue();
+            var v2 = new Venue();
             v.VenueId = 1;
             v2.VenueId = 1;
             v2.Name = "123";
