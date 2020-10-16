@@ -125,6 +125,25 @@ namespace VocalSchool.Test.IntegrationTests
             content.Should().ContainAll(expected);
         }
 
-        
+        [Theory]
+        [InlineData(@"create", nameof(Venue.Name), nameof(Venue.Adress), nameof(Venue.Email1), nameof(Venue.Info),
+            nameof(Venue.Phone), nameof(Venue.MapsUrl), nameof(Venue.Contact1))]
+        [InlineData(@"delete/2", "Venue2", "Alles checken, klopt altijd wel iets niet!", "sorry@qfactory.acme", 
+            "020-1206", "Atlantisplein 1 1000XX Amsterdam", "https://goo.gl/maps/u3isDnp99GXWZ23U7")]
+        [InlineData(@"details/1", "Venue1", "Van alles over de bel en de poort etc.", "info@polanen.acme", 
+            "020-1205", "polanenstraat 1 1000AA Amsterdam", "https://goo.gl/maps/qMjMmcgD43nf9Fqy9", "mitch@acme.com", 
+            "06-0002", "Contact2", "polanenbuurt 2 1000BB Amsterdam")]
+        [InlineData(@"edit/2", "Venue2", "Alles checken, klopt altijd wel iets niet!", "info@qfactory.acme", 
+            "020-1206", "Atlantisplein 1 1000XX Amsterdam", "https://goo.gl/maps/u3isDnp99GXWZ23U7")]
+        [InlineData(@"index", "Venue1", "Van alles over de bel en de poort etc.", "info@polanen.acme", 
+            "Contact3", "Atlantisplein 2 1000XX Amsterdam", "jenny@acme.com")]
+        public async Task Venue_Views_return_OKResult_and_contain_seeded_details(string view, params string[] expected)
+        {            
+            var page = await _client.GetAsync("/venue/" + view);
+            var content = await page.Content.ReadAsStringAsync();
+
+            page.StatusCode.Should().Be(HttpStatusCode.OK);
+            content.Should().ContainAll(expected);
+        }
     }
 }
