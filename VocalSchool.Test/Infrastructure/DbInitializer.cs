@@ -138,7 +138,7 @@ namespace VocalSchool.Test.Infrastructure
                     CourseDesign = context.CourseDesigns.Find(1)},
                 new Course() {CourseId = 2, Name = "Course2", Description = "short course",
                     CourseDesign = context.CourseDesigns.Find(2)},
-                new Course() {CourseId = 3, Name = "Course2", Description = "complete course",
+                new Course() {CourseId = 3, Name = "Course3", Description = "complete course",
                     CourseDesign = context.CourseDesigns.Find(3)}
             };
 
