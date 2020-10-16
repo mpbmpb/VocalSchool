@@ -25,7 +25,7 @@ namespace VocalSchool.Test.Controllers
             Name = "Effects",
             Email = "info@acme.com",
             Adress = "straat 1 Amsterdam"
-        };
+        };    
 
         [Fact]
         public async Task Index_returns_ViewResult()

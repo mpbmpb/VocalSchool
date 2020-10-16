@@ -213,8 +213,10 @@ namespace VocalSchool.Test.Controllers
             var courseDesigns = await Context.CourseDesigns.ToListAsync();
 
             var courseView = new CourseViewModel(c, courseDesigns);
-            courseView.Course.CourseDesign = new CourseDesign();
-            courseView.Course.CourseDesign.CourseDesignId = int.Parse(courseView.DesignList[1].Value);
+            courseView.Course.CourseDesign = new CourseDesign
+            {
+                CourseDesignId = int.Parse(courseView.DesignList[1].Value)
+            };
 
             await Controller.Edit(1, courseView);
 
