@@ -6,6 +6,7 @@ namespace VocalSchool.Models
     public class CourseDate
     {
         public int CourseDateId { get; set; }
+    
         [Required]
         public DateTime Date { get; set; }
         public int VenueId { get; set; }
