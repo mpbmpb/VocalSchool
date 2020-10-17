@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VocalSchool.Data;
 using VocalSchool.Models;
 
 namespace VocalSchool.Test.Infrastructure

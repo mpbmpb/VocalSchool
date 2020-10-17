@@ -3,6 +3,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using VocalSchool.Data;
 using VocalSchool.Models;
 using Xunit;
 

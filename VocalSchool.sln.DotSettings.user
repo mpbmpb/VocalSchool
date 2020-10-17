@@ -8,6 +8,11 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4055426c_002Dce79_002D4c21_002D9f6a_002D3424e46dbec7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=692e3ee7_002D1239_002D4766_002Da580_002D076f7b2e89cd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Subject_Views_return_OKResult_and_contain_seeded_details" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::A52B9544-CBE2-4C5A-AF54-AB0CE9BAF327::.NETCoreApp,Version=v3.1::VocalSchool.Test.IntegrationTests.ViewsTests.Subject_Views_return_OKResult_and_contain_seeded_details&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6dc86b9f_002Df3ea_002D4135_002D94a0_002De61d4116c27b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Index_returns_ViewResult #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::A52B9544-CBE2-4C5A-AF54-AB0CE9BAF327::.NETCoreApp,Version=v3.1::VocalSchool.Test.Controllers.DayControllerTests.Index_returns_ViewResult&lt;/TestId&gt;
@@ -30,9 +35,9 @@
     &lt;TestId&gt;xUnit::A52B9544-CBE2-4C5A-AF54-AB0CE9BAF327::.NETCoreApp,Version=v3.1::VocalSchool.Test.IntegrationTests.ViewsTests.Day_Views_return_OKResult_and_contain_seeded_details&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ee5d6211_002D6fa8_002D4d0d_002D948c_002De6dbedb5b459/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Index_returns_ViewResult #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ee5d6211_002D6fa8_002D4d0d_002D948c_002De6dbedb5b459/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Index_returns_ViewResult #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f67e89dd_002De3f4_002D4358_002D9b73_002D0ac051f630da/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Day_Views_return_OKResult_and_contain_seeded_details" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f67e89dd_002De3f4_002D4358_002D9b73_002D0ac051f630da/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Day_Views_return_OKResult_and_contain_seeded_details" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
