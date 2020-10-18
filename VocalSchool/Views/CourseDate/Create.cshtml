@@ -14,8 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" width="312" />
-
+                <input asp-for="Date" class="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="VenueId" class="control-label"></label>
@@ -49,7 +48,13 @@
 
 @section Scripts {
     <script>
-        $('#Date').datetimepicker({ uiLibrary: 'materialdesign', footer: true, modal: true });
+        $('#Date').datetimepicker({ 
+            uiLibrary: 'bootstrap4', footer: true, modal: true, 
+            datepicker: { 
+                weekStartDay: 1, showOtherMonths: true, selectOtherMonths: true, 
+                showOnFocus: true, showRightIcon: true
+            } 
+        });
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
