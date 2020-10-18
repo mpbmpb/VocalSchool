@@ -9,6 +9,9 @@ namespace VocalSchool.Models
         [DataType(DataType.Text)]
         [Required]
         public DateTime Date { get; set; }
+        
+        [Required]
+        public string EndTime { get; set; }
         public int VenueId { get; set; }
         public virtual Venue Venue { get; set; }
         public string ReservationInfo { get; set; }

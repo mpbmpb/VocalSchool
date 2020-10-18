@@ -16,6 +16,8 @@ namespace VocalSchool.Data
         public DbSet<CourseDate> CourseDates { get; set; }
         public DbSet<Venue> Venues { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+
+        public DbSet<Change> Changes { get; set; }
         
         public SchoolContext(DbContextOptions<SchoolContext> options)
             : base(options)
@@ -32,6 +34,8 @@ namespace VocalSchool.Data
 
             modelBuilder.Entity<CourseSeminar>()
                 .HasKey(cs => new { cs.CourseDesignId, cs.SeminarId });
+            
+            modelBuilder.Ignore<CourseProxy>();
         }
     }
 }

@@ -126,7 +126,8 @@ namespace VocalSchool.Test.Controllers
 
             await Controller.Create(courseView);
 
-            Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 7).Should().BeEquivalentTo(Course7);
+            Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 7).Should().BeEquivalentTo(Course7, options =>
+                options.Excluding(c => c.Details));
         }
 
         [Fact]
