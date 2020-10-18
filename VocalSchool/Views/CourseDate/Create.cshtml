@@ -14,11 +14,8 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input id="input" width="312" type="text" class="form-control"/>
-                @* <span asp-validation-for="Date" class="text-danger"></span> *@
-                <script>
-                        $('#input').datetimepicker({ footer: true, modal: true });
-                    </script>
+                <input asp-for="Date" class="form-control" width="312" />
+
             </div>
             <div class="form-group">
                 <label asp-for="VenueId" class="control-label"></label>
@@ -49,6 +46,10 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+
 @section Scripts {
+    <script>
+        $('#Date').datetimepicker({ uiLibrary: 'materialdesign', footer: true, modal: true });
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
