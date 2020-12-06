@@ -132,11 +132,10 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Course_with_correct_CourseDesign()
         {
-            var courseDesigns = await Context.CourseDesigns.ToListAsync();
-            var courseView = new CourseViewModel(courseDesigns) {Course = Course7};
+            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
             courseView.Course.CourseDesign = new CourseDesign
             {
-                CourseDesignId = Int32.Parse(courseView.DesignList[1].Value)
+                CourseDesignId = 3
             };
 
             await Controller.Create(courseView);
@@ -144,6 +143,20 @@ namespace VocalSchool.Test.Controllers
 
             result?.CourseDesign.Name.Should().Match("CourseDesign3");
         }
+
+        [Fact]
+        public async Task Create_copies_all_subjects_in_CourseDesign()
+        {
+            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            courseView.Course.CourseDesign = new CourseDesign
+            {
+                CourseDesignId = 1
+            };
+
+            await Controller.Create(courseView);
+            Resultcontext.Subjects.Should().HaveCount(11);
+        }
+
 
         [Fact]
         public async Task Edit_returns_Notfound_if_given_unknown_id()

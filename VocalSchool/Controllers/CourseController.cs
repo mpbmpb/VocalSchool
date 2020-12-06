@@ -200,5 +200,10 @@ namespace VocalSchool.Controllers
         {
             return _context.Courses.Any(e => e.CourseId == id);
         }
+
+        public async Task<int> CopyCourseDesignContents(int id)
+        {
+            return 0;
+        }
     }
 }
