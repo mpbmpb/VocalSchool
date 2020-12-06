@@ -31,7 +31,7 @@ namespace VocalSchool.Test.Infrastructure
 
             Seedcontext.Database.EnsureCreated();
 
-            DbInitializer.Initialize(Seedcontext);
+            DbInitializer.InitializeDb(Seedcontext);
         }
 
         public void Dispose()

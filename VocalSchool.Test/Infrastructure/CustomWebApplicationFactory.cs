@@ -50,7 +50,7 @@ namespace VocalSchool.Test.Infrastructure
 
                         dbContext.Database.EnsureCreated();
 
-                        DbInitializer.Initialize(dbContext);
+                        DbInitializer.InitializeDb(dbContext);
                     }
                 });
             }

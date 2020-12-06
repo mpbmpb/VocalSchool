@@ -3,17 +3,15 @@ using System.Linq;
 using VocalSchool.Models;
 using VocalSchool.Data;
 
-namespace VocalSchool.Test.Infrastructure
+namespace VocalSchool.Data
 {
     public class DbInitializer
     {
-        public static void Initialize(SchoolContext context)
+        public static void InitializeDb(SchoolContext context)
         {
             if (context.Subjects.Any()) { return; }
-
-
+            
             Seed(context);
-
         }
 
         private static void Seed(SchoolContext context)
