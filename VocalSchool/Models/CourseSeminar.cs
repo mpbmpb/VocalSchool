@@ -1,4 +1,5 @@
-﻿namespace VocalSchool.Models
+﻿using System;
+namespace VocalSchool.Models
 {
     public class CourseSeminar
     {

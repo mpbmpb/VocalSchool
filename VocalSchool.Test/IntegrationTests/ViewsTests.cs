@@ -43,7 +43,7 @@ namespace VocalSchool.Test.IntegrationTests
         [InlineData(@"AddCourseDates/1", "")] //TODO add expected strings once coursdates are fully implemented
         [InlineData(@"create", nameof(Course.Name), nameof(Course.Description), nameof(Course.CourseDesign))]
         [InlineData(@"delete/3", "Course3", "complete course")]
-        [InlineData(@"details/1", "Course1", "workshop", "CourseDesign1", "One weekend workshop", "Support", "Overdrive")]
+        [InlineData(@"details/1", "Course1", "workshop", "CourseDesign1", "One weekend workshop")]
         [InlineData(@"edit/2", "Course2", "short course", "CourseDesign2")]
         [InlineData(@"index", "Course1", "short course", "CourseDesign3" ,"complete course",
              "Day2", "Edge")]

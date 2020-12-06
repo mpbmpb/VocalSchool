@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VocalSchool.Data;
+using VocalSchool.Models;
 
 namespace VocalSchool.Migrations
 {
@@ -14,38 +15,7 @@ namespace VocalSchool.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7");
-
-            modelBuilder.Entity("VocalSchool.Models.Change", b =>
-                {
-                    b.Property<int>("ChangeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EntityId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("EntityType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("ForeignKey")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PropertyName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ChangeId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("Changes");
-                });
+                .HasAnnotation("ProductVersion", "3.1.6");
 
             modelBuilder.Entity("VocalSchool.Models.Contact", b =>
                 {
@@ -60,7 +30,6 @@ namespace VocalSchool.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
@@ -77,17 +46,13 @@ namespace VocalSchool.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CourseDesignId")
+                    b.Property<int?>("CourseDesignId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("MaxStudents")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("CourseId");
@@ -107,10 +72,6 @@ namespace VocalSchool.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EndTime")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ReservationInfo")
@@ -284,7 +245,6 @@ namespace VocalSchool.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
@@ -299,22 +259,11 @@ namespace VocalSchool.Migrations
                     b.ToTable("Venues");
                 });
 
-            modelBuilder.Entity("VocalSchool.Models.Change", b =>
-                {
-                    b.HasOne("VocalSchool.Models.Course", "Course")
-                        .WithMany("Changes")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("VocalSchool.Models.Course", b =>
                 {
                     b.HasOne("VocalSchool.Models.CourseDesign", "CourseDesign")
                         .WithMany()
-                        .HasForeignKey("CourseDesignId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseDesignId");
                 });
 
             modelBuilder.Entity("VocalSchool.Models.CourseDate", b =>
