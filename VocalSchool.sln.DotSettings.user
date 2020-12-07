@@ -1,4 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0022016f_002D750b_002D4969_002Dbc14_002D20a1977bf72e/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Create_stores_Course_with_correct_properties" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0ba3a542_002Dc4b9_002D4495_002Db008_002D8709bcdccbab/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
@@ -18,7 +21,7 @@
     &lt;TestId&gt;xUnit::A52B9544-CBE2-4C5A-AF54-AB0CE9BAF327::.NETCoreApp,Version=v3.1::VocalSchool.Test.Controllers.DayControllerTests.Index_returns_ViewResult&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7cf74a63_002D9c9c_002D4818_002Db06e_002D5135c8270552/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Create_copies_all_subjects_in_CourseDesign" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7cf74a63_002D9c9c_002D4818_002Db06e_002D5135c8270552/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Create_copies_all_subjects_in_CourseDesign" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=df682b0e_002Df3e5_002D461c_002Da8fe_002Dbd2f89d44a72/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Index_returns_ViewResult" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;

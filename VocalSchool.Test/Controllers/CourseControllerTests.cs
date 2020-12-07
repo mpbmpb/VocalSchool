@@ -26,7 +26,6 @@ namespace VocalSchool.Test.Controllers
 
         private static Course Course7 => new Course
         {
-            CourseId = 7,
             Name = "Course7",
             Description = "Learn about effects",
             CourseDates = new List<CourseDate>()
@@ -128,11 +127,11 @@ namespace VocalSchool.Test.Controllers
             
             await Controller.Create(courseView);
 
-            var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 7); 
+            var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 4); 
             
-            result?.Name.Should().Match(Course7.Name);
-            result?.Description.Should().Match(Course7.Description);
-            result?.CourseDesign.CourseDesignId.Should().Be(4, because:"we seeded the db with 3 CourseDesigns");
+            result.Name.Should().Match(Course7.Name);
+            result.Description.Should().Match(Course7.Description);
+            result.CourseDesign.CourseDesignId.Should().Be(4, because:"we seeded the db with 3 CourseDesigns");
         }
 
         [Fact]
@@ -145,9 +144,9 @@ namespace VocalSchool.Test.Controllers
             };
 
             await Controller.Create(courseView);
-            var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 7);
+            var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 4);
 
-            result?.CourseDesign.Name.Should().Match("[Course7-7] CourseDesign3");
+            result.CourseDesign.Name.Should().Match("[Course7-4] CourseDesign3");
         }
 
         [Theory]

@@ -59,8 +59,9 @@ namespace VocalSchool.Controllers
             var course = model.Course;
             if (ModelState.IsValid)
             {
-                model = await CopyCourseDesignAsync(model);
                 await _db.AddCourseAsync(model);
+                model = await CopyCourseDesignAsync(model);
+                await _db.UpdateCourseAsync(model);
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
