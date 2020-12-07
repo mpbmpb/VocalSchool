@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
@@ -19,7 +20,8 @@ namespace VocalSchool.Controllers
         // GET: Day
         public async Task<IActionResult> Index()
         {
-            return View(await _db.GetAllAsync<Day>());
+            var days = await _db.GetAllAsync<Day>();
+            return View(days.Where(x => x.Name[0] != '[').ToList());
         }
 
         // GET: Day/Details/5

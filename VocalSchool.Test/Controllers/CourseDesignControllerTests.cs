@@ -53,6 +53,16 @@ namespace VocalSchool.Test.Controllers
 
             result.As<ViewResult>().Model.As<List<CourseDesign>>().Should().HaveCount(3);
         }
+        
+        [Fact]
+        public async Task Index_only_returns_CourseDesigns_without_uid()
+        {
+            Context.Add(new CourseDesign{Name = "[prepend test] CourseDesign7"});
+            await Context.SaveChangesAsync();
+            var result = await Controller.Index();
+
+            result.As<ViewResult>().Model.As<List<CourseDesign>>().Should().HaveCount(3);
+        }
 
         [Fact]
         public async Task Details_returns_CourseDesign()

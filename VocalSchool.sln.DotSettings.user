@@ -5,10 +5,18 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0ba3a542_002Dc4b9_002D4495_002Db008_002D8709bcdccbab/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=15b21ed8_002Dbc39_002D47d8_002D8101_002D860ef9ae65c4/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Index_only_returns_days_without_uid" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::A52B9544-CBE2-4C5A-AF54-AB0CE9BAF327::.NETCoreApp,Version=v3.1::VocalSchool.Test.Controllers.DayControllerTests.Index_only_returns_days_without_uid&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=394e3263_002D08dd_002D4d66_002D949c_002D48c03dabd95d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4055426c_002Dce79_002D4c21_002D9f6a_002D3424e46dbec7/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="All tests from Solution #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Solution /&gt;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b808689_002D1fb4_002D4c7b_002D8a6e_002Df1a67c93c0e6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Index_only_returns_days_without_uid #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=692e3ee7_002D1239_002D4766_002Da580_002D076f7b2e89cd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Subject_Views_return_OKResult_and_contain_seeded_details" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;

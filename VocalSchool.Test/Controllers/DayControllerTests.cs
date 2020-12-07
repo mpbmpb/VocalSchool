@@ -21,6 +21,9 @@ namespace VocalSchool.Test.Controllers
         }
         
         private DayController Controller => new DayController(Context);
+        
+        private static Day Day7 => new Day { DayId = 7, Name = "Day7",
+            Description = "Learn about effects"};
 
         [Fact]
         public async Task Index_returns_ViewResult()
@@ -41,6 +44,16 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Index_returns_All_Days()
         {
+            var result = await Controller.Index();
+
+            result.As<ViewResult>().Model.As<List<Day>>().Should().HaveCount(6);
+        }
+        
+        [Fact]
+        public async Task Index_only_returns_days_without_uid()
+        {
+            Context.Add(new Day{Name = "[prepend test] day7"});
+            await Context.SaveChangesAsync();
             var result = await Controller.Index();
 
             result.As<ViewResult>().Model.As<List<Day>>().Should().HaveCount(6);
@@ -92,13 +105,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Day()
         {
-            var d = new Day
-            {
-                DayId = 7,
-                Name = "Day7",
-                Description = "Learn about effects",
-            };
-            var dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
+            var dayView = new DayViewModel { Day = Day7, CheckList = new List<CheckedId>()};
 
             await Controller.Create(dayView);
 
@@ -108,25 +115,18 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Day_with_correct_properties()
         {
-            var d = new Day
-            {
-                DayId = 7,
-                Name = "Day7",
-                Description = "Learn about effects",
-            };
-            var dayView = new DayViewModel { Day = d, CheckList = new List<CheckedId>()};
+            var dayView = new DayViewModel { Day = Day7, CheckList = new List<CheckedId>()};
 
             await Controller.Create(dayView);
 
-            Context.Days.FirstOrDefault(x => x.DayId == 7).Should().BeEquivalentTo(d);
+            Context.Days.FirstOrDefault(x => x.DayId == 7).Should().BeEquivalentTo(Day7);
         }
         
         [Fact]
         public async Task Create_stores_Day_with_correct_daySubjects()
         {
-            var d = new Day { DayId = 7, Name = "Day7", Description = "Learn about effects",};
             var subjects = await Context.Subjects.ToListAsync();
-            var dayView = new DayViewModel(subjects) {Day = d};
+            var dayView = new DayViewModel(subjects) {Day = Day7};
             dayView.CheckList[0].IsSelected = true;
             dayView.CheckList[4].IsSelected = true;
 

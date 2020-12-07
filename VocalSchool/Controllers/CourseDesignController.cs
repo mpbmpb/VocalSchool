@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using VocalSchool.Data;
 using VocalSchool.Models;
 using VocalSchool.ViewModels;
@@ -24,7 +21,8 @@ namespace VocalSchool.Controllers
         // GET: CourseDesign
         public async Task<IActionResult> Index()
         {
-            return View(await _db.GetAllAsync<CourseDesign>());
+            var cd = await _db.GetAllAsync<CourseDesign>();
+            return View(cd.Where(x => x.Name[0] != '[').ToList());
         }
 
         // GET: CourseDesign/Details/5

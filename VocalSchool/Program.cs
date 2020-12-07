@@ -25,15 +25,10 @@ namespace VocalSchool
                 });
     }
 }
-//TODO add no contact to contacts otherwise can't unselect contact in venue
-
-//TODO add edit button to days table in seminar details
 
 //TODO disable enter key as submit button
 
 //TODO change redirect on save to back to last page
-
-//TODO refactor _context out of controllers
 
 //TODO make method for tables in views
 
@@ -48,3 +43,7 @@ namespace VocalSchool
 //TODO make enrollment class (m2m)
 
 //TODO add login / roles
+
+//TODO filter edit views based on uid
+
+//TODO add edit btns for items in edit views

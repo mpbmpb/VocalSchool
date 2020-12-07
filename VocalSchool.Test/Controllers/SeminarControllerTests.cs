@@ -52,6 +52,16 @@ namespace VocalSchool.Test.Controllers
 
             result.As<ViewResult>().Model.As<List<Seminar>>().Should().HaveCount(3);
         }
+        
+        [Fact]
+        public async Task Index_only_returns_Seminars_without_uid()
+        {
+            Context.Add(new Seminar{Name = "[prepend test] seminar7"});
+            await Context.SaveChangesAsync();
+            var result = await Controller.Index();
+
+            result.As<ViewResult>().Model.As<List<Seminar>>().Should().HaveCount(3);
+        }
 
         [Fact]
         public async Task Index_returns_Seminars_with_Days()
