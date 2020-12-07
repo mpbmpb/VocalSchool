@@ -22,7 +22,8 @@ namespace VocalSchool.Controllers
         // GET: Subject
         public async Task<IActionResult> Index()
         {
-            return View(await _db.GetAllSubjectsIncludeDaysAsync());
+            var subjects = await _db.GetAllSubjectsIncludeDaysAsync();
+            return View(subjects.Where(x => x.Name[0] != '[').ToList());
         }
 
         // GET: Subject/Details/5

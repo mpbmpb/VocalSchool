@@ -48,6 +48,18 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
+        public async Task Index_only_returns_subjects_without_uid()
+        {
+            var s = new Subject() {Name = "[prepend test] Support", SubjectId = 7};
+            await Controller.Create(s);
+
+            var result = await Controller.Index();
+
+            result.As<ViewResult>().Model.As<List<Subject>>().Should().HaveCount(6);
+        }
+
+
+        [Fact]
         public async Task Details_returns_Subject()
         {
             var result = await Controller.Details(1);
