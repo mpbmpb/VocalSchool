@@ -133,6 +133,19 @@ namespace VocalSchool.Test.Controllers
             result.Description.Should().Match(Course7.Description);
             result.CourseDesign.CourseDesignId.Should().Be(4, because:"we seeded the db with 3 CourseDesigns");
         }
+        
+        [Fact]
+        public async Task CopyAndPrepend_does_just_that()
+        {
+            var s = await Context.Subjects.FirstOrDefaultAsync(x => x.SubjectId == 1);
+            var result = s.CopyAndPrependNameWith("[test]");
+
+            result.Name.Should().Match("[test] Introduction");
+            result.Description.Should().Match(s.Description);
+            result.RequiredReading.Should().Match(s.RequiredReading);
+            result.SubjectId.Should().Be(0);
+        }
+
 
         [Fact]
         public async Task Create_stores_Course_with_correct_CourseDesign()
@@ -514,6 +527,7 @@ namespace VocalSchool.Test.Controllers
             result.Should().BeFalse();
             result2.Should().BeFalse();
         }
+
 
     }
 }

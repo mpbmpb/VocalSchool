@@ -7,5 +7,15 @@ namespace VocalSchool.Models
         public virtual Day Day { get; set; }
         public int SubjectId { get; set; }
         public virtual Subject Subject { get; set; }
+
+        public DaySubject()
+        {
+        }
+
+        public DaySubject(int dayId, int subjectId)
+        {
+            DayId = dayId;
+            SubjectId = subjectId;   
+        }
     }
 }

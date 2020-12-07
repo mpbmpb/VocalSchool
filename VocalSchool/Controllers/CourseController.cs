@@ -56,7 +56,6 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CourseViewModel model)
         {
-            var course = model.Course;
             if (ModelState.IsValid)
             {
                 await _db.AddCourseAsync(model);
@@ -203,50 +202,35 @@ namespace VocalSchool.Controllers
             return _context.Courses.Any(e => e.CourseId == id);
         }
 
-        public async Task<CourseViewModel> CopyCourseDesignAsync(CourseViewModel model)
+        private async Task<CourseViewModel> CopyCourseDesignAsync(CourseViewModel model)
         {
             var cd = await _db.GetCourseDesignFullAsync(model.Course.CourseDesign.CourseDesignId);
             var uid = $"[{model.Course.Name}-{model.Course.CourseId}]";
-            var courseDesign = new CourseDesign();
-            courseDesign.Name = cd.Name.Prepend(uid);
-            courseDesign.Description = cd.Description;
+            var courseDesign = cd.CopyAndPrependNameWith(uid);
             await _db.AddAsync(courseDesign);
            
             foreach (var courseSeminar in cd.CourseSeminars)
             {
-                var seminar = new Seminar();
-                seminar.Name = courseSeminar.Seminar.Name.Prepend(uid);
-                seminar.Description = courseSeminar.Seminar.Description;
+                var seminar = courseSeminar.Seminar.CopyAndPrependNameWith(uid);
                 await _db.AddAsync(seminar);
 
-                var cs = new CourseSeminar();
-                cs.CourseDesignId = courseDesign.CourseDesignId;
-                cs.SeminarId = seminar.SeminarId;
+                var cs = new CourseSeminar(courseDesign.CourseDesignId, seminar.SeminarId);
                 await _db.AddAsync(cs);
                 
                 foreach (var seminarDay in courseSeminar.Seminar.SeminarDays)
                 {
-                    var day = new Day();
-                    day.Name = seminarDay.Day.Name.Prepend(uid);
-                    day.Description = seminarDay.Day.Description;
+                    var day = seminarDay.Day.CopyAndPrependNameWith(uid);
                     await _db.AddAsync(day);
 
-                    var sd = new SeminarDay();
-                    sd.SeminarId = seminar.SeminarId;
-                    sd.DayId = day.DayId;
+                    var sd = new SeminarDay(seminar.SeminarId, day.DayId);
                     await _db.AddAsync(sd);
                     
                     foreach (var daySubject in seminarDay.Day.DaySubjects)
                     {
-                        var subject = new Subject();
-                        subject.Name = daySubject.Subject.Name.Prepend(uid);
-                        subject.Description = daySubject.Subject.Description;
-                        subject.RequiredReading = daySubject.Subject.RequiredReading;
+                        var subject = daySubject.Subject.CopyAndPrependNameWith(uid);
                         await _db.AddAsync(subject);
                         
-                        var ds = new DaySubject();
-                        ds.DayId = day.DayId;
-                        ds.SubjectId = subject.SubjectId;
+                        var ds = new DaySubject(day.DayId, subject.SubjectId);
                         await _db.AddAsync(ds);
                     }
                 }
@@ -254,10 +238,5 @@ namespace VocalSchool.Controllers
             model.Course.CourseDesign = courseDesign;
             return model;
         }
-    }
-
-    public static class Extensions
-    {
-        public static string Prepend(this string s, string pre) => $"{pre} {s}";
     }
 }
