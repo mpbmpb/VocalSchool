@@ -112,8 +112,9 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Course()
         {
-            var courseView = new CourseViewModel {Course = Course7, DesignList = new List<SelectListItem>()};
-
+            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            courseView.Course.CourseDesign = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            
             await Controller.Create(courseView);
 
             Resultcontext.Courses.Should().HaveCount(4);
@@ -122,11 +123,16 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Course_with_correct_properties()
         {
-            var courseView = new CourseViewModel {Course = Course7, DesignList = new List<SelectListItem>()};
-
+            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            courseView.Course.CourseDesign = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            
             await Controller.Create(courseView);
 
-            Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 7).Should().BeEquivalentTo(Course7);
+            var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 7); 
+            
+            result?.Name.Should().Match(Course7.Name);
+            result?.Description.Should().Match(Course7.Description);
+            result?.CourseDesign.CourseDesignId.Should().Be(4, because:"we seeded the db with 3 CourseDesigns");
         }
 
         [Fact]
@@ -141,20 +147,23 @@ namespace VocalSchool.Test.Controllers
             await Controller.Create(courseView);
             var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 7);
 
-            result?.CourseDesign.Name.Should().Match("CourseDesign3");
+            result?.CourseDesign.Name.Should().Match("[Course7-7] CourseDesign3");
         }
 
-        [Fact]
-        public async Task Create_copies_all_subjects_in_CourseDesign()
+        [Theory]
+        [InlineData(1, 11)]
+        [InlineData(2, 15)]
+        [InlineData(3, 22)]
+        public async Task Create_copies_all_subjects_in_CourseDesign(int id, int expected)
         {
             var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
             courseView.Course.CourseDesign = new CourseDesign
             {
-                CourseDesignId = 1
+                CourseDesignId = id
             };
 
             await Controller.Create(courseView);
-            Resultcontext.Subjects.Should().HaveCount(11);
+            Resultcontext.Subjects.Should().HaveCount(expected);
         }
 
 

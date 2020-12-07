@@ -35,23 +35,11 @@ namespace VocalSchool.ViewModels
 
             }
         }
-
+        
         public CourseViewModel(Course course, List<CourseDesign> designs)
+            :this(designs)
         {
             Course = course;
-            CourseDesigns = designs;
-            DesignList = new List<SelectListItem>();
-            DesignList.Add(new SelectListItem { Value = "0", Text = "-- select design --" });
-
-            foreach (var item in designs)
-            {
-                DesignList.Add(new SelectListItem
-                {
-                    Value = item.CourseDesignId.ToString(),
-                    Text = item.Name
-                });
-
-            }
         }
         
         public CourseViewModel(Course course, List<CourseDate> dates)
