@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace VocalSchool.Models
 {
-    public class Subject
+    public class Subject : ICourseElement
     {
         public int SubjectId { get; set; }
         [Required(ErrorMessage = "Name of at least 4 characters is required.")]

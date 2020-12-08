@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VocalSchool.Models
 {
-    public class Day
+    public class Day : ICourseElement
     {
         public int DayId { get; set; }
         [Required(ErrorMessage = "Name of at least 4 characters is required.")]
