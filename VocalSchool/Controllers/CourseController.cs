@@ -206,32 +206,22 @@ namespace VocalSchool.Controllers
         {
             var cd = await _db.GetCourseDesignFullAsync(model.Course.CourseDesign.CourseDesignId);
             var uid = $"[{model.Course.Name}-{model.Course.CourseId}]";
-            var courseDesign = cd.CopyAndPrependNameWith(uid);
-            await _db.AddAsync(courseDesign);
+            var courseDesign = await cd.CopyAndPrependNameWithAsync(uid, _db);
            
             foreach (var courseSeminar in cd.CourseSeminars)
             {
-                var seminar = courseSeminar.Seminar.CopyAndPrependNameWith(uid);
-                await _db.AddAsync(seminar);
-
-                var cs = new CourseSeminar(courseDesign.CourseDesignId, seminar.SeminarId);
-                await _db.AddAsync(cs);
+                var seminar = await courseSeminar.Seminar.CopyAndPrependNameWithAsync(uid, _db);
+                await courseSeminar.CreateMany2ManyAsync(courseDesign.CourseDesignId, seminar.SeminarId, _db);
                 
                 foreach (var seminarDay in courseSeminar.Seminar.SeminarDays)
                 {
-                    var day = seminarDay.Day.CopyAndPrependNameWith(uid);
-                    await _db.AddAsync(day);
-
-                    var sd = new SeminarDay(seminar.SeminarId, day.DayId);
-                    await _db.AddAsync(sd);
+                    var day = await seminarDay.Day.CopyAndPrependNameWithAsync(uid, _db);
+                    await seminarDay.CreateMany2ManyAsync(seminar.SeminarId, day.DayId, _db);
                     
                     foreach (var daySubject in seminarDay.Day.DaySubjects)
                     {
-                        var subject = daySubject.Subject.CopyAndPrependNameWith(uid);
-                        await _db.AddAsync(subject);
-                        
-                        var ds = new DaySubject(day.DayId, subject.SubjectId);
-                        await _db.AddAsync(ds);
+                        var subject = await daySubject.Subject.CopyAndPrependNameWithAsync(uid, _db);
+                        await daySubject.CreateMany2ManyAsync(day.DayId, subject.SubjectId, _db);
                     }
                 }
             }

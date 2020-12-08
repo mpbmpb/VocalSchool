@@ -1,21 +1,27 @@
 ﻿using System;
 namespace VocalSchool.Models
 {
-    public class SeminarDay
+    public class SeminarDay : IMany2Many
     {
         public int SeminarId { get; set; }
         public virtual Seminar Seminar { get; set; }
         public int DayId { get; set; }
         public virtual Day Day { get; set; }
 
-        public SeminarDay()
+        public int this [int index]
         {
-        }
+            get
+            {
+                if (index == 0) return SeminarId;
+                if (index == 1) return DayId;
+                return -1;
+            }
 
-        public SeminarDay(int seminarId, int dayId)
-        {
-            SeminarId = seminarId;
-            DayId = dayId;
+            set
+            {
+                if (index == 0) SeminarId = value;
+                if (index == 1) DayId = value;
+            }
         }
     }
 }

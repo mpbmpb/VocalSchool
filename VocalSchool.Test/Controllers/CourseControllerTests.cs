@@ -12,6 +12,7 @@ using VocalSchool.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using VocalSchool.Data;
 
 namespace VocalSchool.Test.Controllers
 {
@@ -138,12 +139,12 @@ namespace VocalSchool.Test.Controllers
         public async Task CopyAndPrepend_does_just_that()
         {
             var s = await Context.Subjects.FirstOrDefaultAsync(x => x.SubjectId == 1);
-            var result = s.CopyAndPrependNameWith("[test]");
+            var result = await s.CopyAndPrependNameWithAsync("[test]", new DbHandler(Context));
 
             result.Name.Should().Match("[test] Introduction");
             result.Description.Should().Match(s.Description);
             result.RequiredReading.Should().Match(s.RequiredReading);
-            result.SubjectId.Should().Be(0);
+            result.SubjectId.Should().Be(7);
         }
 
 

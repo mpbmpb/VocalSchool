@@ -29,7 +29,7 @@
     &lt;TestId&gt;xUnit::A52B9544-CBE2-4C5A-AF54-AB0CE9BAF327::.NETCoreApp,Version=v3.1::VocalSchool.Test.Controllers.DayControllerTests.Index_returns_ViewResult&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7cf74a63_002D9c9c_002D4818_002Db06e_002D5135c8270552/@EntryIndexedValue">JetBrains.ReSharper.UnitTestFramework.Session.Serialization.SessionState</s:String>
+	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=df682b0e_002Df3e5_002D461c_002Da8fe_002Dbd2f89d44a72/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Index_returns_ViewResult" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::A52B9544-CBE2-4C5A-AF54-AB0CE9BAF327::.NETCoreApp,Version=v3.1::VocalSchool.Test.Controllers.DayControllerTests.Index_returns_ViewResult&lt;/TestId&gt;
