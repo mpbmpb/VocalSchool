@@ -85,7 +85,11 @@ namespace VocalSchool.Controllers
                 seminars = await _db.GetAllSeminarsFullAsync(x => 
                     x.Name.Substring(0, length) == uid);
             }
-            else {seminars = await _db.GetAllSeminarsFullAsync(x => x.Name.Substring(0, 1) != "[");}
+            else
+            {
+                seminars = await _db.GetAllSeminarsFullAsync(x => 
+                    x.Name.Substring(0, 1) != "[");
+            }
             return View(new CourseDesignViewModel(courseDesign, seminars));
         }
 

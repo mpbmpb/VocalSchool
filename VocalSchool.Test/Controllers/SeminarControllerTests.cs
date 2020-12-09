@@ -114,6 +114,19 @@ namespace VocalSchool.Test.Controllers
 
             result.Should().BeOfType<ViewResult>();
         }
+        
+        [Fact]
+        public async Task Create_shows_only_Days_without_uid()
+        {
+            var d = new Day {Name = "[uid] test", DayId = 7};
+            Context.Add(d);
+            await Context.SaveChangesAsync();
+            var result = await Controller.Create();
+
+            result.As<ViewResult>().Model.As<SeminarViewModel>().Days
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
 
         [Fact]
         public async Task Create_stores_new_Seminar()
@@ -185,7 +198,6 @@ namespace VocalSchool.Test.Controllers
             result.As<ViewResult>().Model.As<SeminarViewModel>().Seminar.Name.Should().Be("Seminar1");
         }
 
-
         [Fact]
         public async Task Edit_returns_SeminarViewModel_with_ALL_Days_injected_into_checklist()
         {
@@ -199,6 +211,23 @@ namespace VocalSchool.Test.Controllers
                 .And.Contain(x => x.Name == "Day5")
                 .And.Contain(x => x.Name == "Day6");
         }
+        
+        [Fact]
+        public async Task Edit_shows_only_Days_without_uid_if_Seminar_has_no_uid()
+        {
+            var d = new Day {Name = "[uid] test", DayId = 7};
+            Context.Add(d);
+            await Context.SaveChangesAsync();
+            
+            var result = await Controller.Edit(1);
+
+            result.As<ViewResult>().Model.As<SeminarViewModel>().CheckList
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
+        
+        //TODO edit shows days with correct uid
+
 
         [Fact]
         public async Task Edit_updates_Seminar_with_correct_properties()

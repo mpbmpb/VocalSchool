@@ -266,7 +266,7 @@ namespace VocalSchool.Data
                 .FirstOrDefaultAsync(d => d.DayId == id);
         }
 
-        public async Task<List<Day>> GetAllDaysAsync()
+        public async Task<List<Day>> GetAllDaysFullAsync()
         {
             return await _context.Days
                 .Include(d => d.DaySubjects)
@@ -275,7 +275,7 @@ namespace VocalSchool.Data
                 .ToListAsync();
         }
 
-        public async Task<List<Day>> GetAllDaysAsync(Expression<Func<Day, bool>> predicate)
+        public async Task<List<Day>> GetAllDaysFullAsync(Expression<Func<Day, bool>> predicate)
         {
             return await _context.Days
                 .Where(predicate)

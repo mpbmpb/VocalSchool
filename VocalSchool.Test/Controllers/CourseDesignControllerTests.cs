@@ -182,10 +182,9 @@ namespace VocalSchool.Test.Controllers
             result.As<ViewResult>().Model.As<CourseDesignViewModel>().CheckList
                 .Should().HaveCount(3, because: "we seeded the Db with 3 seminars");
         }
-        
-         
+
         [Fact]
-        public async Task Edit_shows_only_Seminars_without_uid()
+        public async Task Edit_shows_only_Seminars_without_uid_if_CourseDesign_has_no_uid()
         {
             var s = new Seminar {Name = "[uid] test", SeminarId = 7};
             Context.Add(s);

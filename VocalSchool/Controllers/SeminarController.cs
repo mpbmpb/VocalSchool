@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace VocalSchool.Controllers
         // GET: Seminar/Create
         public async Task<IActionResult> Create()
         {
-            var days = await _db.GetAllDaysAsync(x => x.Name.Substring(0, 1) != "[");
+            var days = await _db.GetAllDaysFullAsync(x => x.Name.Substring(0, 1) != "[");
             return View(new SeminarViewModel(days));
         }
 
@@ -73,7 +74,20 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-            var days = await _db.GetAllDaysAsync();
+            
+            var days = new List<Day>();
+            if (seminar.Name[0] == '[')
+            {
+                int length = seminar.Name.IndexOf(']') + 1;
+                var uid = seminar.Name.Substring(0, length);
+                days = await _db.GetAllDaysFullAsync(x => 
+                    x.Name.Substring(0, length) == uid);
+            }
+            else
+            {
+                days = await _db.GetAllDaysFullAsync(x => 
+                    x.Name.Substring(0, 1) != "[");
+            }
 
             return View(new SeminarViewModel(seminar, days));
         }
