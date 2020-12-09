@@ -101,6 +101,20 @@ namespace VocalSchool.Test.Controllers
 
             result.Should().BeOfType<ViewResult>();
         }
+         
+        [Fact]
+        public async Task Create_shows_only_Subjects_without_uid()
+        {
+            var s = new Subject {Name = "[uid] test", SubjectId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+            var result = await Controller.Create();
+
+            result.As<ViewResult>().Model.As<DayViewModel>().CheckList
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
+
 
         [Fact]
         public async Task Create_stores_new_Day()
@@ -184,6 +198,35 @@ namespace VocalSchool.Test.Controllers
                 .And.Contain(x => x.Name == "Overdrive")
                 .And.Contain(x => x.Name == "Edge");
         }
+        
+        [Fact]
+        public async Task Edit_shows_only_Subjects_without_uid_if_Day_has_no_uid()
+        {
+            var s = new Subject {Name = "[uid] test", SubjectId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+            
+            var result = await Controller.Edit(1);
+
+            result.As<ViewResult>().Model.As<DayViewModel>().CheckList
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
+        
+        [Fact]
+        public async Task Edit_shows_only_Subjects_with_matching_uid()
+        {
+            await MakeNewCourse(1);
+            
+            var result = await Controller.Edit(7);
+
+            result.As<ViewResult>().Model.As<DayViewModel>().CheckList.Count
+                .Should().Be(5, because:"CourseDesign 1 contains 5 Subjects now copied and prepended with [test]");
+            result.As<ViewResult>().Model.As<DayViewModel>().CheckList
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(5, because:"CourseDesign 1 contains 5 Subjects now copied and prepended with [test]");
+        }
+
 
         [Fact]
         public async Task Edit_updates_Day_with_correct_properties()

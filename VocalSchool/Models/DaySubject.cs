@@ -1,5 +1,4 @@
-﻿using System;
-namespace VocalSchool.Models
+﻿namespace VocalSchool.Models
 {
     public class DaySubject : IMany2Many
     {

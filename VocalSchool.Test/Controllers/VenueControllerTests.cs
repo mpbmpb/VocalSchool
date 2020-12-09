@@ -142,8 +142,8 @@ namespace VocalSchool.Test.Controllers
 
             var result = Context.Venues.FirstOrDefault(x => x.VenueId == 7);
 
-            result.Contact1.Name.Should().Match("Contact3");
-            result.Contact2.Name.Should().Match("Contact1");
+            result?.Contact1.Name.Should().Match("Contact3");
+            result?.Contact2.Name.Should().Match("Contact1");
         }
 
         [Fact]

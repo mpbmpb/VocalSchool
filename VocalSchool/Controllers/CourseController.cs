@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VocalSchool.Data;
 using VocalSchool.Models;
@@ -80,7 +78,19 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-            var designs = await _db.GetOnlyCourseDesignsAsync();
+            List<CourseDesign> designs;
+            if (course.Name[0] == '[')
+            {
+                int length = course.Name.IndexOf(']') + 1;
+                var uid = course.Name.Substring(0, length);
+                designs = await _db.GetAllCourseDesignsFullAsync(x => 
+                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
+            }
+            else
+            {
+                designs = await _db.GetAllCourseDesignsFullAsync(x => 
+                    x.Name.Substring(0, 1) != "[");
+            }
             return View(new CourseViewModel(course, designs));
         }
 

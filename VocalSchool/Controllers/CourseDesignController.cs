@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
@@ -77,13 +76,13 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
             
-            var seminars = new List<Seminar>();
+            List<Seminar> seminars;
             if (courseDesign.Name[0] == '[')
             {
                 int length = courseDesign.Name.IndexOf(']') + 1;
                 var uid = courseDesign.Name.Substring(0, length);
                 seminars = await _db.GetAllSeminarsFullAsync(x => 
-                    x.Name.Substring(0, length) == uid);
+                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
             }
             else
             {

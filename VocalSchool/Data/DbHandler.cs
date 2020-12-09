@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VocalSchool.Models;
 using VocalSchool.ViewModels;
@@ -141,8 +138,7 @@ namespace VocalSchool.Data
         public async Task AddSeminarAsync(SeminarViewModel model)
         {
             await AddAsync(model.Seminar);
-
-            var seminarDays = await _context.SeminarDays.ToListAsync();
+            
             foreach (var item in model.CheckList)
             {
                 if (item.IsSelected)
@@ -236,9 +232,22 @@ namespace VocalSchool.Data
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<CourseDesign>> GetAllCourseDesignsAsync()
+        public async Task<List<CourseDesign>> GetAllCourseDesignsFullAsync()
         {
             return await _context.CourseDesigns
+                .Include(cd => cd.CourseSeminars)
+                .ThenInclude(cs => cs.Seminar)
+                .ThenInclude(s => s.SeminarDays)
+                .ThenInclude(sd => sd.Day)
+                .ThenInclude(d => d.DaySubjects)
+                .ThenInclude(ds => ds.Subject)
+                .ToListAsync();
+        }
+        
+        public async Task<List<CourseDesign>> GetAllCourseDesignsFullAsync(Expression<Func<CourseDesign, bool>> predicate)
+        {
+            return await _context.CourseDesigns
+                .Where(predicate)
                 .Include(cd => cd.CourseSeminars)
                 .ThenInclude(cs => cs.Seminar)
                 .ThenInclude(s => s.SeminarDays)

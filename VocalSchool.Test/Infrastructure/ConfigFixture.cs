@@ -13,7 +13,7 @@ namespace VocalSchool.Test.Infrastructure
         {
             var dir = Directory.GetCurrentDirectory();
             var path = Path.GetDirectoryName(dir
-                .Substring(0, dir.IndexOf("VocalSchool.Test")));
+                .Substring(0, dir.IndexOf("VocalSchool.Test", StringComparison.Ordinal)));
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile($"{path}/VocalSchool/appsettings.json", optional: false, reloadOnChange: true)

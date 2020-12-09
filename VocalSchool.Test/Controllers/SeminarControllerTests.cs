@@ -160,7 +160,7 @@ namespace VocalSchool.Test.Controllers
 
             var result = Context.Seminars.FirstOrDefault(x => x.SeminarId == 7);
 
-            result.SeminarDays.Should().HaveCount(2)
+            result?.SeminarDays.Should().HaveCount(2)
                 .And.Contain(x => x.Day.Name == "Day2")
                 .And.Contain(x => x.Day.Name == "Day6");
         }
@@ -232,7 +232,9 @@ namespace VocalSchool.Test.Controllers
             await MakeNewCourse(1);
             
             var result = await Controller.Edit(4);
-
+            
+            result.As<ViewResult>().Model.As<SeminarViewModel>().CheckList.Count
+                .Should().Be(2, because:"CourseDesign 1 contains 2 Days now copied and prepended with [test]");
             result.As<ViewResult>().Model.As<SeminarViewModel>().CheckList
                 .Count(x => x.Name.Substring(0, 1) == "[")
                 .Should().Be(2, because:"CourseDesign 1 contains 2 Days now copied and prepended with [test]");

@@ -2,9 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VocalSchool.Data;
-using VocalSchool.Models;
 
 namespace VocalSchool.Migrations
 {

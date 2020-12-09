@@ -144,9 +144,9 @@ namespace VocalSchool.Test.Controllers
 
             var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 4); 
             
-            result.Name.Should().Match(Course7.Name);
-            result.Description.Should().Match(Course7.Description);
-            result.CourseDesign.CourseDesignId.Should().Be(4, because:"we seeded the db with 3 CourseDesigns");
+            result?.Name.Should().Match(Course7.Name);
+            result?.Description.Should().Match(Course7.Description);
+            result?.CourseDesign.CourseDesignId.Should().Be(4, because:"we seeded the db with 3 CourseDesigns");
         }
         
         [Fact]
@@ -174,7 +174,7 @@ namespace VocalSchool.Test.Controllers
             await Controller.Create(courseView);
             var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 4);
 
-            result.CourseDesign.Name.Should().Match("[Course7-4] CourseDesign3");
+            result?.CourseDesign.Name.Should().Match("[Course7-4] CourseDesign3");
         }
 
         [Theory]
@@ -237,6 +237,20 @@ namespace VocalSchool.Test.Controllers
                 .And.Contain(x => x.Text == "CourseDesign2")
                 .And.Contain(x => x.Text == "CourseDesign3");
         }
+        
+        [Fact]
+        public async Task Edit_shows_only_CourseDesigns_without_uid_if_CourseDesign_has_no_uid()
+        {
+            var cd = new CourseDesign() {Name = "[uid] test", CourseDesignId = 7};
+            Context.Add(cd);
+            await Context.SaveChangesAsync();
+            
+            var result = await Controller.Edit(1);
+
+            result.As<ViewResult>().Model.As<CourseViewModel>().CourseDesigns
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
 
         [Fact]
         public async Task Edit_updates_Course_with_correct_properties()
@@ -251,8 +265,8 @@ namespace VocalSchool.Test.Controllers
 
             var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 1);
                 
-            result.Name.Should().Be(c.Name);
-            result.Description.Should().Be(c.Description);
+            result?.Name.Should().Be(c.Name);
+            result?.Description.Should().Be(c.Description);
         }
 
         [Fact]

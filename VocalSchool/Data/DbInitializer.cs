@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using VocalSchool.Models;
-using VocalSchool.Data;
 
 namespace VocalSchool.Data
 {

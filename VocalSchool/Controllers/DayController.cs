@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace VocalSchool.Controllers
         // GET: Day/Create
         public async Task<IActionResult> Create()
         {
-            var subjects = await _db.GetAllAsync<Subject>();
+            var subjects = await _db.GetAllAsync<Subject>(x => x.Name.Substring(0, 1) != "[");
 
             return View(new DayViewModel(subjects));
         }
@@ -77,7 +78,20 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-            var subjects = await _db.GetAllAsync<Subject>();
+
+            List<Subject> subjects;
+            if (day.Name[0] == '[')
+            {
+                int length = day.Name.IndexOf(']') + 1;
+                var uid = day.Name.Substring(0, length);
+                subjects = await _db.GetAllAsync<Subject>(x => 
+                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
+            }
+            else
+            {
+                subjects = await _db.GetAllAsync<Subject>(x => 
+                    x.Name.Substring(0, 1) != "[");
+            }
 
             return View(new DayViewModel(day, subjects));
         }

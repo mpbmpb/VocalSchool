@@ -1,5 +1,3 @@
-using System;
-
 namespace VocalSchool.Models
 {
     public class ErrorViewModel

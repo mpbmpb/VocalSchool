@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
@@ -75,7 +74,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
             
-            var days = new List<Day>();
+            List<Day> days;
             if (seminar.Name[0] == '[')
             {
                 int length = seminar.Name.IndexOf(']') + 1;
@@ -143,7 +142,7 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var seminar = await _db.GetSeminarAndDaysAsync((int)id);
+            var seminar = await _db.GetSeminarAndDaysAsync(id);
             await _db.RemoveAsync(seminar);
             return RedirectToAction(nameof(Index));
         }

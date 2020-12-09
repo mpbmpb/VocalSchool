@@ -204,6 +204,8 @@ namespace VocalSchool.Test.Controllers
             
             var result = await Controller.Edit(4);
 
+            result.As<ViewResult>().Model.As<CourseDesignViewModel>().CheckList.Count
+                .Should().Be(1, because:"CourseDesign 1 only contains 1 Seminar now copied and prepended with [test]");
             result.As<ViewResult>().Model.As<CourseDesignViewModel>().CheckList
                 .Count(x => x.Name.Substring(0, 1) == "[")
                 .Should().Be(1, because:"CourseDesign 1 only contains 1 Seminar now copied and prepended with [test]");
@@ -233,16 +235,16 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_updates_CourseDesign_with_correct_properties()
         {            
-            var cd = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
-            cd.Name = "Effects";
-            cd.Description = "Learn about effects";
+            var courseDesign = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
+            courseDesign.Name = "Effects";
+            courseDesign.Description = "Learn about effects";
 
-            var courseDesignView = new CourseDesignViewModel {CourseDesign = cd, CheckList = new List<CheckedId>()};
+            var courseDesignView = new CourseDesignViewModel {CourseDesign = courseDesign, CheckList = new List<CheckedId>()};
 
             await Controller.Edit(1, courseDesignView);
 
             Resultcontext.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1)
-                .Should().BeEquivalentTo(cd, options => options
+                .Should().BeEquivalentTo(courseDesign, options => options
                     .Excluding(cd => cd.CourseSeminars));
         }
 
