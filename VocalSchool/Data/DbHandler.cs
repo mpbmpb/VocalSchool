@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,11 @@ namespace VocalSchool.Data
         public async Task<List<T>> GetAllAsync<T>() where T : class
         {
             return await _context.Set<T>().ToListAsync();
+        }
+
+        public async Task<List<T>> GetAllAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return await _context.Set<T>().Where(predicate).ToListAsync();
         }
 
         public async Task RemoveAsync(Object entity)
@@ -217,6 +223,19 @@ namespace VocalSchool.Data
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<CourseDesign> GetCourseDesignFullAsync(int? id, Expression<Func<CourseDesign, bool>> predicate)
+        {
+            return await _context.CourseDesigns
+                .Where(cd => cd.CourseDesignId == id)
+                .Include(c => c.CourseSeminars)
+                .ThenInclude(cs => cs.Seminar)
+                .ThenInclude(s => s.SeminarDays)
+                .ThenInclude(sd => sd.Day)
+                .ThenInclude(d => d.DaySubjects)
+                .ThenInclude(ds => ds.Subject)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<List<CourseDesign>> GetAllCourseDesignsAsync()
         {
             return await _context.CourseDesigns
@@ -277,6 +296,18 @@ namespace VocalSchool.Data
         public async Task<List<Seminar>> GetAllSeminarsFullAsync()
         {
             return await _context.Seminars
+               .Include(s => s.SeminarDays)
+               .ThenInclude(sd => sd.Day)
+               .ThenInclude(d => d.DaySubjects)
+               .ThenInclude(ds => ds.Subject)
+               .OrderBy(s => s.Name.ToLower())
+               .ToListAsync();
+        }
+
+        public async Task<List<Seminar>> GetAllSeminarsFullAsync(Expression<Func<Seminar, bool>> predicate)
+        {
+            return await _context.Seminars
+                .Where(predicate)
                .Include(s => s.SeminarDays)
                .ThenInclude(sd => sd.Day)
                .ThenInclude(d => d.DaySubjects)

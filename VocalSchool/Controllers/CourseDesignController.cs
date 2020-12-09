@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +22,8 @@ namespace VocalSchool.Controllers
         // GET: CourseDesign
         public async Task<IActionResult> Index()
         {
-            var cd = await _db.GetAllAsync<CourseDesign>();
-            return View(cd.Where(x => x.Name[0] != '[').ToList());
+            var cd = await _db.GetAllAsync<CourseDesign>(x => x.Name.Substring(0, 1) != "[");
+            return View(cd);
         }
 
         // GET: CourseDesign/Details/5
@@ -75,8 +76,16 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-
-            var seminars = await _db.GetAllSeminarsFullAsync();
+            
+            var seminars = new List<Seminar>();
+            if (courseDesign.Name[0] == '[')
+            {
+                int length = courseDesign.Name.IndexOf(']') + 1;
+                var uid = courseDesign.Name.Substring(0, length);
+                seminars = await _db.GetAllSeminarsFullAsync(x => 
+                    x.Name.Substring(0, length) == uid);
+            }
+            else {seminars = await _db.GetAllSeminarsFullAsync(x => x.Name.Substring(0, 1) != "[");}
             return View(new CourseDesignViewModel(courseDesign, seminars));
         }
 
