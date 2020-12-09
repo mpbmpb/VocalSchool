@@ -110,6 +110,20 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
+        public async Task Create_shows_only_CourseDesigns_without_uid()
+        {
+            var cd = new CourseDesign {Name = "[uid] test", CourseDesignId = 7};
+            Context.Add(cd);
+            await Context.SaveChangesAsync();
+            var result = await Controller.Create();
+
+            result.As<ViewResult>().Model.As<CourseViewModel>().CourseDesigns
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
+
+
+        [Fact]
         public async Task Create_stores_new_Course()
         {
             var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};

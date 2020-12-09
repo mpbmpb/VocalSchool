@@ -33,5 +33,6 @@ namespace VocalSchool.Controllers
             var m2m = new T {[0] = id0, [1] = id1};
             await db.AddAsync(m2m);
         }
+        
     }
 }

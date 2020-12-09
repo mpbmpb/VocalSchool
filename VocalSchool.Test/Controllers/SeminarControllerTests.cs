@@ -68,8 +68,8 @@ namespace VocalSchool.Test.Controllers
         {
             var result = await Controller.Index();
 
-            result.As<ViewResult>().Model.As<IEnumerable<Seminar>>().FirstOrDefault()
-                .SeminarDays.FirstOrDefault().Day.DaySubjects.Should().NotBeNull();
+            result?.As<ViewResult>().Model.As<IEnumerable<Seminar>>().FirstOrDefault()?
+                .SeminarDays.FirstOrDefault()?.Day.DaySubjects.Should().NotBeNull();
 
         }
 

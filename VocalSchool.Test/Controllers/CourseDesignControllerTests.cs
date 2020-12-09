@@ -105,6 +105,20 @@ namespace VocalSchool.Test.Controllers
 
             result.Should().BeOfType<ViewResult>();
         }
+        
+        [Fact]
+        public async Task Create_shows_only_Seminars_without_uid()
+        {
+            var s = new Seminar {Name = "[uid] test", SeminarId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+            var result = await Controller.Create();
+
+            result.As<ViewResult>().Model.As<CourseDesignViewModel>().Seminars
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
+
 
         [Fact]
         public async Task Create_stores_new_CourseDesign()
@@ -166,8 +180,47 @@ namespace VocalSchool.Test.Controllers
             var result = await Controller.Edit(1);
 
             result.As<ViewResult>().Model.As<CourseDesignViewModel>().CheckList
-                .Should().NotBeNullOrEmpty(because: "we seeded the Db with seminars");
+                .Should().HaveCount(3, because: "we seeded the Db with 3 seminars");
         }
+        
+         
+        [Fact]
+        public async Task Edit_shows_only_Seminars_without_uid()
+        {
+            var s = new Seminar {Name = "[uid] test", SeminarId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+            
+            var result = await Controller.Edit(1);
+
+            result.As<ViewResult>().Model.As<CourseDesignViewModel>().CheckList
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(0);
+        }
+
+        [Fact]
+        public async Task Edit_shows_only_Seminars_with_matching_uid()
+        {
+            var courseView = new CourseViewModel(new List<CourseDesign>()) 
+                {
+                    Course = new Course 
+                    {
+                        Name = "test", 
+                        CourseDesign = new CourseDesign {CourseDesignId = 1}
+                        
+                    }
+                };
+            var courseContr = new CourseController(Context);
+            await courseContr.Create(courseView);
+            
+            var result = await Controller.Edit(4);
+
+            result.As<ViewResult>().Model.As<CourseDesignViewModel>().CheckList
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(1, because:"CourseDesign 1 only contains 1 Seminar now copied and prepended with [test]");
+            
+        }
+
 
         [Fact]
         public async Task Edit_returns_CourseDesignViewModel_with_correct_CourseDesign()

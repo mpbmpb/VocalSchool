@@ -20,8 +20,8 @@ namespace VocalSchool.Controllers
         // GET: Seminar
         public async Task<IActionResult> Index()
         {
-            var seminars = await _db.GetAllSeminarsFullAsync();
-            return View(seminars.Where(x => x.Name[0] != '[').ToList());
+            var seminars = await _db.GetAllSeminarsFullAsync(x => x.Name.Substring(0, 1) != "[");
+            return View(seminars);
         }
 
         // GET: Seminar/Details/5
@@ -43,7 +43,7 @@ namespace VocalSchool.Controllers
         // GET: Seminar/Create
         public async Task<IActionResult> Create()
         {
-            var days = await _db.GetAllDaysAsync();
+            var days = await _db.GetAllDaysAsync(x => x.Name.Substring(0, 1) != "[");
             return View(new SeminarViewModel(days));
         }
 

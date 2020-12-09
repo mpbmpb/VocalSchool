@@ -48,7 +48,8 @@ namespace VocalSchool.Controllers
         // GET: Course/Create
         public async Task<IActionResult> Create()
         {
-            return View(new CourseViewModel(await _db.GetOnlyCourseDesignsAsync()));
+            var courseDesigns = await _db.GetOnlyCourseDesignsAsync(x => x.Name.Substring(0, 1) != "[");
+            return View(new CourseViewModel(courseDesigns));
         }
 
         // POST: Course/Create
@@ -169,6 +170,7 @@ namespace VocalSchool.Controllers
         }
 
         // GET: Course/Delete/5
+        //TODO if name has uid add message all courseElements will be deleted as well
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -187,6 +189,7 @@ namespace VocalSchool.Controllers
         }
 
         // POST: Course/Delete/5
+        //TODO if name has uid delete all courseElements and Many2Many relations
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -253,6 +253,11 @@ namespace VocalSchool.Data
             return await _context.CourseDesigns.ToListAsync();
         }
 
+        public async Task<List<CourseDesign>> GetOnlyCourseDesignsAsync(Expression<Func<CourseDesign, bool>> predicate)
+        {
+            return await _context.CourseDesigns.Where(predicate).ToListAsync();
+        }
+
         public async Task<Day> GetDayFullAsync(int? id)
         {
             return await _context.Days
@@ -264,8 +269,18 @@ namespace VocalSchool.Data
         public async Task<List<Day>> GetAllDaysAsync()
         {
             return await _context.Days
-                //.Include(d => d.DaySubjects)
-                //.ThenInclude(ds => ds.Subject)
+                .Include(d => d.DaySubjects)
+                .ThenInclude(ds => ds.Subject)
+                .OrderBy(d => d.Name.ToLower())
+                .ToListAsync();
+        }
+
+        public async Task<List<Day>> GetAllDaysAsync(Expression<Func<Day, bool>> predicate)
+        {
+            return await _context.Days
+                .Where(predicate)
+                .Include(d => d.DaySubjects)
+                .ThenInclude(ds => ds.Subject)
                 .OrderBy(d => d.Name.ToLower())
                 .ToListAsync();
         }
