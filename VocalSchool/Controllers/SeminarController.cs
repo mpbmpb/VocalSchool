@@ -81,7 +81,7 @@ namespace VocalSchool.Controllers
                 int length = seminar.Name.IndexOf(']') + 1;
                 var uid = seminar.Name.Substring(0, length);
                 days = await _db.GetAllDaysFullAsync(x => 
-                    x.Name.Substring(0, length) == uid);
+                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
             }
             else
             {
@@ -120,6 +120,7 @@ namespace VocalSchool.Controllers
         }
 
         // GET: Seminar/Delete/5
+        //TODO if name contains uid add message courseElements will be deleted
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +138,7 @@ namespace VocalSchool.Controllers
         }
 
         // POST: Seminar/Delete/5
+        //TODO if name contains uid delete all courseElements & Many2Many relations as well
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

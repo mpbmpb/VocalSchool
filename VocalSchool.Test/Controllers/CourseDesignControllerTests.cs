@@ -200,24 +200,13 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_shows_only_Seminars_with_matching_uid()
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) 
-                {
-                    Course = new Course 
-                    {
-                        Name = "test", 
-                        CourseDesign = new CourseDesign {CourseDesignId = 1}
-                        
-                    }
-                };
-            var courseContr = new CourseController(Context);
-            await courseContr.Create(courseView);
+            await MakeNewCourse(1);
             
             var result = await Controller.Edit(4);
 
             result.As<ViewResult>().Model.As<CourseDesignViewModel>().CheckList
                 .Count(x => x.Name.Substring(0, 1) == "[")
                 .Should().Be(1, because:"CourseDesign 1 only contains 1 Seminar now copied and prepended with [test]");
-            
         }
 
 

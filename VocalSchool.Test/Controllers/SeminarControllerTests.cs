@@ -226,7 +226,18 @@ namespace VocalSchool.Test.Controllers
                 .Should().Be(0);
         }
         
-        //TODO edit shows days with correct uid
+        [Fact]
+        public async Task Edit_shows_only_Days_with_matching_uid()
+        {
+            await MakeNewCourse(1);
+            
+            var result = await Controller.Edit(4);
+
+            result.As<ViewResult>().Model.As<SeminarViewModel>().CheckList
+                .Count(x => x.Name.Substring(0, 1) == "[")
+                .Should().Be(2, because:"CourseDesign 1 contains 2 Days now copied and prepended with [test]");
+        }
+
 
 
         [Fact]

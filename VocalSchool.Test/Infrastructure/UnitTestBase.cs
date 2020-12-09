@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using VocalSchool.Controllers;
 using VocalSchool.Data;
 using VocalSchool.Models;
+using VocalSchool.ViewModels;
 using Xunit;
 
 namespace VocalSchool.Test.Infrastructure
@@ -45,11 +48,25 @@ namespace VocalSchool.Test.Infrastructure
             Resultcontext.Dispose();
         }
 
-        protected async Task<T> GetModel<T>(Func<int?, Task<IActionResult>> method, int id)
+        protected static async Task<T> GetModel<T>(Func<int?, Task<IActionResult>> method, int id)
         {
             var actionResult = await method(id);
             var model = actionResult.As<ViewResult>().Model.As<T>();
             return model;
+        }
+        
+        protected async Task MakeNewCourse(int courseDesignId)
+        {
+            var courseView = new CourseViewModel(new List<CourseDesign>())
+            {
+                Course = new Course
+                {
+                    Name = "test",
+                    CourseDesign = new CourseDesign {CourseDesignId = courseDesignId}
+                }
+            };
+            var courseContr = new CourseController(Seedcontext);
+            await courseContr.Create(courseView);
         }
 
         
