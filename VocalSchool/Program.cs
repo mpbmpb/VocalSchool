@@ -40,3 +40,5 @@ namespace VocalSchool
 //TODO filter edit views based on uid
 
 //TODO add edit btns for items in edit views
+
+//TODO add constraint uid in name cannot be removed

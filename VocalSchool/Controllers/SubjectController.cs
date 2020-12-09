@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
 using VocalSchool.Models;
+using VocalSchool.ViewModels;
 
 namespace VocalSchool.Controllers
 {
@@ -57,6 +58,29 @@ namespace VocalSchool.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(subject);
+        }
+        
+        // GET: Subject/Create
+        public async Task<IActionResult> CreateCourseSubject(int id)
+        {
+            var course = await _db.GetCourseFullAsync(id);
+            var uid = $"[{course.Name}-{id}]"; 
+            return View(new CreateCourseSubjectVM(id, uid));
+        }
+
+        // POST: Subject/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCourseSubject(CreateCourseSubjectVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var subject = model.Subject;
+                subject.Name = model.Subject.Name.Prepend(model.Uid);
+                await _db.AddAsync(subject);
+                return RedirectToAction(nameof(Edit), nameof(Course), new { id = model.CourseId});
+            }
+            return RedirectToAction(nameof(Index), nameof(Course));
         }
 
         // GET: Subject/Edit/5
