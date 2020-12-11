@@ -8,6 +8,7 @@ using VocalSchool.Models;
 using VocalSchool.Controllers;
 using VocalSchool.Test.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using VocalSchool.ViewModels;
 
 namespace VocalSchool.Test.Controllers
 {
@@ -116,11 +117,11 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Edit_returns_Subject()
+        public async Task Edit_returns_SubjectViewModel()
         {
             var result = await Controller.Edit(1);
 
-            result.As<ViewResult>().Model.Should().BeAssignableTo<Subject>();
+            result.As<ViewResult>().Model.Should().BeAssignableTo<SubjectViewModel>();
         }
 
         [Fact]
@@ -128,39 +129,58 @@ namespace VocalSchool.Test.Controllers
         {
             var result = await Controller.Edit(1);
 
-            result.As<ViewResult>().Model.As<Subject>().Name.Should().Be("Introduction");
+            result.As<ViewResult>().Model.As<SubjectViewModel>().Subject.Name.Should().Be("Introduction");
         }
 
+        [Fact]
+        public async Task Edit_removes_uid_from_name_puts_it_in_Uid_prop()
+        {
+            var s = new Subject{ Name = "[test] name", SubjectId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+
+            var result = await Controller.Edit(7);
+
+            result.As<ViewResult>().Model.As<SubjectViewModel>().Uid.Should().Match("[test]");
+            result.As<ViewResult>().Model.As<SubjectViewModel>().Subject.Name.Should().Match("name");
+        }
+
+        [Fact]
+        public async Task Edit_puts_uid_and_name_back_together_when_saving_to_context()
+        {
+            var s = new Subject{ Name = "[test] name", SubjectId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+            var actionResult = await Controller.Edit(7);
+            var model = actionResult.As<ViewResult>().Model.As<SubjectViewModel>();
+
+            await Controller.Edit(model);
+            var result = Context.Subjects.FirstOrDefault(x => x.SubjectId == 7);
+
+            result?.Name.Should().Be(s.Name);
+        }
+        
         [Fact]
         public async Task Edit_updates_Subject_with_correct_properties()
         {
             var s = Subject7;
             s.SubjectId = 1;
+            var vm = new SubjectViewModel(s, "");
 
-            await Controller.Edit(1,s);
+            await Controller.Edit(vm);
 
             Context.Subjects.FirstOrDefault(x => x.SubjectId == 1).Should().BeEquivalentTo(s);
         }
-        
-        [Fact]
-        public async Task Edit_returns_NotFound_if_Id_changes()
-        {            
-            var s = Subject7;
-            s.SubjectId = 1;
-
-            var result = await Controller.Edit(8,s);
-
-            result.Should().BeOfType<NotFoundResult>();
-        }
-        
+       
         [Fact]
         public async Task Edit_returns_Redirect_if_modelstate_not_valid()
         {
             var controller = Controller;
-            controller.ViewData.ModelState.AddModelError("key", "Some Exception");
             var s = new Subject  {SubjectId = 1};
+            var vm = new SubjectViewModel(s, "");
+            controller.ViewData.ModelState.AddModelError("key", "Some Exception");
 
-            var result = await controller.Edit(1, s);
+            var result = await controller.Edit(vm);
 
             result.Should().BeOfType<ViewResult>();
         }
@@ -169,10 +189,11 @@ namespace VocalSchool.Test.Controllers
         public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
         {            
             var s = Context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
+            var vm = new SubjectViewModel(s, "");
             Context.Remove(s);
             await Context.SaveChangesAsync();
 
-            var result = await Controller.Edit(1,s);
+            var result = await Controller.Edit(vm);
 
             result.As<RedirectToActionResult>().ActionName.Should().Match("Index");
         }

@@ -18,7 +18,6 @@ namespace VocalSchool.ViewModels
 
         public CreateCourseSubjectVM()
         {
-            Subject = new Subject();
         }
     }
 }

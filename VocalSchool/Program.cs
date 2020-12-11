@@ -41,4 +41,11 @@ namespace VocalSchool
 
 //TODO add edit btns for items in edit views
 
-//TODO add constraint uid in name cannot be removed
+//TODO add method to remove uid from name & display in readonly field to all edit methods
+//TODO add method to reform name from readonly uid + name to all edit methods
+
+//TODO add uid check to all controller edit methods
+
+//TODO add casccade delete method to coursecontroller delete
+
+//TODO add CreateCourseDesignFromCourse method to CourseController

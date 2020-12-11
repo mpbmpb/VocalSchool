@@ -60,7 +60,7 @@ namespace VocalSchool.Controllers
             return View(subject);
         }
         
-        // GET: Subject/Create
+        // GET: Subject/CreateCourseSubject
         public async Task<IActionResult> CreateCourseSubject(int id)
         {
             var course = await _db.GetCourseFullAsync(id);
@@ -68,7 +68,7 @@ namespace VocalSchool.Controllers
             return View(new CreateCourseSubjectVM(id, uid));
         }
 
-        // POST: Subject/Create
+        // POST: Subject/CreateCourseSubject
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCourseSubject(CreateCourseSubjectVM model)
@@ -87,33 +87,35 @@ namespace VocalSchool.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var subject = await _db.GetSubjectAsync((int)id);
             if (subject == null)
-            {
                 return NotFound();
-            }
-            return View(subject);
+
+            string uid = "";
+            var len = subject.Name.IndexOf(']') + 1;
+            
+            if (subject.Name[0] != '[' || len == 0) 
+                return View(new SubjectViewModel(subject, uid));
+            
+            uid = subject.Name.Substring(0, len);
+            subject.Name = subject.Name.Substring(len + 1);
+            return View(new SubjectViewModel(subject, uid));
         }
 
         // POST: Subject/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SubjectId,Name,Description,RequiredReading")] Subject subject)
+        public async Task<IActionResult> Edit(SubjectViewModel model)
         {
-            if (id != subject.SubjectId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
+                if (model.Uid != "")
+                    model.Subject.Name = model.Subject.Name.Prepend(model.Uid);
                 try
                 {
-                    await _db.UpdateAsync(subject);
+                    await _db.UpdateAsync(model.Subject);
                 }
                 catch (Exception)
                 {
@@ -121,7 +123,7 @@ namespace VocalSchool.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(subject); 
+            return View(model); 
         }
 
         // GET: Subject/Delete/5
