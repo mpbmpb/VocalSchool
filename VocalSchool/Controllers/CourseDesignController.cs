@@ -77,19 +77,15 @@ namespace VocalSchool.Controllers
             }
             
             List<Seminar> seminars;
-            if (courseDesign.Name[0] == '[')
-            {
-                int length = courseDesign.Name.IndexOf(']') + 1;
-                var uid = courseDesign.Name.Substring(0, length);
+            var uid = courseDesign.GetUid();
+            if (uid != "")
                 seminars = await _db.GetAllSeminarsFullAsync(x => 
-                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
-            }
+                    x.Name.Length >= uid.Length && x.Name.Substring(0, uid.Length) == uid);
             else
-            {
                 seminars = await _db.GetAllSeminarsFullAsync(x => 
                     x.Name.Substring(0, 1) != "[");
-            }
-            return View(new CourseDesignViewModel(courseDesign, seminars));
+            
+            return View(new CourseDesignViewModel(courseDesign.TrimUid(), seminars, uid));
         }
 
         // POST: CourseDesign/Edit/5
@@ -107,6 +103,8 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
+                if (model.Uid != "")
+                    model.CourseDesign.Name = model.CourseDesign.Name.Prepend(model.Uid);
                 try
                 {
                     await _db.UpdateCourseDesignAsync(model);

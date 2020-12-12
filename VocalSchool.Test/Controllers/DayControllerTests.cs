@@ -42,7 +42,7 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Index_returns_All_Days()
+        public async Task Index_returns_All_Days_without_uid()
         {
             var result = await Controller.Index();
 

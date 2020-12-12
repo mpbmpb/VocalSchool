@@ -49,7 +49,7 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Index_returns_All_Courses()
+        public async Task Index_returns_All_Courses_without_uid()
         {
             var result = await Controller.Index();
 

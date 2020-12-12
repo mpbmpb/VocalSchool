@@ -9,6 +9,7 @@ namespace VocalSchool.ViewModels
         public CourseDesign CourseDesign { get; set; }
         public List<CheckedId> CheckList { get; set; }
         public List<Seminar> Seminars { get; set; }
+        public string Uid { get; private set; }
 
         public CourseDesignViewModel()
         {
@@ -38,6 +39,27 @@ namespace VocalSchool.ViewModels
             CourseDesign = courseDesign;
             CheckList = new List<CheckedId>();
             Seminars = seminars;
+
+            foreach (var sem in seminars)
+            {
+                bool isInCourseSeminars = (CourseDesign.CourseSeminars.Any(x => x.SeminarId == sem.SeminarId));
+
+                var check = new CheckedId()
+                {
+                    Id = sem.SeminarId,
+                    Name = sem.Name,
+                    Description = sem.Description,
+                    IsSelected = isInCourseSeminars
+                };
+                CheckList.Add(check);
+            }
+        }
+        public CourseDesignViewModel(CourseDesign courseDesign, List<Seminar> seminars, string uid)
+        {
+            CourseDesign = courseDesign;
+            CheckList = new List<CheckedId>();
+            Seminars = seminars;
+            Uid = uid;
 
             foreach (var sem in seminars)
             {

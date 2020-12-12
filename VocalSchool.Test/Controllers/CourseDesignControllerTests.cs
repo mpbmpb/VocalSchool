@@ -47,7 +47,7 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Index_returns_All_CourseDesigns()
+        public async Task Index_returns_All_CourseDesigns_without_uid()
         {
             var result = await Controller.Index();
 
@@ -219,6 +219,35 @@ namespace VocalSchool.Test.Controllers
 
             result.As<ViewResult>().Model.As<CourseDesignViewModel>().CourseDesign
                 .Name.Should().Be("CourseDesign1");
+        }
+        
+        [Fact]
+        public async Task Edit_removes_uid_from_name_puts_it_in_Uid_prop()
+        {
+            var cd = new CourseDesign(){ Name = "[test] name", CourseDesignId = 7};
+            Context.Add(cd);
+            await Context.SaveChangesAsync();
+
+            var result = await Controller.Edit(7);
+
+            result.As<ViewResult>().Model.As<CourseDesignViewModel>().Uid.Should().Match("[test]");
+            result.As<ViewResult>().Model.As<CourseDesignViewModel>().CourseDesign.Name.Should().Match("name");
+        }
+        
+        [Fact]
+        public async Task Edit_puts_uid_and_name_back_together_when_saving_to_context()
+        {
+            const string name = "[test] name";
+            var cd = new CourseDesign{ Name = name, CourseDesignId = 7};
+            Context.Add(cd);
+            await Context.SaveChangesAsync();
+            var actionResult = await Controller.Edit(7);
+            var model = actionResult.As<ViewResult>().Model.As<CourseDesignViewModel>();
+
+            await Controller.Edit(7, model);
+            var result = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 7);
+
+            result?.Name.Should().Be(name);
         }
 
         [Fact]
