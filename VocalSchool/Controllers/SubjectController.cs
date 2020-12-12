@@ -93,14 +93,9 @@ namespace VocalSchool.Controllers
             if (subject == null)
                 return NotFound();
 
-            string uid = "";
-            var len = subject.Name.IndexOf(']') + 1;
-            
-            if (subject.Name[0] != '[' || len == 0) 
-                return View(new SubjectViewModel(subject, uid));
-            
-            uid = subject.Name.Substring(0, len);
-            subject.Name = subject.Name.Substring(len + 1);
+            string uid = subject.GetUid();
+            subject.TrimUid();
+           
             return View(new SubjectViewModel(subject, uid));
         }
 
