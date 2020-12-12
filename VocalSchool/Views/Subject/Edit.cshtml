@@ -11,7 +11,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Subject.SubjectId" />
             <div class="form-group">
-                <label asp-for="Subject.Name" class="control-label">&nbsp @Model.Uid</label>
+                <label asp-for="Subject.Name" class="control-label">Name &nbsp &nbsp @Model.Uid</label>
                 <input asp-for="Subject.Name" class="form-control" />
                 <span asp-validation-for="Subject.Name" class="text-danger"></span>
             </div>

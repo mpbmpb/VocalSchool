@@ -80,20 +80,15 @@ namespace VocalSchool.Controllers
             }
 
             List<Subject> subjects;
-            if (day.Name[0] == '[')
-            {
-                int length = day.Name.IndexOf(']') + 1;
-                var uid = day.Name.Substring(0, length);
+            var uid = day.GetUid();
+            if (uid != "")
                 subjects = await _db.GetAllAsync<Subject>(x => 
-                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
-            }
+                    x.Name.Length >= uid.Length && x.Name.Substring(0, uid.Length) == uid);
             else
-            {
                 subjects = await _db.GetAllAsync<Subject>(x => 
                     x.Name.Substring(0, 1) != "[");
-            }
 
-            return View(new DayViewModel(day, subjects));
+            return View(new DayViewModel(day.TrimUid(), subjects, uid));
         }
 
         // POST: Day/Edit/5
@@ -110,6 +105,8 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
+                if (model.Uid != "")
+                    model.Day.Name = model.Day.Name.Prepend(model.Uid);
                 try
                 {
                     await _db.UpdateDayAsync(model);

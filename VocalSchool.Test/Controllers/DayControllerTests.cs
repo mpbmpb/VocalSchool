@@ -184,6 +184,34 @@ namespace VocalSchool.Test.Controllers
             result.As<ViewResult>().Model.As<DayViewModel>().Day.Name.Should().Be("Day1");
         }
 
+        [Fact]
+        public async Task Edit_removes_uid_from_name_puts_it_in_Uid_prop()
+        {
+            var d = new Day(){ Name = "[test] name", DayId = 7};
+            Context.Add(d);
+            await Context.SaveChangesAsync();
+
+            var result = await Controller.Edit(7);
+
+            result.As<ViewResult>().Model.As<DayViewModel>().Uid.Should().Match("[test]");
+            result.As<ViewResult>().Model.As<DayViewModel>().Day.Name.Should().Match("name");
+        }
+
+        [Fact]
+        public async Task Edit_puts_uid_and_name_back_together_when_saving_to_context()
+        {
+            const string name = "[test] name";
+            var d = new Day{ Name = name, DayId = 7};
+            Context.Add(d);
+            await Context.SaveChangesAsync();
+            var actionResult = await Controller.Edit(7);
+            var model = actionResult.As<ViewResult>().Model.As<DayViewModel>();
+
+            await Controller.Edit(7, model);
+            var result = Context.Days.FirstOrDefault(x => x.DayId == 7);
+
+            result?.Name.Should().Be(name);
+        }
 
         [Fact]
         public async Task Edit_returns_DayViewModel_with_ALL_subjects_injected_into_checklist()

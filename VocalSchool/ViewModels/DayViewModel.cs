@@ -8,6 +8,7 @@ namespace VocalSchool.ViewModels
     {
         public Day Day { get; set; }
         public List<CheckedId> CheckList { get; set; }
+        public string Uid { get; private set; }
 
         public DayViewModel()
         {
@@ -35,6 +36,27 @@ namespace VocalSchool.ViewModels
         {
             Day = day;
             CheckList = new List<CheckedId>();
+
+            foreach (var subject in subjects)
+            {
+                bool isInDaySubjects = (Day.DaySubjects.Any(x => x.SubjectId == subject.SubjectId));
+
+                var check = new CheckedId()
+                {
+                    Id = subject.SubjectId,
+                    Name = subject.Name,
+                    Description = subject.Description,
+                    IsSelected = isInDaySubjects
+                };
+
+                CheckList.Add(check);
+            }
+        }
+        public DayViewModel(Day day, IEnumerable<Subject> subjects, string uid)
+        {
+            Day = day;
+            CheckList = new List<CheckedId>();
+            Uid = uid;
 
             foreach (var subject in subjects)
             {
