@@ -197,6 +197,36 @@ namespace VocalSchool.Test.Controllers
 
             result.As<ViewResult>().Model.As<SeminarViewModel>().Seminar.Name.Should().Be("Seminar1");
         }
+        
+        [Fact]
+        public async Task Edit_removes_uid_from_name_puts_it_in_Uid_prop()
+        {
+            var s = new Seminar(){ Name = "[test] name", SeminarId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+
+            var result = await Controller.Edit(7);
+
+            result.As<ViewResult>().Model.As<SeminarViewModel>().Uid.Should().Match("[test]");
+            result.As<ViewResult>().Model.As<SeminarViewModel>().Seminar.Name.Should().Match("name");
+        }
+        
+        [Fact]
+        public async Task Edit_puts_uid_and_name_back_together_when_saving_to_context()
+        {
+            const string name = "[test] name";
+            var s = new Seminar{ Name = name, SeminarId = 7};
+            Context.Add(s);
+            await Context.SaveChangesAsync();
+            var actionResult = await Controller.Edit(7);
+            var model = actionResult.As<ViewResult>().Model.As<SeminarViewModel>();
+
+            await Controller.Edit(7, model);
+            var result = Context.Seminars.FirstOrDefault(x => x.SeminarId == 7);
+
+            result?.Name.Should().Be(name);
+        }
+
 
         [Fact]
         public async Task Edit_returns_SeminarViewModel_with_ALL_Days_injected_into_checklist()

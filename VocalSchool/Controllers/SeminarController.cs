@@ -75,20 +75,15 @@ namespace VocalSchool.Controllers
             }
             
             List<Day> days;
-            if (seminar.Name[0] == '[')
-            {
-                int length = seminar.Name.IndexOf(']') + 1;
-                var uid = seminar.Name.Substring(0, length);
+            var uid = seminar.GetUid();
+            if (uid != "")
                 days = await _db.GetAllDaysFullAsync(x => 
-                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
-            }
+                    x.Name.Length >= uid.Length && x.Name.Substring(0, uid.Length) == uid);
             else
-            {
                 days = await _db.GetAllDaysFullAsync(x => 
                     x.Name.Substring(0, 1) != "[");
-            }
 
-            return View(new SeminarViewModel(seminar, days));
+            return View(new SeminarViewModel(seminar.TrimUid(), days, uid));
         }
 
         // POST: Seminar/Edit/5
@@ -104,6 +99,8 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
+                if (model.Uid != "")
+                    model.Seminar.Name = model.Seminar.Name.Prepend(model.Uid);
                 try
                 {
                     await _db.UpdateSeminarAsync(model);

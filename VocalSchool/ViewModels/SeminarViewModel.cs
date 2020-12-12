@@ -11,6 +11,7 @@ namespace VocalSchool.ViewModels
         public Seminar Seminar { get; set; }
         public List<CheckedId> CheckList { get; set; }
         public List<Day> Days { get; set; }
+        public string Uid { get; private set; }
 
         public SeminarViewModel()
         {
@@ -40,6 +41,27 @@ namespace VocalSchool.ViewModels
             Seminar = seminar;
             CheckList = new List<CheckedId>();
             Days = days;
+
+            foreach (var day in days)
+            {
+                bool isInSeminarDays = (Seminar.SeminarDays.Any(x => x.DayId == day.DayId));
+
+                var check = new CheckedId()
+                {
+                    Id = day.DayId,
+                    Name = day.Name,
+                    Description = day.Description,
+                    IsSelected = isInSeminarDays
+                };
+                CheckList.Add(check);
+            }
+        }
+        public SeminarViewModel(Seminar seminar, List<Day> days, string uid)
+        {
+            Seminar = seminar;
+            CheckList = new List<CheckedId>();
+            Days = days;
+            Uid = uid;
 
             foreach (var day in days)
             {
