@@ -4,14 +4,14 @@
     ViewData["Title"] = "Edit";
 }
 
-<h4 class="category-heading mb-3">Edit Subject</h4><hr />
+<h4 class="category-heading mb-3">Edit Subject <span class="text-info">@Model.Uid</span></h4><hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Subject.SubjectId" />
             <div class="form-group">
-                <label asp-for="Subject.Name" class="control-label">Name &nbsp &nbsp @Model.Uid</label>
+                <label asp-for="Subject.Name" class="control-label"></label>
                 <input asp-for="Subject.Name" class="form-control" />
                 <span asp-validation-for="Subject.Name" class="text-danger"></span>
             </div>
