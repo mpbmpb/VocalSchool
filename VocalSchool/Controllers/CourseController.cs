@@ -175,7 +175,6 @@ namespace VocalSchool.Controllers
         }
 
         // GET: Course/Delete/5
-        //TODO if name has uid add message all courseElements will be deleted as well
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -183,8 +182,7 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
 
-            var course = await _context.Courses
-                .FirstOrDefaultAsync(m => m.CourseId == id);
+            var course = await _db.GetCourseFullAsync((int)id);
             if (course == null)
             {
                 return NotFound();
@@ -194,7 +192,6 @@ namespace VocalSchool.Controllers
         }
 
         // POST: Course/Delete/5
-        //TODO if name has uid delete all courseElements and Many2Many relations
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

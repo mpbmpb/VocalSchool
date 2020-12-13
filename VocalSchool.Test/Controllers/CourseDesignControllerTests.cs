@@ -363,6 +363,25 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
+        public async Task Delete_removes_all_related_course_elements_if_it_has_uid()
+        {
+            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = new Course(){Name = "test"}};
+            courseView.Course.CourseDesign = new CourseDesign
+            {
+                CourseDesignId = 2
+            };
+            var controller = new CourseController(Context);
+            await controller.Create(courseView);
+            
+            await Controller.DeleteConfirmed(4);
+            
+            Resultcontext.CourseDesigns.Should().HaveCount(3, because:"We seeded the db with 3 CourseDesigns");
+            Resultcontext.Seminars.Should().HaveCount(3, because:"We seeded the db with 3 seminars");
+            Resultcontext.Days.Should().HaveCount(6, because:"We seeded the db with 6 days");
+            Resultcontext.Subjects.Should().HaveCount(6, because:"We seeded the db with 6 subjects");
+        }
+        
+        [Fact]
         public void Validation_Leaving_Name_Null_or_short_causes_modelstate_not_valid()
         {            
             var cd = new CourseDesign();

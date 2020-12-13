@@ -89,6 +89,41 @@ namespace VocalSchool.Data
             await _context.SaveChangesAsync();
         }
 
+        public async Task RemoveCourseDesignAsync(CourseDesign courseDesign)
+        {
+            var uid = courseDesign.GetUid();
+            if (uid != "")
+            {
+                foreach (var courseSeminar in courseDesign.CourseSeminars)
+                {
+                    foreach (var seminarDay in courseSeminar.Seminar.SeminarDays)
+                    {
+                        foreach (var daySubject in seminarDay.Day.DaySubjects)
+                        {
+                            if (daySubject.Subject.Name.Length >= uid.Length
+                                && daySubject.Subject.Name.Substring(0, uid.Length) == uid)
+                                _context.Remove(daySubject.Subject);
+                        }
+
+                        if (seminarDay.Day.Name.Length >= uid.Length
+                            && seminarDay.Day.Name.Substring(0, uid.Length) == uid)
+                            _context.Remove(seminarDay.Day);
+                    }
+
+                    if (courseSeminar.Seminar.Name.Length >= uid.Length
+                        && courseSeminar.Seminar.Name.Substring(0, uid.Length) == uid)
+                        _context.Remove(courseSeminar.Seminar);
+                }
+
+                if (courseDesign.Name.Length >= uid.Length
+                    && courseDesign.Name.Substring(0, uid.Length) == uid)
+                    _context.Remove(courseDesign);
+            }
+
+            _context.Remove(courseDesign);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task RemoveAllCourseDesignElementsAsync(string uid)
         {
             Expression<Func<ICourseElement, bool>> hasUid = x => x.Name.Length >= uid.Length 
@@ -500,9 +535,7 @@ namespace VocalSchool.Data
         {
             await UpdateAsync(model.Seminar);
             var seminarDays = await _context.SeminarDays.ToListAsync();
-
-            //TODO: this fixes null exception being triggered at start of function
-            // find the others
+            
             model.CheckList.ForEach(async item => 
            {
                var existingEntry = seminarDays

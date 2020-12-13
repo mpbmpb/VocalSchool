@@ -1,12 +1,18 @@
+@using VocalSchool.Controllers
 @model VocalSchool.Models.CourseDesign
 
 @{
     ViewData["Title"] = "Delete";
 }
+@{
+    var uid = Model.GetUid();
+    var cascadeMessage = uid == "" ? "" : "All related course elements will be deleted as well";
+}
 
 <h4 class="category-heading mb-3">Delete course design</h4>
 <div class="alert alert-danger" role="alert">
     <h4>Are you sure you want to delete this course design?</h4>
+    <h4>@cascadeMessage</h4>
 </div>
 <div>
     <h4>CourseDesign</h4>
