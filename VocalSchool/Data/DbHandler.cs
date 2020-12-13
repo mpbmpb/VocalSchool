@@ -89,34 +89,18 @@ namespace VocalSchool.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveCourseDesignElementsAsync(CourseDesign courseDesign)
+        public async Task RemoveAllCourseDesignElementsAsync(string uid)
         {
-            var uid = courseDesign.Name.GetUid();
-            if (uid != "")
-            {
-                foreach (var courseSeminar in courseDesign.CourseSeminars)
-                {
-                    foreach (var seminarDay in courseSeminar.Seminar.SeminarDays)
-                    {
-                        foreach (var daySubject in seminarDay.Day.DaySubjects)
-                        {
-                            if (daySubject.Subject.Name.Length >= uid.Length
-                                && daySubject.Subject.Name.Substring(0, uid.Length) == uid)
-                                _context.Remove(daySubject.Subject);
-                        }
-
-                        if (seminarDay.Day.Name.Length >= uid.Length
-                            && seminarDay.Day.Name.Substring(0, uid.Length) == uid)
-                            _context.Remove(seminarDay.Day);
-                    }
-
-                    if (courseSeminar.Seminar.Name.Length >= uid.Length
-                        && courseSeminar.Seminar.Name.Substring(0, uid.Length) == uid)
-                        _context.Remove(courseSeminar.Seminar);
-                }
-            }
-
-            _context.Remove(courseDesign);
+            Expression<Func<ICourseElement, bool>> hasUid = x => x.Name.Length >= uid.Length 
+                                                                    && x.Name.Substring(0, uid.Length ) == uid;
+            var subjects = _context.Subjects.Where(hasUid);
+            _context.RemoveRange(subjects);
+            var days = _context.Days.Where(hasUid);
+            _context.RemoveRange(days);
+            var seminars = _context.Seminars.Where(hasUid);
+            _context.RemoveRange(seminars);
+            var courseDesigns = _context.CourseDesigns.Where(hasUid);
+            _context.RemoveRange(courseDesigns);
             await _context.SaveChangesAsync();
         }
         

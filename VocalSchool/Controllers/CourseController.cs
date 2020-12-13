@@ -95,17 +95,18 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
-                var uid = model.Course.CourseDesign.GetUid();
-                if (uid != "" && model.Course.Name != uid.Substring(1, uid.Length - 1) )
-                {
-                    var newModel = await CopyCourseDesignAsync(model);
-                    await _db.UpdateCourseAsync(newModel);
-
-                    return RedirectToAction(nameof(Index));
-                }
                 try
                 {
+                    var courseDesign = await _db.GetCourseDesignFullAsync(model.Course.CourseDesign.CourseDesignId);
+                    var uid = courseDesign.GetUid();
+                    var end = uid.IndexOf('_') - 1;
+                    if (uid != "" && model.Course.Name != uid.Substring(1, end) )
+                        model = await CopyCourseDesignAsync(model);
+
                     await _db.UpdateCourseAsync(model);
+                    
+                    if (model.Course.CourseDesign.GetUid() != uid)
+                        await _db.RemoveAllCourseDesignElementsAsync(uid);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -113,10 +114,7 @@ namespace VocalSchool.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -214,7 +212,7 @@ namespace VocalSchool.Controllers
         private async Task<CourseViewModel> CopyCourseDesignAsync(CourseViewModel model)
         {
             var cd = await _db.GetCourseDesignFullAsync(model.Course.CourseDesign.CourseDesignId);
-            var uid = $"[{model.Course.Name}-{model.Course.CourseId}]";
+            var uid = $"[{model.Course.Name}_{model.Course.CourseId}]";
             var courseDesign = await cd.CopyAndPrependNameWithAsync(uid, _db);
            
             foreach (var courseSeminar in cd.CourseSeminars)

@@ -22,8 +22,6 @@ namespace VocalSchool.Controllers
                 reqReading.SetValue(copy, reqReading.GetValue(original));
             
             await db.AddAsync(copy);
-            if (original.GetUid() != "")
-                await db.RemoveAsync(original);
             return copy;
         }
 

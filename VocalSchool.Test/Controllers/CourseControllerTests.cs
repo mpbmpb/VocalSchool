@@ -174,7 +174,7 @@ namespace VocalSchool.Test.Controllers
             await Controller.Create(courseView);
             var result = Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 4);
 
-            result?.CourseDesign.Name.Should().Match("[Course7-4] CourseDesign3");
+            result?.CourseDesign.Name.Should().Match("[Course7_4] CourseDesign3");
         }
 
         [Theory]
@@ -257,7 +257,7 @@ namespace VocalSchool.Test.Controllers
         {
             var actionResult = await Controller.Edit(1);
             var model = actionResult.As<ViewResult>().Model.As<CourseViewModel>();
-            model.Course.CourseDesign.Name = "[test] name";
+            model.Course.CourseDesign.Name = "[test_0] name";
             await Controller.Edit(1, model);
 
             Resultcontext.Subjects.Count(x => x.Name.Substring(0, 1) == "[").Should().Be(5,
@@ -273,17 +273,19 @@ namespace VocalSchool.Test.Controllers
                 CourseDesignId = 1
             };
             await Controller.Create(courseView);
-            var b = Resultcontext.Subjects.ToList();
             
             var actionResult = await Controller.Edit(4);
             var model = actionResult.As<ViewResult>().Model.As<CourseViewModel>();
+            
             model.Course.Name = "test";
             await Controller.Edit(4, model);
-            var c = Resultcontext.Subjects.ToList();
 
             Resultcontext.Subjects.Count().Should().Be(11,
                 because: "courseDesign 1 has 5 subjects now copied twice and removed once and added to the 6 seeded subjects");
-            Resultcontext.Subjects.Count(x => x.Name.Substring(0, 4) == "[tes").Should().Be(5);
+            Resultcontext.Subjects.Count(x => x.Name.Length >= 6 
+                                              && x.Name.Substring(0, 6) == "[test_")
+                .Should().Be(5, "5 subjects are now copied and prepended with uid");
+            Resultcontext.Courses.Count().Should().Be(4);
         }
 
         [Fact]
