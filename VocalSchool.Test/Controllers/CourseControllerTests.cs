@@ -228,31 +228,6 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Edit_returns_CourseViewModel_with_ALL_CourseDesigns_injected_into_DesignList()
-        {
-            var result = await Controller.Edit(1);
-
-            result.As<ViewResult>().Model.As<CourseViewModel>().DesignList
-                .Should().HaveCount(4).And.Contain(x => x.Text == "CourseDesign1")
-                .And.Contain(x => x.Text == "CourseDesign2")
-                .And.Contain(x => x.Text == "CourseDesign3");
-        }
-        
-        [Fact]
-        public async Task Edit_shows_only_CourseDesigns_without_uid_if_CourseDesign_has_no_uid()
-        {
-            var cd = new CourseDesign() {Name = "[uid] test", CourseDesignId = 7};
-            Context.Add(cd);
-            await Context.SaveChangesAsync();
-            
-            var result = await Controller.Edit(1);
-
-            result.As<ViewResult>().Model.As<CourseViewModel>().CourseDesigns
-                .Count(x => x.Name.Substring(0, 1) == "[")
-                .Should().Be(0);
-        }
-
-        [Fact]
         public async Task Edit_updates_Course_with_correct_properties()
         {            
             var c = Context.Courses.FirstOrDefault(x => x.CourseId == 1);
@@ -270,21 +245,45 @@ namespace VocalSchool.Test.Controllers
         }
 
         [Fact]
-        public async Task Edit_updates_Course_with_correct_CourseDesign()
-        {            
-            var c = Context.Courses.FirstOrDefault(x => x.CourseId == 1);
-            var courseDesigns = await Context.CourseDesigns.ToListAsync();
+        public async Task Edit_only_loads_current_CourseDesign_in_designList()
+        {
+            var result = await Controller.Edit(1);
 
-            var courseView = new CourseViewModel(c, courseDesigns);
+            result.As<ViewResult>().Model.As<CourseViewModel>().DesignList.Count().Should().Be(2, because:"1st item is --select-- 2nd item is CourseDesign");
+        }
+
+        [Fact]
+        public async Task Edit_makes_new_copies_if_name_differs_from_design_name_uid()
+        {
+            var actionResult = await Controller.Edit(1);
+            var model = actionResult.As<ViewResult>().Model.As<CourseViewModel>();
+            model.Course.CourseDesign.Name = "[test] name";
+            await Controller.Edit(1, model);
+
+            Resultcontext.Subjects.Count(x => x.Name.Substring(0, 1) == "[").Should().Be(5,
+                because: "courseDesign 1 has 5 subjects now copied and prepended with uid");
+        }
+
+        [Fact]
+        public async Task Edit_makes_new_copies_deletes_old_elements_if_name_changes_and_design_name_has_uid()
+        {
+            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
             courseView.Course.CourseDesign = new CourseDesign
             {
-                CourseDesignId = int.Parse(courseView.DesignList[1].Value)
+                CourseDesignId = 1
             };
+            await Controller.Create(courseView);
+            var b = Resultcontext.Subjects.ToList();
+            
+            var actionResult = await Controller.Edit(4);
+            var model = actionResult.As<ViewResult>().Model.As<CourseViewModel>();
+            model.Course.Name = "test";
+            await Controller.Edit(4, model);
+            var c = Resultcontext.Subjects.ToList();
 
-            await Controller.Edit(1, courseView);
-
-            Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 1)?.CourseDesign
-                .Name.Should().Match("CourseDesign3");
+            Resultcontext.Subjects.Count().Should().Be(11,
+                because: "courseDesign 1 has 5 subjects now copied twice and removed once and added to the 6 seeded subjects");
+            Resultcontext.Subjects.Count(x => x.Name.Substring(0, 4) == "[tes").Should().Be(5);
         }
 
         [Fact]
@@ -349,6 +348,26 @@ namespace VocalSchool.Test.Controllers
 
             Resultcontext.Courses.FirstOrDefault(x => x.CourseId == 1).Should().BeNull();
         }
+
+        [Fact]
+        public async Task Delete_removes_all_related_course_elements_if_it_has_uid()
+        {
+            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            courseView.Course.CourseDesign = new CourseDesign
+            {
+                CourseDesignId = 2
+            };
+            courseView.Course.CourseId = 7;
+            await Controller.Create(courseView);
+            
+            await Controller.DeleteConfirmed(7);
+            
+            Resultcontext.CourseDesigns.Should().HaveCount(3, because:"We seeded the db with 3 CourseDesigns");
+            Resultcontext.Seminars.Should().HaveCount(3, because:"We seeded the db with 3 seminars");
+            Resultcontext.Days.Should().HaveCount(6, because:"We seeded the db with 6 days");
+            Resultcontext.Subjects.Should().HaveCount(6, because:"We seeded the db with 6 subjects");
+        }
+
 
         [Fact]
         public async Task AddCourseDates_returns_Notfound_if_given_unknown_id()

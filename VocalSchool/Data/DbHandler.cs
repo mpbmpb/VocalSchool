@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using VocalSchool.Controllers;
 using VocalSchool.Models;
 using VocalSchool.ViewModels;
 
@@ -52,7 +53,73 @@ namespace VocalSchool.Data
             _context.Remove(entity);
             await _context.SaveChangesAsync();
         }
+        
+        public async Task RemoveCourseAsync(Course course)
+        {
+            var uid = course.CourseDesign.Name.GetUid();
+            if (uid != "")
+            {
+                foreach (var courseSeminar in course.CourseDesign.CourseSeminars)
+                {
+                    foreach (var seminarDay in courseSeminar.Seminar.SeminarDays)
+                    {
+                        foreach (var daySubject in seminarDay.Day.DaySubjects)
+                        {
+                            if (daySubject.Subject.Name.Length >= uid.Length
+                                && daySubject.Subject.Name.Substring(0, uid.Length) == uid)
+                                _context.Remove(daySubject.Subject);
+                        }
 
+                        if (seminarDay.Day.Name.Length >= uid.Length
+                            && seminarDay.Day.Name.Substring(0, uid.Length) == uid)
+                            _context.Remove(seminarDay.Day);
+                    }
+
+                    if (courseSeminar.Seminar.Name.Length >= uid.Length
+                        && courseSeminar.Seminar.Name.Substring(0, uid.Length) == uid)
+                        _context.Remove(courseSeminar.Seminar);
+                }
+
+                if (course.CourseDesign.Name.Length >= uid.Length
+                    && course.CourseDesign.Name.Substring(0, uid.Length) == uid)
+                    _context.Remove(course.CourseDesign);
+            }
+
+            _context.Remove(course);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoveCourseDesignElementsAsync(CourseDesign courseDesign)
+        {
+            var uid = courseDesign.Name.GetUid();
+            if (uid != "")
+            {
+                foreach (var courseSeminar in courseDesign.CourseSeminars)
+                {
+                    foreach (var seminarDay in courseSeminar.Seminar.SeminarDays)
+                    {
+                        foreach (var daySubject in seminarDay.Day.DaySubjects)
+                        {
+                            if (daySubject.Subject.Name.Length >= uid.Length
+                                && daySubject.Subject.Name.Substring(0, uid.Length) == uid)
+                                _context.Remove(daySubject.Subject);
+                        }
+
+                        if (seminarDay.Day.Name.Length >= uid.Length
+                            && seminarDay.Day.Name.Substring(0, uid.Length) == uid)
+                            _context.Remove(seminarDay.Day);
+                    }
+
+                    if (courseSeminar.Seminar.Name.Length >= uid.Length
+                        && courseSeminar.Seminar.Name.Substring(0, uid.Length) == uid)
+                        _context.Remove(courseSeminar.Seminar);
+                }
+            }
+
+            _context.Remove(courseDesign);
+            await _context.SaveChangesAsync();
+        }
+        
         public async Task UpdateAsync(Object entity)
         {
                 _context.Update(entity);
@@ -474,7 +541,5 @@ namespace VocalSchool.Data
 
             await _context.SaveChangesAsync();
         }
-
-
     }
 }

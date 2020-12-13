@@ -78,19 +78,8 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-            List<CourseDesign> designs;
-            if (course.Name[0] == '[')
-            {
-                int length = course.Name.IndexOf(']') + 1;
-                var uid = course.Name.Substring(0, length);
-                designs = await _db.GetAllCourseDesignsFullAsync(x => 
-                    x.Name.Length >= length && x.Name.Substring(0, length) == uid);
-            }
-            else
-            {
-                designs = await _db.GetAllCourseDesignsFullAsync(x => 
-                    x.Name.Substring(0, 1) != "[");
-            }
+            var designs = new List<CourseDesign>() { course.CourseDesign };
+
             return View(new CourseViewModel(course, designs));
         }
 
@@ -106,6 +95,14 @@ namespace VocalSchool.Controllers
 
             if (ModelState.IsValid)
             {
+                var uid = model.Course.CourseDesign.GetUid();
+                if (uid != "" && model.Course.Name != uid.Substring(1, uid.Length - 1) )
+                {
+                    var newModel = await CopyCourseDesignAsync(model);
+                    await _db.UpdateCourseAsync(newModel);
+
+                    return RedirectToAction(nameof(Index));
+                }
                 try
                 {
                     await _db.UpdateCourseAsync(model);
@@ -204,9 +201,8 @@ namespace VocalSchool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Courses.FindAsync(id);
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync();
+            var course = await _db.GetCourseFullAsync(id);
+            await _db.RemoveCourseAsync(course);
             return RedirectToAction(nameof(Index));
         }
 

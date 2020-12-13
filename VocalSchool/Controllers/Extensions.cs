@@ -15,13 +15,15 @@ namespace VocalSchool.Controllers
             var reqReading = original.GetType().GetProperty("RequiredReading");
             var copy = new T();
 
-            copy.Name = original.Name.Prepend(uid);
+            copy.Name = original.Name.TrimUid().Prepend(uid);
             copy.Description = original.Description;
                         
             if (reqReading != null) 
                 reqReading.SetValue(copy, reqReading.GetValue(original));
             
             await db.AddAsync(copy);
+            if (original.GetUid() != "")
+                await db.RemoveAsync(original);
             return copy;
         }
 
@@ -49,6 +51,13 @@ namespace VocalSchool.Controllers
             var start = courseElement.Name.GetUid().Length;
             courseElement.Name = courseElement.Name.Substring(start == 0 ? 0 : ++start); // ++ takes off whitespace after uid
             return courseElement;
+        }
+        
+        public static string TrimUid(this string name)
+        {
+            var start = name.GetUid().Length;
+            name = name.Substring(start == 0 ? 0 : ++start); // ++ takes off whitespace after uid
+            return name;
         }
         
     }
