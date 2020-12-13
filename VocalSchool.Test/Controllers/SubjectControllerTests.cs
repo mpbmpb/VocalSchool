@@ -238,6 +238,24 @@ namespace VocalSchool.Test.Controllers
             result.Should().BeFalse();
             result2.Should().BeFalse();
         }
+        
+        [Fact]
+        public void Validation_entering_disallowed_character_in_Name_field_causes_modelstate_not_valid()
+        {            
+            var s = new Subject();
+            var s2 = new Subject();
+            var s3 = new Subject();
+            s.Name = "[123";
+            s2.Name = "123]";
+            s3.Name = "12_3";
 
+            var result = Validator.TryValidateObject(s, new ValidationContext(s), null, true);
+            var result2 = Validator.TryValidateObject(s2, new ValidationContext(s2), null, true);
+            var result3 = Validator.TryValidateObject(s3, new ValidationContext(s3), null, true);
+
+            result.Should().BeFalse();
+            result2.Should().BeFalse();
+            result3.Should().BeFalse();
+        }
     }
 }
