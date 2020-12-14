@@ -57,7 +57,7 @@ namespace VocalSchool.Test.Infrastructure
         
         protected async Task MakeNewCourse(int courseDesignId)
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>())
+            var courseView = new CourseViewModel(new List<CourseDesign>(), "http://www.completevocaltraining.nl")
             {
                 Course = new Course
                 {

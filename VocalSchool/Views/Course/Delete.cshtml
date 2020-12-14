@@ -1,11 +1,11 @@
 @using VocalSchool.Controllers
-@model VocalSchool.Models.Course
+@model CourseViewModel
 
 @{
     ViewData["Title"] = "Delete";
 }
 @{
-    var uid = Model.CourseDesign.GetUid();
+    var uid = Model.Course.CourseDesign.GetUid();
     var cascadeMessage = uid == "" ? "" : "All related course elements will be deleted as well";
 }
 <h4 class="category-heading mb-3">Delete course</h4>
@@ -18,21 +18,22 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Course.Name)
         </dt>
         <dd class="col-sm-10 alert alert-primary">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Course.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Course.Description)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Course.Description)
         </dd>
     </dl>
 
     <form asp-action="Delete">
-        <input type="hidden" asp-for="CourseId" />
+        <input type="hidden" asp-for="Course.CourseId" />
+        <input asp-for="LastPage" type="hidden" value="@Model.LastPage"/>
         <input type="submit" value="Delete" class="btn btn-danger" />
         <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
     </form>

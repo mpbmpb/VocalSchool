@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VocalSchool.Data;
@@ -46,8 +47,11 @@ namespace VocalSchool.Controllers
         // GET: Course/Create
         public async Task<IActionResult> Create()
         {
-            var courseDesigns = await _db.GetOnlyCourseDesignsAsync(x => x.Name.Substring(0, 1) != "[");
-            return View(new CourseViewModel(courseDesigns));
+            var courseDesigns = await _db.GetOnlyCourseDesignsAsync(
+                x => x.Name.Substring(0, 1) != "[");
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
+
+            return View(new CourseViewModel(courseDesigns, lastPage));
         }
 
         // POST: Course/Create
@@ -79,8 +83,10 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
             var designs = new List<CourseDesign>() { course.CourseDesign };
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(new CourseViewModel(course, designs));
+
+            return View(new CourseViewModel(course, designs, lastPage));
         }
 
         // POST: Course/Edit/5
@@ -135,7 +141,9 @@ namespace VocalSchool.Controllers
                 return NotFound();
             }
             var courseDates = await _db.GetAllAsync<CourseDate>();
-            return View(new CourseViewModel(course, courseDates));
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
+
+            return View(new CourseViewModel(course, courseDates, lastPage));
         }
 
         //Post
@@ -187,8 +195,9 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(course);
+            return View(new CourseViewModel(course, lastPage));
         }
 
         // POST: Course/Delete/5

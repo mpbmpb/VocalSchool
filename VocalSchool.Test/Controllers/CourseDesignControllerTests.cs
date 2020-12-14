@@ -369,7 +369,8 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_all_related_course_elements_if_it_has_uid()
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = new Course(){Name = "test"}};
+            var courseView = new CourseViewModel(new List<CourseDesign>(), "http://completevocaltraining.nl")
+                {Course = new Course(){Name = "test"}};
             courseView.Course.CourseDesign = new CourseDesign
             {
                 CourseDesignId = 2

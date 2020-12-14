@@ -20,7 +20,7 @@ namespace VocalSchool
 }
 //TODO check delete methods for concurrencyException try/catch
 
-//TODO change redirect on save to back to last page
+//TODO figure out what to return for which type of exception
 
 //TODO add delete button to edit views
 

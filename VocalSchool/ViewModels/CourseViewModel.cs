@@ -12,17 +12,24 @@ namespace VocalSchool.ViewModels
         public List<SelectListItem> DesignList { get; set; }
         public List<CourseDate> CourseDates { get; set; }
         public int DayCount { get; private set; }
+        public string LastPage { get; set; }
 
         public CourseViewModel()
         {
         }
 
-        public CourseViewModel(List<CourseDesign> designs)
+        public CourseViewModel(Course course, string lastPage)
+        {
+            Course = course;
+            LastPage = lastPage;
+        }
+
+        public CourseViewModel(List<CourseDesign> designs, string lastPage)
         {
             Course = new Course();
             CourseDesigns = designs;
+            LastPage = lastPage;
             DesignList = new List<SelectListItem>();
-            DesignList.Add(new SelectListItem { Value = "0", Text = "-- select design --" });
 
             foreach (var item in designs)
             {
@@ -35,17 +42,18 @@ namespace VocalSchool.ViewModels
             }
         }
         
-        public CourseViewModel(Course course, List<CourseDesign> designs)
-            :this(designs)
+        public CourseViewModel(Course course, List<CourseDesign> designs, string lastPage)
+            :this(designs, lastPage)
         {
             Course = course;
         }
         
-        public CourseViewModel(Course course, List<CourseDate> dates)
+        public CourseViewModel(Course course, List<CourseDate> dates, string lastPage)
         {
             DayCount = 0;
             Id = course.CourseId;
             CourseDates = new List<CourseDate>();
+            LastPage = lastPage;
             foreach (var date in dates)
             {
                 if (date.CourseId == Id)

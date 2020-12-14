@@ -126,7 +126,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Course()
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            var courseView = new CourseViewModel(new List<CourseDesign>(), "http://www.completevocaltraining.nl") {Course = Course7};
             courseView.Course.CourseDesign = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
             
             await Controller.Create(courseView);
@@ -137,7 +137,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Course_with_correct_properties()
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            var courseView = new CourseViewModel(Course7,new List<CourseDesign>(), "http://www.completevocaltraining.nl");
             courseView.Course.CourseDesign = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
             
             await Controller.Create(courseView);
@@ -165,7 +165,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Course_with_correct_CourseDesign()
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            var courseView = new CourseViewModel(Course7,new List<CourseDesign>(), "http://www.completevocaltraining.nl");
             courseView.Course.CourseDesign = new CourseDesign
             {
                 CourseDesignId = 3
@@ -183,7 +183,7 @@ namespace VocalSchool.Test.Controllers
         [InlineData(3, 22)]
         public async Task Create_copies_all_subjects_in_CourseDesign(int id, int expected)
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            var courseView = new CourseViewModel(Course7,new List<CourseDesign>(), "http://www.completevocaltraining.nl");
             courseView.Course.CourseDesign = new CourseDesign
             {
                 CourseDesignId = id
@@ -249,7 +249,7 @@ namespace VocalSchool.Test.Controllers
         {
             var result = await Controller.Edit(1);
 
-            result.As<ViewResult>().Model.As<CourseViewModel>().DesignList.Count().Should().Be(2, because:"1st item is --select-- 2nd item is CourseDesign");
+            result.As<ViewResult>().Model.As<CourseViewModel>().DesignList.Count().Should().Be(1);
         }
 
         [Fact]
@@ -267,7 +267,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Edit_makes_new_copies_deletes_old_elements_if_name_changes_and_design_name_has_uid()
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            var courseView = new CourseViewModel(Course7,new List<CourseDesign>(), "http://www.completevocaltraining.nl");
             courseView.Course.CourseDesign = new CourseDesign
             {
                 CourseDesignId = 1
@@ -317,7 +317,7 @@ namespace VocalSchool.Test.Controllers
         {            
             var c = await Context.Courses.FirstOrDefaultAsync(x => x.CourseId == 1);
             var courseDesigns = await Context.CourseDesigns.ToListAsync();
-            var courseView = new CourseViewModel(c, courseDesigns);
+            var courseView = new CourseViewModel(c, courseDesigns, "http://www.completevocaltraining.nl");
 
             Context.Remove(c);
             await Context.SaveChangesAsync();
@@ -332,7 +332,7 @@ namespace VocalSchool.Test.Controllers
         {
             var result = await Controller.Delete(1);
 
-            result.As<ViewResult>().Model.As<Course>().Name.Should().Be("Course1");
+            result.As<ViewResult>().Model.As<CourseViewModel>().Course.Name.Should().Be("Course1");
         }
 
         [Fact]
@@ -354,7 +354,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_all_related_course_elements_if_it_has_uid()
         {
-            var courseView = new CourseViewModel(new List<CourseDesign>()) {Course = Course7};
+            var courseView = new CourseViewModel(Course7,new List<CourseDesign>(), "http://www.completevocaltraining.nl");
             courseView.Course.CourseDesign = new CourseDesign
             {
                 CourseDesignId = 2
@@ -433,7 +433,7 @@ namespace VocalSchool.Test.Controllers
         {            
             var course = await Context.Courses.FindAsync(2);
             var courseDates = await Context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(course, courseDates);
+            var model = new CourseViewModel(course, courseDates, "http://www.completevocaltraining.nl");
             var date = new CourseDate
             {
                 Date = new DateTime(2080, 01, 03),
@@ -457,7 +457,7 @@ namespace VocalSchool.Test.Controllers
         {            
             var course = await Context.Courses.FindAsync(id);
             var courseDates = await Context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(course, courseDates);
+            var model = new CourseViewModel(course, courseDates, "http://www.completevocaltraining.nl");
             var date = new CourseDate
             {
                 Date = new DateTime(2080, 01, 03),
@@ -480,7 +480,7 @@ namespace VocalSchool.Test.Controllers
         {            
             var course = await Context.Courses.FindAsync(2);
             var courseDates = await Context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(course, courseDates);
+            var model = new CourseViewModel(course, courseDates, "http://www.completevocaltraining.nl");
             var date = new CourseDate
             {
                 Date = new DateTime(2080, 01, 03),
@@ -502,7 +502,7 @@ namespace VocalSchool.Test.Controllers
         {            
             var course = await Context.Courses.FindAsync(1);
             var courseDates = await Context.CourseDates.ToListAsync();
-            var model = new CourseViewModel(course, courseDates);
+            var model = new CourseViewModel(course, courseDates, "http://www.completevocaltraining.nl");
             var date = new CourseDate
             {
                 CourseDateId = 1,
@@ -552,7 +552,7 @@ namespace VocalSchool.Test.Controllers
         {            
             var c = await Context.Courses.FirstOrDefaultAsync(x => x.CourseId == 1);
             var courseDesigns = await Context.CourseDesigns.ToListAsync();
-            var courseView = new CourseViewModel(c, courseDesigns);
+            var courseView = new CourseViewModel(c, courseDesigns, "http://www.completevocaltraining.nl");
 
             Context.Remove(c);
             await Context.SaveChangesAsync();
