@@ -31,7 +31,8 @@
             </div>
             <hr />
             <div class="form-group mt-4">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input asp-for="LastPage" type="hidden" value="@Model.LastPage"/>
+                <input type="submit" value="Save" class="btn btn-primary"/>
                 <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
                 <a asp-controller="Subject" asp-action="Create" class="btn btn-primary">Create new subject</a>
             </div>

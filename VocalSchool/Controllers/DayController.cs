@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
 using VocalSchool.Models;
@@ -46,8 +47,9 @@ namespace VocalSchool.Controllers
         public async Task<IActionResult> Create()
         {
             var subjects = await _db.GetAllAsync<Subject>(x => x.Name.Substring(0, 1) != "[");
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(new DayViewModel(subjects));
+            return View(new DayViewModel(subjects, lastPage));
         }
 
         // POST: Day/Create
@@ -59,7 +61,7 @@ namespace VocalSchool.Controllers
             if (ModelState.IsValid)
             {
                 await _db.AddDayAsync(model);
-                return RedirectToAction(nameof(Index));
+                return Redirect(model.LastPage);
             }
             return View(model);
         }
@@ -87,8 +89,9 @@ namespace VocalSchool.Controllers
             else
                 subjects = await _db.GetAllAsync<Subject>(x => 
                     x.Name.Substring(0, 1) != "[");
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(new DayViewModel(day.TrimUid(), subjects, uid));
+            return View(new DayViewModel(day.TrimUid(), subjects, uid, lastPage));
         }
 
         // POST: Day/Edit/5
@@ -113,9 +116,9 @@ namespace VocalSchool.Controllers
                 }
                 catch (Exception)
                 {
-                    RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect(model.LastPage);
             }
             return View(model);
         }
@@ -133,19 +136,20 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(day);
+            return View(new DayViewModel(day, lastPage));
         }
 
         // POST: Day/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(DayViewModel model)
         {
-            var day = await _db.GetAsync<Day>(id);
+            var day = await _db.GetAsync<Day>(model.Day.DayId);
 
             await _db.RemoveAsync(day);
-            return RedirectToAction(nameof(Index));
+            return Redirect(model.LastPage);
         }
 
         public ControllerContext GetContext([FromServices] ControllerContext ctx)

@@ -9,15 +9,23 @@ namespace VocalSchool.ViewModels
         public Day Day { get; set; }
         public List<CheckedId> CheckList { get; set; }
         public string Uid { get; private set; }
+        public string LastPage { get; set; }
 
         public DayViewModel()
         {
         }
 
-        public DayViewModel(List<Subject> subjects)
+        public DayViewModel(Day day, string lastPage)
+        {
+            Day = day;
+            LastPage = lastPage;
+        }
+
+        public DayViewModel(List<Subject> subjects, string lastPage)
         {
             Day = new Day();
             CheckList = new List<CheckedId>();
+            LastPage = lastPage;
 
             foreach (var subject in subjects)
             {
@@ -52,11 +60,12 @@ namespace VocalSchool.ViewModels
                 CheckList.Add(check);
             }
         }
-        public DayViewModel(Day day, IEnumerable<Subject> subjects, string uid)
+        public DayViewModel(Day day, IEnumerable<Subject> subjects, string uid, string lastPage)
         {
             Day = day;
             CheckList = new List<CheckedId>();
             Uid = uid;
+            LastPage = lastPage;
 
             foreach (var subject in subjects)
             {

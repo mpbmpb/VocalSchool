@@ -1,4 +1,4 @@
-@model VocalSchool.Models.Day
+@model DayViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -13,18 +13,19 @@
 <div>
     <dl class="form-group col-sm-4 pl-0">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.Day.Name)
         </dt>
         <dt class="alert alert-primary">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.Day.Name)
         </dt>
         <dt class="alert alert-primary">
-                @Html.DisplayFor(model => model.Description)
+                @Html.DisplayFor(model => model.Day.Description)
         </dt>
     </dl>
 
     <form asp-action="Delete">
-        <input type="hidden" asp-for="DayId" />
+        <input type="hidden" asp-for="Day.DayId" />
+        <input asp-for="LastPage" type="hidden" value="@Model.LastPage"/>
         <input type="submit" value="Delete" class="btn btn-danger" />
         <a class="btn btn-primary" href="previous.html" onClick="history.back();return false;">Back</a>
     </form>

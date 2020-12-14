@@ -18,8 +18,11 @@ namespace VocalSchool
                 });
     }
 }
+//TODO check delete methods for concurrencyException try/catch
 
 //TODO change redirect on save to back to last page
+
+//TODO add delete button to edit views
 
 //TODO make method for tables in views
 
