@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
 using VocalSchool.Models;
@@ -46,7 +47,9 @@ namespace VocalSchool.Controllers
         public async Task<IActionResult> Create()
         {
             var seminars = await _db.GetAllSeminarsFullAsync(x => x.Name.Substring(0, 1) != "[");
-            return View(new CourseDesignViewModel(seminars));
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
+
+            return View(new CourseDesignViewModel(seminars, lastPage));
         }
 
         // POST: CourseDesign/Create
@@ -57,7 +60,7 @@ namespace VocalSchool.Controllers
             if (ModelState.IsValid)
             {
                 await _db.AddCourseDesignAsync(model);
-                return RedirectToAction(nameof(Index));
+                return Redirect(model.LastPage);
             }
             return View(model);
         }
@@ -84,8 +87,9 @@ namespace VocalSchool.Controllers
             else
                 seminars = await _db.GetAllSeminarsFullAsync(x => 
                     x.Name.Substring(0, 1) != "[");
-            
-            return View(new CourseDesignViewModel(courseDesign.TrimUid(), seminars, uid));
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
+           
+            return View(new CourseDesignViewModel(courseDesign.TrimUid(), seminars, uid, lastPage));
         }
 
         // POST: CourseDesign/Edit/5
@@ -113,7 +117,7 @@ namespace VocalSchool.Controllers
                 {
                     return NotFound();
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect(model.LastPage);
             }
             return View(model);
         }
@@ -131,18 +135,19 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(courseDesign);
+            return View(new CourseDesignViewModel(courseDesign, lastPage));
         }
 
         // POST: CourseDesign/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(CourseDesignViewModel model)
         {
-            var courseDesign = await _db.GetAsync<CourseDesign>(id);
+            var courseDesign = await _db.GetAsync<CourseDesign>(model.CourseDesign.CourseDesignId);
             await _db.RemoveCourseDesignAsync(courseDesign);
-            return RedirectToAction(nameof(Index));
+            return Redirect(model.LastPage);
         }
     }
 }

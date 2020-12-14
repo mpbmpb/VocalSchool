@@ -123,7 +123,8 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_CourseDesign()
         {            
-            var courseDesignView = new CourseDesignViewModel {CourseDesign = CourseDesign7, CheckList = new List<CheckedId>()};
+            var courseDesignView = new CourseDesignViewModel(CourseDesign7, "http://www.completevocaltraining.nl") 
+                {CheckList = new List<CheckedId>()};
 
             await Controller.Create(courseDesignView);
 
@@ -133,7 +134,8 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_CourseDesign_with_correct_properties()
         {            
-            var courseDesignView = new CourseDesignViewModel {CourseDesign = CourseDesign7, CheckList = new List<CheckedId>()};
+            var courseDesignView = new CourseDesignViewModel(CourseDesign7, "http://www.completevocaltraining.nl")
+                {CheckList = new List<CheckedId>()};
 
             await Controller.Create(courseDesignView);
 
@@ -145,7 +147,8 @@ namespace VocalSchool.Test.Controllers
         public async Task Create_stores_CourseDesign_with_correct_CourseSeminars()
         {            
             var seminars = await Context.Seminars.ToListAsync();
-            var courseDesignView = new CourseDesignViewModel(seminars) {CourseDesign = CourseDesign7};
+            var courseDesignView = new CourseDesignViewModel(seminars, "http://www.completevocaltraining.nl") 
+                {CourseDesign = CourseDesign7};
             courseDesignView.CheckList[0].IsSelected = true;
             courseDesignView.CheckList[2].IsSelected = true;
 
@@ -268,7 +271,7 @@ namespace VocalSchool.Test.Controllers
             courseDesign.Name = "Effects";
             courseDesign.Description = "Learn about effects";
 
-            var courseDesignView = new CourseDesignViewModel {CourseDesign = courseDesign, CheckList = new List<CheckedId>()};
+            var courseDesignView = new CourseDesignViewModel(courseDesign, "http://www.completevocaltraining.nl") {CheckList = new List<CheckedId>()};
 
             await Controller.Edit(1, courseDesignView);
 
@@ -283,7 +286,7 @@ namespace VocalSchool.Test.Controllers
             var cd = Context.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
             var seminars = await Context.Seminars.ToListAsync();
 
-            var courseDesignView = new CourseDesignViewModel(cd, seminars);
+            var courseDesignView = new CourseDesignViewModel(cd, seminars, "", "http://www.completevocaltraining.nl") ;
             courseDesignView.CheckList[2].IsSelected = false;
             courseDesignView.CheckList[1].IsSelected = false;
             courseDesignView.CheckList[0].IsSelected = true;
@@ -341,7 +344,7 @@ namespace VocalSchool.Test.Controllers
         {
             var result = await Controller.Delete(1);
 
-            result.As<ViewResult>().Model.As<CourseDesign>().Name.Should().Be("CourseDesign1");
+            result.As<ViewResult>().Model.As<CourseDesignViewModel>().CourseDesign.Name.Should().Be("CourseDesign1");
         }
 
         [Fact]
@@ -355,7 +358,8 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_CourseDesign_from_Db()
         {
-            await Controller.DeleteConfirmed(1);
+            await Controller.DeleteConfirmed(new CourseDesignViewModel(
+                new CourseDesign(){CourseDesignId = 1}, "http://www.completevocaltraining.nl"));
 
             var result = Resultcontext.CourseDesigns.FirstOrDefault(x => x.CourseDesignId == 1);
 
@@ -373,7 +377,8 @@ namespace VocalSchool.Test.Controllers
             var controller = new CourseController(Context);
             await controller.Create(courseView);
             
-            await Controller.DeleteConfirmed(4);
+            await Controller.DeleteConfirmed(new CourseDesignViewModel(
+                new CourseDesign(){CourseDesignId = 4}, "http://www.completevocaltraining.nl"));
             
             Resultcontext.CourseDesigns.Should().HaveCount(3, because:"We seeded the db with 3 CourseDesigns");
             Resultcontext.Seminars.Should().HaveCount(3, because:"We seeded the db with 3 seminars");

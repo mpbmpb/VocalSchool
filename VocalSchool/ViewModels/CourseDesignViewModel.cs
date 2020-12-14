@@ -10,16 +10,24 @@ namespace VocalSchool.ViewModels
         public List<CheckedId> CheckList { get; set; }
         public List<Seminar> Seminars { get; set; }
         public string Uid { get; private set; }
+        public string LastPage { get; set; }
 
         public CourseDesignViewModel()
         {
         }
 
-        public CourseDesignViewModel(List<Seminar> seminars)
+        public CourseDesignViewModel(CourseDesign courseDesign, string lastPage)
+        {
+            CourseDesign = courseDesign;
+            LastPage = lastPage;
+        }
+
+        public CourseDesignViewModel(List<Seminar> seminars, string lastPage)
         {
             CourseDesign = new CourseDesign();
             CheckList = new List<CheckedId>();
             Seminars = seminars;
+            LastPage = lastPage;
 
             foreach (var sem in seminars)
             {
@@ -54,12 +62,13 @@ namespace VocalSchool.ViewModels
                 CheckList.Add(check);
             }
         }
-        public CourseDesignViewModel(CourseDesign courseDesign, List<Seminar> seminars, string uid)
+        public CourseDesignViewModel(CourseDesign courseDesign, List<Seminar> seminars, string uid, string lastPage)
         {
             CourseDesign = courseDesign;
             CheckList = new List<CheckedId>();
             Seminars = seminars;
             Uid = uid;
+            LastPage = lastPage;
 
             foreach (var sem in seminars)
             {
