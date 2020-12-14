@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
 using VocalSchool.Models;
@@ -44,7 +45,8 @@ namespace VocalSchool.Controllers
         public async Task<IActionResult> Create()
         {
             var days = await _db.GetAllDaysFullAsync(x => x.Name.Substring(0, 1) != "[");
-            return View(new SeminarViewModel(days));
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
+            return View(new SeminarViewModel(days, lastPage));
         }
 
         // POST: Seminar/Create
@@ -55,7 +57,7 @@ namespace VocalSchool.Controllers
             if (ModelState.IsValid)
             {
                 await _db.AddSeminarAsync(model);
-                return RedirectToAction(nameof(Index));
+                return Redirect(model.LastPage);
             }
             return View(model);
         }
@@ -82,8 +84,9 @@ namespace VocalSchool.Controllers
             else
                 days = await _db.GetAllDaysFullAsync(x => 
                     x.Name.Substring(0, 1) != "[");
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(new SeminarViewModel(seminar.TrimUid(), days, uid));
+            return View(new SeminarViewModel(seminar.TrimUid(), days, uid, lastPage));
         }
 
         // POST: Seminar/Edit/5
@@ -110,7 +113,7 @@ namespace VocalSchool.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                return RedirectToAction(nameof(Index));
+                return Redirect(model.LastPage);
             }
             return View(model);
         }
@@ -128,18 +131,19 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
 
-            return View(seminar);
+            return View(new SeminarViewModel(seminar, lastPage));
         }
 
         // POST: Seminar/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(SeminarViewModel model)
         {
-            var seminar = await _db.GetSeminarAndDaysAsync(id);
+            var seminar = await _db.GetSeminarAndDaysAsync(model.Seminar.SeminarId);
             await _db.RemoveAsync(seminar);
-            return RedirectToAction(nameof(Index));
+            return Redirect(model.LastPage);
         }
     }
 }

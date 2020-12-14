@@ -131,7 +131,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Seminar()
         {
-            var seminarView = new SeminarViewModel {Seminar = Seminar7, CheckList = new List<CheckedId>()};
+            var seminarView = new SeminarViewModel(Seminar7,  new List<Day>(), "", "http://completevocaltraining.nl");
 
             await Controller.Create(seminarView);
 
@@ -141,7 +141,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Seminar_with_correct_properties()
         {
-            var seminarView = new SeminarViewModel {Seminar = Seminar7, CheckList = new List<CheckedId>()};
+            var seminarView = new SeminarViewModel(Seminar7,  new List<Day>(), "", "http://completevocaltraining.nl");
 
             await Controller.Create(seminarView);
 
@@ -152,7 +152,7 @@ namespace VocalSchool.Test.Controllers
         public async Task Create_stores_Seminar_with_correct_SeminarDays()
         {
             var days = await Context.Days.ToListAsync();
-            var seminarView = new SeminarViewModel(days) {Seminar = Seminar7};
+            var seminarView = new SeminarViewModel(days, "http://completevocaltraining.nl") {Seminar = Seminar7};
             seminarView.CheckList[0].IsSelected = true;
             seminarView.CheckList[4].IsSelected = true;
 
@@ -279,7 +279,7 @@ namespace VocalSchool.Test.Controllers
             s.Name = "Effects";
             s.Description = "Learn about effects";
 
-            var seminarView = new SeminarViewModel {Seminar = s, CheckList = new List<CheckedId>()};
+            var seminarView = new SeminarViewModel (s, "http://completevocaltraining.nl"){ CheckList = new List<CheckedId>()};
 
             await Controller.Edit(1, seminarView);
 
@@ -292,7 +292,7 @@ namespace VocalSchool.Test.Controllers
             var s = Context.Seminars.FirstOrDefault(x => x.SeminarId == 1);
             var days = await Context.Days.ToListAsync();
 
-            var seminarView = new SeminarViewModel(s, days);
+            var seminarView = new SeminarViewModel(s, days, "", "http://completevocaltraining.nl");
             seminarView.CheckList[5].IsSelected = false;
             seminarView.CheckList[4].IsSelected = false;
             seminarView.CheckList[3].IsSelected = true;
@@ -350,7 +350,7 @@ namespace VocalSchool.Test.Controllers
         {
             var result = await Controller.Delete(1);
 
-            result.As<ViewResult>().Model.As<Seminar>().Name.Should().Be("Seminar1");
+            result.As<ViewResult>().Model.As<SeminarViewModel>().Seminar.Name.Should().Be("Seminar1");
         }
 
         [Fact]
@@ -364,7 +364,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_Seminar_from_Db()
         {
-            await Controller.DeleteConfirmed(1);
+            await Controller.DeleteConfirmed(new SeminarViewModel(new Seminar(){SeminarId = 1}, "http://completevocaltraining.nl"));
 
             var result = Context.Seminars.FirstOrDefault(x => x.SeminarId == 1);
 
