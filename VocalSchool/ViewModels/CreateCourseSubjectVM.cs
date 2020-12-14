@@ -5,13 +5,13 @@ namespace VocalSchool.ViewModels
     public class CreateCourseSubjectVM
     {
         public Subject Subject { get; set; }
-        public int CourseId { get; set; }
+        public int CourseDesignId { get; set; }
         
         public string Uid { get; set; }
 
-        public CreateCourseSubjectVM(int courseId, string uid)
+        public CreateCourseSubjectVM(int courseDesignId, string uid)
         {
-            CourseId = courseId;
+            CourseDesignId = courseDesignId;
             Uid = uid;
             Subject = new Subject();
         }

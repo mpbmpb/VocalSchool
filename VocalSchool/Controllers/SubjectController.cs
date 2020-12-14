@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -45,20 +46,21 @@ namespace VocalSchool.Controllers
         // GET: Subject/Create
         public IActionResult Create()
         {
-            return View();
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
+            return View(new SubjectViewModel(new Subject(), "", lastPage));
         }
 
         // POST: Subject/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SubjectId,Name,Description,RequiredReading")] Subject subject)
+        public async Task<IActionResult> Create(SubjectViewModel model)
         {
             if (ModelState.IsValid)
             {
-                await _db.AddAsync(subject);
-                return RedirectToAction(nameof(Index));
+                await _db.AddAsync(model.Subject);
+                return Redirect(model.LastPage);
             }
-            return View(subject);
+            return View(model);
         }
         
         // GET: Subject/CreateCourseSubject
@@ -66,7 +68,7 @@ namespace VocalSchool.Controllers
         {
             var course = await _db.GetCourseFullAsync(id);
             var uid = $"[{course.Name}-{id}]"; 
-            return View(new CreateCourseSubjectVM(id, uid));
+            return View(new CreateCourseSubjectVM(course.CourseDesign.CourseDesignId, uid));
         }
 
         // POST: Subject/CreateCourseSubject
@@ -79,9 +81,9 @@ namespace VocalSchool.Controllers
                 var subject = model.Subject;
                 subject.Name = model.Subject.Name.Prepend(model.Uid);
                 await _db.AddAsync(subject);
-                return RedirectToAction(nameof(Edit), nameof(Course), new { id = model.CourseId});
+                return RedirectToAction(nameof(Edit), nameof(CourseDesign), new { id = model.CourseDesignId});
             }
-            return RedirectToAction(nameof(Index), nameof(Course));
+            return View(model);
         }
 
         // GET: Subject/Edit/5
@@ -96,10 +98,9 @@ namespace VocalSchool.Controllers
 
             string uid = subject.GetUid();
             subject.TrimUid();
-            var model = new SubjectViewModel(subject, uid);
-            model.LastPage = Request.GetTypedHeaders().Referer;
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
            
-            return View(new SubjectViewModel(subject, uid));
+            return View(new SubjectViewModel(subject, uid, lastPage));
         }
 
         // POST: Subject/Edit/5
@@ -117,9 +118,9 @@ namespace VocalSchool.Controllers
                 }
                 catch (Exception)
                 {
-                    RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
                 }
-                return Redirect(model.LastPage.ToString());
+                return Redirect(model.LastPage);
             }
             return View(model); 
         }
@@ -137,18 +138,18 @@ namespace VocalSchool.Controllers
             {
                 return NotFound();
             }
-
-            return View(subject);
+            var lastPage = Request?.GetTypedHeaders()?.Referer?.ToString() ?? "http://completevocaltraining.nl";
+            return View(new SubjectViewModel(subject, "", lastPage));
         }
 
         // POST: Subject/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(SubjectViewModel model)
         {
-            var subject = await _db.GetSubjectAsync(id);
+            var subject = await _db.GetSubjectAsync(model.Subject.SubjectId);
             await _db.RemoveAsync(subject);
-            return RedirectToAction(nameof(Index));
+            return Redirect(model.LastPage);
         }
     }
 }

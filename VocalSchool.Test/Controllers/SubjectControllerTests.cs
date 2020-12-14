@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,7 +53,7 @@ namespace VocalSchool.Test.Controllers
         public async Task Index_only_returns_subjects_without_uid()
         {
             var s = new Subject() {Name = "[prepend test] Support", SubjectId = 7};
-            await Controller.Create(s);
+            await Controller.Create(new SubjectViewModel(s, "", "http://completevocaltraining.nl"));
 
             var result = await Controller.Index();
 
@@ -95,7 +96,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_new_Subject()
         {
-            await Controller.Create(Subject7);
+            await Controller.Create(new SubjectViewModel(Subject7, "", "http://completevocaltraining.nl"));
 
             Context.Subjects.Should().HaveCount(7);
         }
@@ -103,7 +104,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Create_stores_Subject_with_correct_properties()
         {
-            await Controller.Create(Subject7);
+            await Controller.Create(new SubjectViewModel(Subject7, "", "http://completevocaltraining.nl"));
 
             Context.Subjects.FirstOrDefault(x => x.SubjectId == 7).Should().BeEquivalentTo(Subject7);
         }
@@ -165,7 +166,7 @@ namespace VocalSchool.Test.Controllers
         {
             var s = Subject7;
             s.SubjectId = 1;
-            var vm = new SubjectViewModel(s, "");
+            var vm = new SubjectViewModel(s, "", "http://completevocaltraining.nl");
 
             await Controller.Edit(vm);
 
@@ -189,7 +190,7 @@ namespace VocalSchool.Test.Controllers
         public async Task Edit_returns_Redirect_to_Index_if_concurrencyException_occurs()
         {            
             var s = Context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
-            var vm = new SubjectViewModel(s, "");
+            var vm = new SubjectViewModel(s, "", "http://completevocaltraining.nl");
             Context.Remove(s);
             await Context.SaveChangesAsync();
 
@@ -203,7 +204,7 @@ namespace VocalSchool.Test.Controllers
         {
             var result = await Controller.Delete(1);
 
-            result.As<ViewResult>().Model.As<Subject>().Name.Should().Be("Introduction");
+            result.As<ViewResult>().Model.As<SubjectViewModel>().Subject.Name.Should().Be("Introduction");
         }
 
         [Fact]
@@ -217,7 +218,7 @@ namespace VocalSchool.Test.Controllers
         [Fact]
         public async Task Delete_removes_subject_from_Db()
         {
-            await Controller.DeleteConfirmed(1);
+            await Controller.DeleteConfirmed(new SubjectViewModel(new Subject(){SubjectId = 1}, "", "http://completevocaltraining.nl"));
             var result = Context.Subjects.FirstOrDefault(x => x.SubjectId == 1);
 
             result.Should().BeNull();

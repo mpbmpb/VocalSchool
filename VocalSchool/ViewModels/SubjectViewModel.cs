@@ -8,7 +8,7 @@ namespace VocalSchool.ViewModels
         public Subject Subject { get; set; }
         public string Uid { get; private set; }
         
-        public Uri LastPage { get; set; }
+        public string LastPage { get; set; }
 
         public SubjectViewModel()
         {
@@ -18,6 +18,12 @@ namespace VocalSchool.ViewModels
         {
             Subject = subject;
             Uid = uid;
+        }
+        public SubjectViewModel(Subject subject, string uid, string lastPage)
+        {
+            Subject = subject;
+            Uid = uid;
+            LastPage = lastPage;
         }
     }
 }
