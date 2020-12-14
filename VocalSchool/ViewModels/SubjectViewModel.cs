@@ -1,3 +1,4 @@
+using System;
 using VocalSchool.Models;
 
 namespace VocalSchool.ViewModels
@@ -6,6 +7,8 @@ namespace VocalSchool.ViewModels
     {
         public Subject Subject { get; set; }
         public string Uid { get; private set; }
+        
+        public Uri LastPage { get; set; }
 
         public SubjectViewModel()
         {

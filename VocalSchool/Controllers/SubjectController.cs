@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VocalSchool.Data;
 using VocalSchool.Models;
@@ -95,6 +96,8 @@ namespace VocalSchool.Controllers
 
             string uid = subject.GetUid();
             subject.TrimUid();
+            var model = new SubjectViewModel(subject, uid);
+            model.LastPage = Request.GetTypedHeaders().Referer;
            
             return View(new SubjectViewModel(subject, uid));
         }
@@ -116,7 +119,7 @@ namespace VocalSchool.Controllers
                 {
                     RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect(model.LastPage.ToString());
             }
             return View(model); 
         }
